@@ -245,8 +245,16 @@ function home() {
 function dashboard() {
   const next = missions[nextMissionIndex()];
   return `<main class="content">
-    <div class="hud-card pia-intro"><div class="bar">Avance PIA · Sistemas Operativos</div><div class="inner">
-      <p>Nuestro Producto Integrador de Aprendizaje es una app móvil para repasar los temas vistos durante el semestre en Sistemas Operativos, aplicados al sistema que elegimos: <b>Ubuntu</b>.</p>
+    <div class="hud-card pia-intro"><div class="bar">Introducción · PIA Sistemas Operativos</div><div class="inner">
+      <p>Un sistema operativo es el software que administra los recursos de una computadora (procesador, memoria, archivos y dispositivos) y funciona como intermediario entre el usuario y el hardware. Para nuestro Producto Integrador de Aprendizaje elegimos <b>Ubuntu</b>, una distribución de Linux libre y ampliamente utilizada, como eje para repasar el semestre.</p>
+      <span class="tech-label">Objetivo</span>
+      <p><b>Ascenso a Root</b> es una app móvil educativa que integra los temas vistos en clase: arquitectura y tipos de sistemas operativos, concurrencia, administración de memoria y archivos, y redes y seguridad en sistemas distribuidos.</p>
+      <span class="tech-label">Contenido de la app</span>
+      <ul>
+        <li><b>Misiones:</b> cinco desafíos con una terminal simulada para practicar comandos básicos de Ubuntu (pwd, ls, cd, mkdir, touch, cp, mv y sudo) sin ejecutar nada real en el teléfono.</li>
+        <li><b>AFs:</b> las cuatro actividades fundamentales del semestre en PDF.</li>
+        <li><b>Equipo:</b> los integrantes que desarrollaron el proyecto.</li>
+      </ul>
     </div></div>
     <div class="section-kicker"><span class="tech-label">Tu progreso</span><span>¡Hola, explorador!</span></div>
     <div class="hud-card progress-panel"><div class="progress-ring" style="--pct:${pct()}%"><span>${pct()}%</span></div><div class="tech-label">Ruta Ubuntu completada</div></div>

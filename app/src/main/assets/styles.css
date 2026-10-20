@@ -224,6 +224,10 @@ p { line-height: 1.48; }
 .pia-intro .inner { padding: 13px 18px 0; }
 .pia-intro p { margin-bottom: 13px; color: #d6cdd0; font-size: .88rem; line-height: 1.55; }
 .pia-intro b { color: var(--bright); }
+.pia-intro .tech-label { display: block; margin-bottom: 5px; color: var(--bright); font-size: .7rem; }
+.pia-intro ul { margin: 0 0 13px; padding-left: 18px; color: #d6cdd0; font-size: .85rem; line-height: 1.5; }
+.pia-intro li + li { margin-top: 6px; }
+.pia-intro li::marker { color: var(--orange); }
 
 /* ===== Actividades fundamentales (AFs) ===== */
 .af-list { display: grid; gap: 14px; margin-bottom: 8px; }
