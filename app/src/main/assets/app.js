@@ -157,9 +157,9 @@ function playTone() {
 }
 function nav(active) {
   // El botón central (main = true) es la acción principal: va elevado y más grande.
-  const items = [['dashboard','◴','Dashboard'],['afs','▤','AFs'],['map','⌖','Mapa',true],['team','⚇','Equipo'],['settings','⚙','Ajustes']];
+  const items = [['dashboard','home','Dashboard'],['afs','docs','AFs'],['map','map','Mapa',true],['team','users','Equipo'],['settings','settings','Ajustes']];
   return `<nav class="bottom-nav" aria-label="Navegación principal">
-    ${items.map(([screen,icon,label,main]) => `<button class="nav-item ${main ? 'nav-main' : ''} ${active === screen ? 'active' : ''}" data-action="nav" data-screen="${screen}" aria-label="${label}" ${active === screen ? 'aria-current="page"' : ''}><span class="nav-icon"><span class="nav-plate">${icon}</span></span><span class="nav-label">${label}</span></button>`).join('')}
+    ${items.map(([screen,icon,label,main]) => `<button class="nav-item ${main ? 'nav-main' : ''} ${active === screen ? 'active' : ''}" data-action="nav" data-screen="${screen}" aria-label="${label}" ${active === screen ? 'aria-current="page"' : ''}><span class="nav-icon"><span class="nav-plate"><span class="nav-glyph ic-${icon}" aria-hidden="true"></span></span></span><span class="nav-label">${label}</span></button>`).join('')}
   </nav>`;
 }
 function sectionHeader(title, sub, aside) {

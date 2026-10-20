@@ -173,6 +173,14 @@ p { line-height: 1.48; }
 .nav-main.active .nav-icon { filter: drop-shadow(0 0 11px rgba(243,92,25,.75)); }
 .nav-main.active .nav-plate { background: linear-gradient(135deg,#c33710,#f26520 65%,#ff812e); color: #fff; }
 .nav-label { font-size: .62rem; letter-spacing: .07em; }
+/* Iconos de la barra (assets/icons): se pintan con el color del boton */
+.nav-glyph { display: block; width: 20px; height: 20px; background: currentColor; -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
+.nav-main .nav-glyph { width: 28px; height: 28px; }
+.ic-home { --icon: url(icons/home.png); }
+.ic-docs { --icon: url(icons/docs.png); }
+.ic-map { --icon: url(icons/map.png); }
+.ic-users { --icon: url(icons/users.png); }
+.ic-settings { --icon: url(icons/settings.png); }
 .dialog-backdrop { z-index: 4; position: fixed; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(0,0,0,.75); }
 .dialog { width: min(100%,410px); padding: 20px; border: 1px solid var(--orange); background: #292127; box-shadow: 0 0 25px rgba(243,92,25,.24); }
 .dialog-actions { display: flex; gap: 8px; margin-top: 20px; }
