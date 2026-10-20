@@ -1,0 +1,23 @@
+# Gradle / Android Studio (generados)
+.gradle/
+.idea/
+.kotlin/
+build/
+app/build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.iml
+
+# Configuracion local (ruta del SDK de cada PC)
+local.properties
+
+# Firmas y APK sueltos
+*.jks
+*.keystore
+*.apk
+*.aab
+
+# Sistema
+.DS_Store
+Thumbs.db
