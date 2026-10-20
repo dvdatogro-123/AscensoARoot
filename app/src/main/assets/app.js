@@ -292,8 +292,33 @@ function settings() {
     <div class="setting-row"><span class="left"><span class="symbol">文</span>Idioma: Español</span></div>
     <h3 style="margin-top:27px">Aprendizaje</h3>
     <button class="setting-row danger" data-action="confirm-reset"><span class="left"><span class="symbol">↶</span>Restablecer progreso</span></button>
+    <button class="setting-row" data-action="nav" data-screen="credits"><span class="left"><span class="symbol">★</span>Créditos / Conclusión</span><span class="row-arrow" aria-hidden="true">▶</span></button>
     <div class="setting-row"><span class="left"><span class="symbol">⚒</span>Acerca de Ascenso a Root</span></div>
     <p class="about">Versión 1.5.5 · Aplicación educativa sobre Ubuntu. Los comandos se simulan dentro de la aplicación y no modifican el teléfono.</p>
+  </main>${nav('settings')}`;
+}
+function credits() {
+  return `<main class="content">
+    ${sectionHeader('Conclusión','Lo que aprendimos','Equipo 1')}
+    <div class="hud-card report-card"><div class="bar">Conclusión del semestre</div><div class="inner">
+      <p>Este semestre comprendimos que un sistema operativo no es solo el programa que enciende la computadora: es el administrador que reparte el procesador, la memoria, el almacenamiento y los dispositivos, y ofrece una capa segura entre el usuario y el hardware.</p>
+      <span class="tech-label">Lo que nos dejó cada actividad</span>
+      <ul>
+        <li><b>AF1:</b> aunque Windows, macOS, Linux, Android o iOS sean distintos, todos comparten la misma responsabilidad: gestionar recursos de forma eficiente desde su núcleo.</li>
+        <li><b>AF2:</b> la concurrencia permite ejecutar varias tareas a la vez, pero exige proteger la sección crítica con mecanismos de sincronización para evitar errores.</li>
+        <li><b>AF3:</b> la RAM, la memoria virtual y el almacenamiento se complementan, y el sistema de archivos organiza y protege la información.</li>
+        <li><b>AF4:</b> la seguridad en sistemas distribuidos no es un producto que se instala una vez, sino un proceso continuo de prevención, detección y respuesta.</li>
+      </ul>
+      <p>Con <b>Ubuntu</b> llevamos la teoría a la práctica: la terminal nos enseñó a movernos entre directorios, organizar archivos y usar sudo con responsabilidad, aplicando el principio de menor privilegio.</p>
+      <p>Desarrollar Ascenso a Root nos permitió integrar estos temas en un producto propio y trabajar en equipo. Nos llevamos una idea clara: entender el sistema operativo es entender cómo funciona todo lo que ejecutamos sobre él.</p>
+    </div></div>
+    <div class="hud-card report-card"><div class="bar">Créditos</div><div class="inner">
+      <p><b>Ascenso a Root</b> · Producto Integrador de Aprendizaje de Sistemas Operativos, Facultad de Ingeniería Mecánica y Eléctrica, UANL.</p>
+      <span class="tech-label">Maestra</span>
+      <p>Dra. Marín Martínez Norma Edith</p>
+      <span class="tech-label">Equipo 1 · Grupo 003</span>
+      <ul>${teamMembers.map(t => `<li>${safe(t.name)}${t.leader ? ' · <b>Líder</b>' : ''}</li>`).join('')}</ul>
+    </div></div>
   </main>${nav('settings')}`;
 }
 function mission() {
@@ -310,7 +335,7 @@ function mission() {
       ${finished ? '' : `<form class="terminal-form" id="command-form"><span class="prompt">$</span><input id="command-input" aria-label="Escribe un comando" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Escribe un comando..."><button type="submit">Ejecutar</button></form>`}
     </div>
     ${state.hint && !finished ? `<p class="hint">Pista: ${safe(currentHint(m))}</p>` : ''}
-    ${finished ? `<div class="success-panel"><strong>✓ MISIÓN COMPLETADA · +100 XP</strong><p>${m.ending}</p><button class="primary-btn full" data-action="nav" data-screen="map">Volver al mapa ▶</button></div>` : `<div class="mission-actions"><button class="secondary-btn" data-action="hint">Ver pista</button><button class="secondary-btn" data-action="nav" data-screen="map">Salir al mapa</button></div>`}
+    ${finished ? `<div class="success-panel"><strong>✓ MISIÓN COMPLETADA · +100 XP</strong><p>${m.ending}</p>${state.routeJustCompleted ? `<p class="route-done">¡Completaste toda la ruta! En un momento se abre la conclusión.</p><button class="primary-btn full" data-action="open-credits">Ver conclusión ▶</button>` : `<button class="primary-btn full" data-action="nav" data-screen="map">Volver al mapa ▶</button>`}</div>` : `<div class="mission-actions"><button class="secondary-btn" data-action="hint">Ver pista</button><button class="secondary-btn" data-action="nav" data-screen="map">Salir al mapa</button></div>`}
   </main>${nav('map')}`;
 }
 function resetDialog() {
@@ -318,7 +343,7 @@ function resetDialog() {
 }
 function render() {
   const previousScroll = renderedScreen === state.screen ? (app.querySelector?.('.content')?.scrollTop ?? 0) : 0;
-const screen = state.screen === 'cover' ? cover() : state.screen === 'team' ? team() : state.screen === 'afs' ? afs() : state.screen === 'home' ? home() : state.screen === 'dashboard' ? dashboard() : state.screen === 'map' ? map() : state.screen === 'settings' ? settings() : mission();  app.innerHTML = `<div class="top-rail" aria-hidden="true"></div>${screen}${state.confirmReset ? resetDialog() : ''}`;
+const screen = state.screen === 'cover' ? cover() : state.screen === 'team' ? team() : state.screen === 'afs' ? afs() : state.screen === 'credits' ? credits() : state.screen === 'home' ? home() : state.screen === 'dashboard' ? dashboard() : state.screen === 'map' ? map() : state.screen === 'settings' ? settings() : mission();  app.innerHTML = `<div class="top-rail" aria-hidden="true"></div>${screen}${state.confirmReset ? resetDialog() : ''}`;
   const content = app.querySelector?.('.content');
   if (content) content.scrollTop = previousScroll;
   renderedScreen = state.screen;
@@ -329,7 +354,7 @@ const screen = state.screen === 'cover' ? cover() : state.screen === 'team' ? te
 }
 function openMission(index) {
   if (!Number.isInteger(index) || index < 0 || index >= missions.length || missions[index].id > data.completed.length + 1) return;
-  state = { ...state, screen: 'mission', mission: index, step: 0, lines: [], hint: false, acceptedCommands: [], copyName: null };
+  state = { ...state, screen: 'mission', mission: index, step: 0, lines: [], hint: false, acceptedCommands: [], copyName: null, routeJustCompleted: false };
   render();
 }
 function runCommand(input) {
@@ -353,6 +378,7 @@ function runCommand(input) {
       data.completed.sort((a,b) => a-b);
       saveData();
       playTone();
+      if (data.completed.length === missions.length) state.routeJustCompleted = true;
     }
   } else if (state.acceptedCommands.includes(command)) {
     state.lines.push({ kind: 'output', text: `Ese comando ya completó un paso anterior. Ahora: ${currentInstruction(m)}` });
@@ -376,6 +402,14 @@ function runCommand(input) {
   render();
   const field = document.getElementById('command-input');
   if (field) field.focus();
+  if (state.routeJustCompleted && typeof setTimeout === 'function') {
+    setTimeout(() => { if (state.screen === 'mission' && state.routeJustCompleted) openCredits(); }, 2500);
+  }
+}
+function openCredits() {
+  state.routeJustCompleted = false;
+  state.screen = 'credits';
+  render();
 }
 app.addEventListener('click', event => {
   const button = event.target.closest('[data-action]');
@@ -383,7 +417,8 @@ app.addEventListener('click', event => {
   const action = button.dataset.action;
   if (action === 'start') { state.screen = 'dashboard'; playTone(); render(); }
   else if (action === 'cover-continue') { state.screen = 'home'; playTone(); render(); }
-  else if (action === 'nav') { state.screen = button.dataset.screen; playTone(); render(); }
+  else if (action === 'nav') { state.routeJustCompleted = false; state.screen = button.dataset.screen; playTone(); render(); }
+  else if (action === 'open-credits') { playTone(); openCredits(); }
   else if (action === 'open-mission') { openMission(Number(button.dataset.index)); playTone(); }
   else if (action === 'hint') { state.hint = true; render(); }
   else if (action === 'toggle-sound') { data.sound = !data.sound; saveData(); playTone(); render(); }
@@ -400,6 +435,7 @@ app.addEventListener('submit', event => {
 window.goBackFromAndroid = function () {
   if (state.confirmReset) state.confirmReset = false;
   else if (state.screen === 'mission') state.screen = 'map';
+  else if (state.screen === 'credits') state.screen = 'settings';
   else if (state.screen === 'home' || state.screen === 'cover') return;
   else state.screen = 'home';
   render();

@@ -226,16 +226,16 @@ p { line-height: 1.48; }
 .team-chip { padding: 4px 9px; border: 1px solid var(--orange); background: rgba(185,57,18,.16); color: var(--white); font-family: 'Arial Narrow', Arial, sans-serif; font-stretch: condensed; font-size: .78rem; font-weight: 800; letter-spacing: .1em; }
 
 /* ===== Introducción del PIA (Dashboard) ===== */
-.pia-intro { position: relative; padding: 0 0 2px; margin: 0 0 20px; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); }
-.pia-intro::after { content: ""; position: absolute; left: -1px; bottom: -1px; width: 14px; height: 14px; pointer-events: none; background: linear-gradient(to top right, transparent 0 50%, rgba(238,117,64,.5) 50% calc(50% + 1.4px), transparent calc(50% + 1.4px)); }
-.pia-intro .bar { background: linear-gradient(90deg,#b73713,#fc6d25); padding: 9px 18px; font-size: .8rem; text-transform: uppercase; font-weight: 800; }
-.pia-intro .inner { padding: 13px 18px 0; }
-.pia-intro p { margin-bottom: 13px; color: #d6cdd0; font-size: .88rem; line-height: 1.55; }
-.pia-intro b { color: var(--bright); }
-.pia-intro .tech-label { display: block; margin-bottom: 5px; color: var(--bright); font-size: .7rem; }
-.pia-intro ul { margin: 0 0 13px; padding-left: 18px; color: #d6cdd0; font-size: .85rem; line-height: 1.5; }
-.pia-intro li + li { margin-top: 6px; }
-.pia-intro li::marker { color: var(--orange); }
+.pia-intro, .report-card { position: relative; padding: 0 0 2px; margin: 0 0 20px; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); }
+.pia-intro::after, .report-card::after { content: ""; position: absolute; left: -1px; bottom: -1px; width: 14px; height: 14px; pointer-events: none; background: linear-gradient(to top right, transparent 0 50%, rgba(238,117,64,.5) 50% calc(50% + 1.4px), transparent calc(50% + 1.4px)); }
+.pia-intro .bar, .report-card .bar { background: linear-gradient(90deg,#b73713,#fc6d25); padding: 9px 18px; font-size: .8rem; text-transform: uppercase; font-weight: 800; }
+.pia-intro .inner, .report-card .inner { padding: 13px 18px 0; }
+.pia-intro p, .report-card p { margin-bottom: 13px; color: #d6cdd0; font-size: .88rem; line-height: 1.55; }
+.pia-intro b, .report-card b { color: var(--bright); }
+.pia-intro .tech-label, .report-card .tech-label { display: block; margin-bottom: 5px; color: var(--bright); font-size: .7rem; }
+.pia-intro ul, .report-card ul { margin: 0 0 13px; padding-left: 18px; color: #d6cdd0; font-size: .85rem; line-height: 1.5; }
+.pia-intro li + li, .report-card li + li { margin-top: 6px; }
+.pia-intro li::marker, .report-card li::marker { color: var(--orange); }
 
 /* ===== Actividades fundamentales (AFs) ===== */
 .af-list { display: grid; gap: 14px; margin-bottom: 8px; }
@@ -245,3 +245,8 @@ p { line-height: 1.48; }
 .af-info small { display: block; margin-top: 5px; color: var(--muted); font-size: .74rem; }
 .af-arrow { color: var(--bright); font-size: .9rem; }
 .af-card:active { border-color: var(--bright); }
+
+/* ===== Créditos / Conclusión ===== */
+.report-card + .report-card { margin-top: 4px; }
+.row-arrow { color: var(--bright); font-size: .8rem; }
+.route-done { color: var(--bright); font-weight: 700; }
