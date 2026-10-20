@@ -208,7 +208,6 @@ p { line-height: 1.48; }
 
 /* ===== Integrantes ===== */
 .team-list { border: 1px solid var(--line); background: rgba(33,28,34,.7); margin: 4px 0 8px; }
-.team-footer { z-index: 2; flex: none; padding: 12px 24px max(14px, env(safe-area-inset-bottom)); background: #211a20; border-top: 1px solid var(--line); }
 .team-row { display: grid; grid-template-columns: 60px 1fr auto; gap: 12px; align-items: center; padding: 10px 12px; }
 .team-row + .team-row { border-top: 1px solid rgba(255,134,65,.18); }
 .team-photo { width: 60px; height: 60px; background: linear-gradient(135deg,#f35c19,#ff8d38); clip-path: polygon(25% 0,75% 0,100% 25%,100% 75%,75% 100%,25% 100%,0 75%,0 25%); }
@@ -217,3 +216,20 @@ p { line-height: 1.48; }
 .team-info small { display: block; margin-top: 4px; color: var(--muted); font-size: .74rem; letter-spacing: .04em; }
 .team-leader { color: var(--bright); text-transform: uppercase; }
 .team-chip { padding: 4px 9px; border: 1px solid var(--orange); background: rgba(185,57,18,.16); color: var(--white); font-family: 'Arial Narrow', Arial, sans-serif; font-stretch: condensed; font-size: .78rem; font-weight: 800; letter-spacing: .1em; }
+
+/* ===== Introducción del PIA (Dashboard) ===== */
+.pia-intro { position: relative; padding: 0 0 2px; margin: 0 0 20px; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); }
+.pia-intro::after { content: ""; position: absolute; left: -1px; bottom: -1px; width: 14px; height: 14px; pointer-events: none; background: linear-gradient(to top right, transparent 0 50%, rgba(238,117,64,.5) 50% calc(50% + 1.4px), transparent calc(50% + 1.4px)); }
+.pia-intro .bar { background: linear-gradient(90deg,#b73713,#fc6d25); padding: 9px 18px; font-size: .8rem; text-transform: uppercase; font-weight: 800; }
+.pia-intro .inner { padding: 13px 18px 0; }
+.pia-intro p { margin-bottom: 13px; color: #d6cdd0; font-size: .88rem; line-height: 1.55; }
+.pia-intro b { color: var(--bright); }
+
+/* ===== Actividades fundamentales (AFs) ===== */
+.af-list { display: grid; gap: 14px; margin-bottom: 8px; }
+.af-card { display: grid; grid-template-columns: 54px 1fr auto; gap: 14px; align-items: center; padding: 14px 16px; color: var(--white); text-decoration: none; }
+.af-badge { display: grid; place-items: center; width: 54px; height: 54px; background: linear-gradient(135deg,#c33710,#f26520 65%,#ff812e); clip-path: polygon(25% 0,75% 0,100% 25%,100% 75%,75% 100%,25% 100%,0 75%,0 25%); font-family: 'Arial Narrow', Arial, sans-serif; font-stretch: condensed; font-weight: 800; font-size: 1rem; letter-spacing: .04em; }
+.af-info strong { display: block; font-size: .95rem; line-height: 1.3; text-transform: uppercase; }
+.af-info small { display: block; margin-top: 5px; color: var(--muted); font-size: .74rem; }
+.af-arrow { color: var(--bright); font-size: .9rem; }
+.af-card:active { border-color: var(--bright); }

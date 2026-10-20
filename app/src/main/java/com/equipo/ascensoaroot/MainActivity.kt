@@ -1,6 +1,7 @@
 package com.equipo.ascensoaroot
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -36,6 +37,20 @@ class MainActivity : ComponentActivity() {
                     view: WebView,
                     request: WebResourceRequest
                 ): WebResourceResponse? = assetLoader.shouldInterceptRequest(request.url)
+
+                // Los enlaces a PDF empaquetados (AFs) se abren en el visor propio de la app.
+                override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                    val url = request.url
+                    val path = url.path ?: return false
+                    if (url.host != WebViewAssetLoader.DEFAULT_DOMAIN || !path.startsWith("/assets/") ||
+                        !path.endsWith(".pdf", ignoreCase = true)) return false
+                    startActivity(
+                        Intent(this@MainActivity, PdfViewerActivity::class.java)
+                            .putExtra(PdfViewerActivity.EXTRA_ASSET, path.removePrefix("/assets/"))
+                            .putExtra(PdfViewerActivity.EXTRA_TITLE, url.getQueryParameter("titulo") ?: "Documento")
+                    )
+                    return true
+                }
             }
             loadUrl("https://appassets.androidplatform.net/assets/index.html")
         }

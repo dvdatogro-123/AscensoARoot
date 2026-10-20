@@ -157,7 +157,7 @@ function playTone() {
 }
 function nav(active) {
   // El botón central (main = true) es la acción principal: va elevado y más grande.
-  const items = [['dashboard','◴','Dashboard'],['map','⌖','Mapa',true],['settings','⚙','Ajustes']];
+  const items = [['dashboard','◴','Dashboard'],['afs','▤','AFs'],['map','⌖','Mapa',true],['team','⚇','Equipo'],['settings','⚙','Ajustes']];
   return `<nav class="bottom-nav" aria-label="Navegación principal">
     ${items.map(([screen,icon,label,main]) => `<button class="nav-item ${main ? 'nav-main' : ''} ${active === screen ? 'active' : ''}" data-action="nav" data-screen="${screen}" aria-label="${label}" ${active === screen ? 'aria-current="page"' : ''}><span class="nav-icon"><span class="nav-plate">${icon}</span></span><span class="nav-label">${label}</span></button>`).join('')}
   </nav>`;
@@ -209,8 +209,26 @@ function team() {
       <div class="team-info"><strong>${safe(m.name)}</strong><small>Matrícula ${safe(m.id)}${m.leader ? ' · <b class="team-leader">Líder</b>' : ''}</small></div>
       <span class="team-chip">${safe(m.program)}</span>
     </div>`).join('')}</div>
-  </main>
-  <div class="team-footer"><button class="primary-btn full" data-action="team-continue">Continuar ▶</button></div>`;
+  </main>${nav('team')}`;
+}
+
+// Actividades fundamentales: cada enlace abre su PDF en el visor de la app (PdfViewerActivity).
+const activities = [
+  { id: 'AF1', title: 'Arquitectura, desempeño y tipo de un sistema operativo', date: '11 de agosto de 2026', pages: 37, file: 'afs/AF1.pdf' },
+  { id: 'AF2', title: 'La concurrencia en los sistemas operativos', date: '18 de agosto de 2026', pages: 29, file: 'afs/AF2.pdf' },
+  { id: 'AF3', title: 'Almacenaje, memoria y archivos', date: '15 de septiembre de 2026', pages: 23, file: 'afs/AF3.pdf' },
+  { id: 'AF4', title: 'Redes y seguridad en sistemas distribuidos', date: '13 de octubre de 2026', pages: 42, file: 'afs/AF4.pdf' }
+];
+function afs() {
+  return `<main class="content">
+    ${sectionHeader('Actividades','Evidencias del semestre',`${activities.length} documentos`)}
+    <p class="map-summary">Toca una actividad fundamental para abrir su PDF.</p>
+    <div class="af-list">${activities.map(a => `<a class="hud-card af-card" href="${a.file}?titulo=${encodeURIComponent(`${a.id} · ${a.title}`)}">
+      <span class="af-badge">${a.id}</span>
+      <span class="af-info"><strong>${safe(a.title)}</strong><small>Entrega: ${a.date} · ${a.pages} págs. · PDF</small></span>
+      <span class="af-arrow" aria-hidden="true">▶</span>
+    </a>`).join('')}</div>
+  </main>${nav('afs')}`;
 }
 
 function home() {
@@ -227,7 +245,10 @@ function home() {
 function dashboard() {
   const next = missions[nextMissionIndex()];
   return `<main class="content">
-    ${sectionHeader('Dashboard','Tu progreso','¡Hola, explorador!')}
+    <div class="hud-card pia-intro"><div class="bar">Avance PIA · Sistemas Operativos</div><div class="inner">
+      <p>Nuestro Producto Integrador de Aprendizaje es una app móvil para repasar los temas vistos durante el semestre en Sistemas Operativos, aplicados al sistema que elegimos: <b>Ubuntu</b>.</p>
+    </div></div>
+    <div class="section-kicker"><span class="tech-label">Tu progreso</span><span>¡Hola, explorador!</span></div>
     <div class="hud-card progress-panel"><div class="progress-ring" style="--pct:${pct()}%"><span>${pct()}%</span></div><div class="tech-label">Ruta Ubuntu completada</div></div>
     <h3>Estadísticas generales</h3>
     <div class="stats-grid">
@@ -238,7 +259,6 @@ function dashboard() {
       <strong>${String(next.id).padStart(2,'0')}: ${next.title}</strong><small>COMANDO: ${safe(next.commands)}</small>
       <button class="primary-btn full" data-action="open-mission" data-index="${nextMissionIndex()}">${data.completed.length === missions.length ? 'Repetir misión' : '¡Comenzar ahora!'} ▶</button>
     </div></div>
-    <h3>Consejo del día</h3><div class="tip"><span class="tip-icon">✦</span><span>En Ubuntu, <b>ls -la</b> también muestra los archivos ocultos. En las misiones usarás comandos simulados.</span></div>
   </main>${nav('dashboard')}`;
 }
 function map() {
@@ -291,7 +311,7 @@ function resetDialog() {
 }
 function render() {
   const previousScroll = renderedScreen === state.screen ? (app.querySelector?.('.content')?.scrollTop ?? 0) : 0;
-const screen = state.screen === 'cover' ? cover() : state.screen === 'team' ? team() : state.screen === 'home' ? home() : state.screen === 'dashboard' ? dashboard() : state.screen === 'map' ? map() : state.screen === 'settings' ? settings() : mission();  app.innerHTML = `<div class="top-rail" aria-hidden="true"></div>${screen}${state.confirmReset ? resetDialog() : ''}`;
+const screen = state.screen === 'cover' ? cover() : state.screen === 'team' ? team() : state.screen === 'afs' ? afs() : state.screen === 'home' ? home() : state.screen === 'dashboard' ? dashboard() : state.screen === 'map' ? map() : state.screen === 'settings' ? settings() : mission();  app.innerHTML = `<div class="top-rail" aria-hidden="true"></div>${screen}${state.confirmReset ? resetDialog() : ''}`;
   const content = app.querySelector?.('.content');
   if (content) content.scrollTop = previousScroll;
   renderedScreen = state.screen;
@@ -355,8 +375,7 @@ app.addEventListener('click', event => {
   if (!button || button.disabled) return;
   const action = button.dataset.action;
   if (action === 'start') { state.screen = 'dashboard'; playTone(); render(); }
-  else if (action === 'cover-continue') { state.screen = 'team'; playTone(); render(); }
-  else if (action === 'team-continue') { state.screen = 'home'; playTone(); render(); }
+  else if (action === 'cover-continue') { state.screen = 'home'; playTone(); render(); }
   else if (action === 'nav') { state.screen = button.dataset.screen; playTone(); render(); }
   else if (action === 'open-mission') { openMission(Number(button.dataset.index)); playTone(); }
   else if (action === 'hint') { state.hint = true; render(); }
@@ -374,7 +393,6 @@ app.addEventListener('submit', event => {
 window.goBackFromAndroid = function () {
   if (state.confirmReset) state.confirmReset = false;
   else if (state.screen === 'mission') state.screen = 'map';
-  else if (state.screen === 'team') state.screen = 'cover';
   else if (state.screen === 'home' || state.screen === 'cover') return;
   else state.screen = 'home';
   render();
