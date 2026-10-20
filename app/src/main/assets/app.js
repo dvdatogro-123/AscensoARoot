@@ -251,9 +251,8 @@ function dashboard() {
       <p><b>Ascenso a Root</b> es una app móvil educativa que integra los temas vistos en clase: arquitectura y tipos de sistemas operativos, concurrencia, administración de memoria y archivos, y redes y seguridad en sistemas distribuidos.</p>
       <span class="tech-label">Contenido de la app</span>
       <ul>
-        <li><b>Misiones:</b> cinco desafíos con una terminal simulada para practicar comandos básicos de Ubuntu (pwd, ls, cd, mkdir, touch, cp, mv y sudo) sin ejecutar nada real en el teléfono.</li>
-        <li><b>AFs:</b> las cuatro actividades fundamentales del semestre en PDF.</li>
-        <li><b>Equipo:</b> los integrantes que desarrollaron el proyecto.</li>
+        <li><b>Misiones:</b> desafíos con una terminal simulada para practicar comandos básicos de Ubuntu (pwd, ls, cd, mkdir, touch, cp, mv y sudo) sin ejecutar nada real en el teléfono.</li>
+        <li><b>AFs:</b> las cuatro actividades fundamentales que desarrollamos en el semestre, una por cada tema: arquitectura y tipos de sistemas operativos (AF1), concurrencia (AF2), almacenaje, memoria y archivos (AF3), y redes y seguridad en sistemas distribuidos (AF4).</li>
       </ul>
     </div></div>
     <div class="section-kicker"><span class="tech-label">Tu progreso</span><span>¡Hola, explorador!</span></div>
