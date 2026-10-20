@@ -156,9 +156,10 @@ function playTone() {
   } catch (_) { /* Sound is optional. */ }
 }
 function nav(active) {
+  // El botón central (main = true) es la acción principal: va elevado y más grande.
+  const items = [['dashboard','◴','Dashboard'],['map','⌖','Mapa',true],['settings','⚙','Ajustes']];
   return `<nav class="bottom-nav" aria-label="Navegación principal">
-    ${[['dashboard','◴','Dashboard'],['map','⌖','Mapa'],['settings','⚙','Ajustes']]
-      .map(([screen,icon,label]) => `<button class="nav-item ${active === screen ? 'active' : ''}" data-action="nav" data-screen="${screen}" aria-label="${label}" ${active === screen ? 'aria-current="page"' : ''}><span class="nav-icon">${icon}</span><span class="nav-label">${label}</span></button>`).join('')}
+    ${items.map(([screen,icon,label,main]) => `<button class="nav-item ${main ? 'nav-main' : ''} ${active === screen ? 'active' : ''}" data-action="nav" data-screen="${screen}" aria-label="${label}" ${active === screen ? 'aria-current="page"' : ''}><span class="nav-icon"><span class="nav-plate">${icon}</span></span><span class="nav-label">${label}</span></button>`).join('')}
   </nav>`;
 }
 function sectionHeader(title, sub, aside) {
