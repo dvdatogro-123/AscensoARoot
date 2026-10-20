@@ -208,8 +208,8 @@ function team() {
       <div class="team-info"><strong>${safe(m.name)}</strong><small>Matrícula ${safe(m.id)}${m.leader ? ' · <b class="team-leader">Líder</b>' : ''}</small></div>
       <span class="team-chip">${safe(m.program)}</span>
     </div>`).join('')}</div>
-    <button class="primary-btn full" data-action="team-continue">Continuar ▶</button>
-  </main>`;
+  </main>
+  <div class="team-footer"><button class="primary-btn full" data-action="team-continue">Continuar ▶</button></div>`;
 }
 
 function home() {

@@ -194,7 +194,8 @@ p { line-height: 1.48; }
 @media (max-height: 680px) { .logo-plate img { height: 32px; } .cover-content h1 { margin-top: 10px; } .cover-logos { margin-bottom: 14px; } }
 
 /* ===== Integrantes ===== */
-.team-list { border: 1px solid var(--line); background: rgba(33,28,34,.7); margin: 4px 0 22px; }
+.team-list { border: 1px solid var(--line); background: rgba(33,28,34,.7); margin: 4px 0 8px; }
+.team-footer { z-index: 2; flex: none; padding: 12px 24px max(14px, env(safe-area-inset-bottom)); background: #211a20; border-top: 1px solid var(--line); }
 .team-row { display: grid; grid-template-columns: 60px 1fr auto; gap: 12px; align-items: center; padding: 10px 12px; }
 .team-row + .team-row { border-top: 1px solid rgba(255,134,65,.18); }
 .team-photo { width: 60px; height: 60px; background: linear-gradient(135deg,#f35c19,#ff8d38); clip-path: polygon(25% 0,75% 0,100% 25%,100% 75%,75% 100%,25% 100%,0 75%,0 25%); }
