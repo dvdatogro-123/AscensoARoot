@@ -167,3 +167,39 @@ p { line-height: 1.48; }
 .dialog-actions button { flex: 1; }
 
 @media (max-height: 680px) { .home-hero { min-height: 180px; } .home-hero img { height: 35dvh; } .home-content h1 { margin-top: 10px; } }
+
+/* ===== Portada (Avance PIA) ===== */
+.cover-content { display: flex; flex-direction: column; }
+.cover-content h1 { font-size: clamp(2.2rem, 9vw, 3.4rem); margin-top: 16px; }
+.cover-content h1 em { color: var(--bright); font-style: normal; text-shadow: 0 0 18px rgba(255,97,24,.45); }
+
+.cover-logos { display: flex; justify-content: space-between; align-items: flex-start; margin: 0 0 22px; }
+.logo-plate { display: flex; align-items: center; justify-content: center; padding: 6px 9px; background: #fff; border: 2px solid var(--orange); }
+.logo-plate:first-child { clip-path: polygon(10px 0,100% 0,100% 100%,0 100%,0 10px); }
+.logo-plate:last-child { clip-path: polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%); }
+.logo-plate img { display: block; height: 38px; width: auto; }
+
+.cover-school { color: var(--muted); font-size: .85rem; line-height: 1.6; text-align: center; margin-bottom: 22px; }
+
+.cover-card { position: relative; padding: 0 0 8px; margin-bottom: 22px; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); }
+.cover-card::after { content: ""; position: absolute; left: -1px; bottom: -1px; width: 14px; height: 14px; pointer-events: none; background: linear-gradient(to top right, transparent 0 50%, rgba(238,117,64,.5) 50% calc(50% + 1.4px), transparent calc(50% + 1.4px)); }
+.cover-card .bar { background: linear-gradient(90deg,#b73713,#fc6d25); padding: 9px 18px; font-size: .85rem; text-transform: uppercase; font-weight: 800; }
+.cover-card .inner { padding: 14px 18px 0; }
+.cover-card p { margin-bottom: 14px; }
+.cover-card .tech-label { display: block; color: var(--bright); font-size: .7rem; margin-bottom: 3px; }
+.cover-card strong { display: block; font-size: 1.05rem; }
+
+.cover-content .primary-btn { margin-top: auto; }
+
+@media (max-height: 680px) { .logo-plate img { height: 32px; } .cover-content h1 { margin-top: 10px; } .cover-logos { margin-bottom: 14px; } }
+
+/* ===== Integrantes ===== */
+.team-list { border: 1px solid var(--line); background: rgba(33,28,34,.7); margin: 4px 0 22px; }
+.team-row { display: grid; grid-template-columns: 60px 1fr auto; gap: 12px; align-items: center; padding: 10px 12px; }
+.team-row + .team-row { border-top: 1px solid rgba(255,134,65,.18); }
+.team-photo { width: 60px; height: 60px; background: linear-gradient(135deg,#f35c19,#ff8d38); clip-path: polygon(25% 0,75% 0,100% 25%,100% 75%,75% 100%,25% 100%,0 75%,0 25%); }
+.team-photo img { display: block; width: 56px; height: 56px; margin: 2px; object-fit: cover; clip-path: polygon(25% 0,75% 0,100% 25%,100% 75%,75% 100%,25% 100%,0 75%,0 25%); }
+.team-info strong { display: block; font-size: .92rem; line-height: 1.25; }
+.team-info small { display: block; margin-top: 4px; color: var(--muted); font-size: .74rem; letter-spacing: .04em; }
+.team-leader { color: var(--bright); text-transform: uppercase; }
+.team-chip { padding: 4px 9px; border: 1px solid var(--orange); background: rgba(185,57,18,.16); color: var(--white); font-family: 'Arial Narrow', Arial, sans-serif; font-stretch: condensed; font-size: .78rem; font-weight: 800; letter-spacing: .1em; }

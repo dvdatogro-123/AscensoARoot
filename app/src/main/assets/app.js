@@ -49,7 +49,7 @@ const missions = [
 const storageKey = 'ascenso-a-root-v1';
 const initialData = { completed: [], sound: true, notices: true };
 let data = loadData();
-let state = { screen: 'home', mission: 0, step: 0, lines: [], hint: false, confirmReset: false, acceptedCommands: [], copyName: null };
+let state = { screen: 'cover', mission: 0, step: 0, lines: [], hint: false, confirmReset: false, acceptedCommands: [], copyName: null };
 let renderedScreen = null;
 const app = document.getElementById('app');
 
@@ -164,6 +164,54 @@ function nav(active) {
 function sectionHeader(title, sub, aside) {
   return `<h1>${title}</h1><div class="section-kicker"><span class="tech-label">${sub}</span><span>${aside}</span></div>`;
 }
+
+function cover () {
+  return `<main class="content cover-content">
+    <div class="cover-logos">
+      <div class="logo-plate"><img src="logo-uanl.png" alt="Logo de la Universidad Autónoma de Nuevo León" /></div>
+      <div class="logo-plate"><img src="logo-fime.png" alt="Logo de la Facultad de Ingeniería Mecánica y Eléctrica" /></div>
+    </div>
+    <div class="eyebrow">Avance PIA</div>
+    <h1>SISTEMAS<br><em>OPERATIVOS</em></h1>
+    <p class="cover-school">Universidad Autónoma de Nuevo León<br>Facultad de Ingeniería Mecánica y Eléctrica</p>
+    <div class="hud-card cover-card">
+      <div class="bar">Datos de la entrega</div>
+      <div class="inner">
+        <p><span class="tech-label">Maestro</span><strong>Dra. Marín Martínez Norma Edith</strong></p>
+        <p><span class="tech-label">Materia</span><strong>Sistemas Operativos</strong></p>
+        <p><span class="tech-label">Semestre</span><strong>5to semestre</strong></p>
+      </div>
+    </div>
+    <button class="primary-btn full" data-action="cover-continue">Continuar ▶</button>
+  </main>`; 
+}
+
+// Orden alfabético por apellido. Cada integrante conserva su propia foto.
+const teamMembers = [
+  { id: '2178081', name: 'Cisneros Moreno Valeria Nohemí', program: 'ITS', photo: 'equipo/04.png' },
+  { id: '2097304', name: 'Esparza Leyva Jaime Sebastian', program: 'ITS', photo: 'equipo/08.png' },
+  { id: '2144053', name: 'Lozano Garza Camila del Carmen', program: 'IAS', photo: 'equipo/01.png' },
+  { id: '2158392', name: 'Martinez Tamez Julio César', program: 'IAS', photo: 'equipo/09.png' },
+  { id: '1320176', name: 'Maycott López Gilberto', program: 'IAS', photo: 'equipo/10.png' },
+  { id: '2161066', name: 'Ramirez Fabian Maria de los Angeles', program: 'IAS', photo: 'equipo/06.png' },
+  { id: '2169669', name: 'Sánchez Juárez Emiliano', program: 'ITS', photo: 'equipo/07.png' },
+  { id: '2226699', name: 'Sánchez Santiago Osmar Abdi', program: 'ITS', photo: 'equipo/03.png' },
+  { id: '2144813', name: 'Torres Guerrero David Alonso', program: 'ITS', photo: 'equipo/05.png', leader: true },
+  { id: '2160859', name: 'Vera Moreno Oscar Elias', program: 'ITS', photo: 'equipo/02.png' }
+];
+
+function team() {
+  return `<main class="content team-content">
+    ${sectionHeader('Integrantes','Equipo de trabajo',`${teamMembers.length} integrantes`)}
+    <div class="team-list" role="list">${teamMembers.map(m => `<div class="team-row" role="listitem">
+      <div class="team-photo"><img src="${m.photo}" alt="Foto de ${safe(m.name)}" /></div>
+      <div class="team-info"><strong>${safe(m.name)}</strong><small>Matrícula ${safe(m.id)}${m.leader ? ' · <b class="team-leader">Líder</b>' : ''}</small></div>
+      <span class="team-chip">${safe(m.program)}</span>
+    </div>`).join('')}</div>
+    <button class="primary-btn full" data-action="team-continue">Continuar ▶</button>
+  </main>`;
+}
+
 function home() {
   return `<main class="content home-content">
     <div class="eyebrow">Expedición al sistema operativo</div>
@@ -242,8 +290,7 @@ function resetDialog() {
 }
 function render() {
   const previousScroll = renderedScreen === state.screen ? (app.querySelector?.('.content')?.scrollTop ?? 0) : 0;
-  const screen = state.screen === 'home' ? home() : state.screen === 'dashboard' ? dashboard() : state.screen === 'map' ? map() : state.screen === 'settings' ? settings() : mission();
-  app.innerHTML = `<div class="top-rail" aria-hidden="true"></div>${screen}${state.confirmReset ? resetDialog() : ''}`;
+const screen = state.screen === 'cover' ? cover() : state.screen === 'team' ? team() : state.screen === 'home' ? home() : state.screen === 'dashboard' ? dashboard() : state.screen === 'map' ? map() : state.screen === 'settings' ? settings() : mission();  app.innerHTML = `<div class="top-rail" aria-hidden="true"></div>${screen}${state.confirmReset ? resetDialog() : ''}`;
   const content = app.querySelector?.('.content');
   if (content) content.scrollTop = previousScroll;
   renderedScreen = state.screen;
@@ -307,6 +354,8 @@ app.addEventListener('click', event => {
   if (!button || button.disabled) return;
   const action = button.dataset.action;
   if (action === 'start') { state.screen = 'dashboard'; playTone(); render(); }
+  else if (action === 'cover-continue') { state.screen = 'team'; playTone(); render(); }
+  else if (action === 'team-continue') { state.screen = 'home'; playTone(); render(); }
   else if (action === 'nav') { state.screen = button.dataset.screen; playTone(); render(); }
   else if (action === 'open-mission') { openMission(Number(button.dataset.index)); playTone(); }
   else if (action === 'hint') { state.hint = true; render(); }
@@ -324,7 +373,8 @@ app.addEventListener('submit', event => {
 window.goBackFromAndroid = function () {
   if (state.confirmReset) state.confirmReset = false;
   else if (state.screen === 'mission') state.screen = 'map';
-  else if (state.screen === 'home') return;
+  else if (state.screen === 'team') state.screen = 'cover';
+  else if (state.screen === 'home' || state.screen === 'cover') return;
   else state.screen = 'home';
   render();
 };
