@@ -218,7 +218,8 @@ const activities = [
   { id: 'AF2', title: 'La concurrencia en los sistemas operativos', date: '18 de agosto de 2026', pages: 29, file: 'afs/AF2.pdf' },
   { id: 'AF3', title: 'Almacenaje, memoria y archivos', date: '15 de septiembre de 2026', pages: 23, file: 'afs/AF3.pdf' },
   { id: 'AF4', title: 'Redes y seguridad en sistemas distribuidos', date: '13 de octubre de 2026', pages: 42, file: 'afs/AF4.pdf' },
-  { id: 'DD', title: 'Diccionario de datos', date: '25 de octubre de 2026', pages: 15, file: 'afs/DiccionarioDatos.pdf' }
+  { id: 'DD', title: 'Diccionario de datos', date: '25 de octubre de 2026', pages: 15, file: 'afs/DiccionarioDatos.pdf' },
+  { id: 'MA', title: 'Ascenso a root', date: '25 de octubre de 2026', pages: 65, file: 'afs/Avance_de_PIA.pdf' },
 ];
 function afs() {
   return `<main class="content">
