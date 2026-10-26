@@ -1,53 +1,171 @@
 # Ascenso a Root
 
-App educativa para Android sobre comandos básicos de Ubuntu. La interfaz está hecha con HTML, CSS y JavaScript local; Kotlin la muestra con `WebView` y `WebViewAssetLoader`. Funciona sin conexión y no pide permisos.
+App educativa para Android, hecha como Producto Integrador de Aprendizaje (PIA) de **Sistemas Operativos** (FIME, UANL, Equipo 1 · Grupo 003). Sirve para repasar los temas del semestre con **Ubuntu** como sistema de referencia.
 
-## Estado de esta primera versión
+- Funciona **sin conexión** una vez instalada y no pide permisos.
+- La terminal es **simulada**: valida lo que escribes, pero nunca ejecuta comandos reales ni modifica el teléfono.
+- El progreso se guarda solo en el teléfono, en el almacenamiento local de la app.
 
-- Inicio con el astronauta proporcionado por el equipo.
-- Interfaz adaptable: el contenedor ocupa la altura visible del teléfono, el menú inferior permanece en la misma posición y el contenido largo se desplaza dentro de cada pantalla.
-- Dashboard con porcentaje, misiones completadas y XP.
-- Mapa de cinco misiones con desbloqueo progresivo.
-- Terminal **simulada**: acepta los comandos previstos para cada misión y explica el resultado. Nunca ejecuta comandos del teléfono ni modifica Ubuntu.
-- Cada misión muestra el paso actual; repetir un comando completado o escribirlo con errores produce una indicación concreta para continuar.
-- En la misión 4 puedes elegir el nombre de la copia y moverla con `mv nombre proyectos` o `mv nombre proyectos/`. La pista y el paso siguiente usan el nombre elegido.
-- Al completar las cinco misiones, el mapa permite repetirlas y muestra un mensaje de ruta terminada.
-- Ajustes de sonido y avisos internos; opción para restablecer el progreso.
-- Progreso guardado localmente con `localStorage` del WebView.
+---
 
-## Abrir y ejecutar
+## Cómo funciona la app
 
-1. Instalar Android Studio con Android SDK 35 y JDK 17.
-2. Abrir esta carpeta como proyecto en Android Studio.
-3. Esperar la sincronización de Gradle. El proyecto incluye Gradle Wrapper 8.9.
-4. Ejecutar el módulo `app` en un teléfono Android o emulador con Android 8.0 o superior.
-5. Para generar un APK de prueba, usar **Build > Build APK(s)**.
+### Flujo de pantallas
 
-La primera sincronización necesita internet para descargar las dependencias. Después, la interfaz y las misiones funcionan sin conexión.
+```text
+Portada (Avance PIA) → Inicio (astronauta) → Dashboard
+                                                │
+          Barra inferior: Dashboard · AFs · [Mapa] · Equipo · Ajustes
+```
 
-Para revisar solo la interfaz en la computadora, abre `app/src/main/assets/index.html` en un navegador. La versión Android usa ese mismo contenido dentro de `WebView`.
+| Pantalla | Qué contiene |
+|---|---|
+| **Portada** | Logos de la UANL y la FIME, materia, maestra y semestre. Botón *Continuar*. |
+| **Inicio** | Astronauta y botón *Comenzar expedición*. |
+| **Dashboard** | Introducción del PIA, porcentaje de avance, misiones completadas, XP y acceso a la siguiente misión. |
+| **AFs** | Las 4 actividades fundamentales del semestre. Al tocar una, el PDF se abre en un visor dentro de la app. |
+| **Mapa** | Botón central de la barra. Ruta de 5 misiones que se desbloquean en orden. |
+| **Equipo** | Integrantes en orden alfabético, con foto, matrícula y programa. |
+| **Ajustes** | Avisos, sonido, restablecer progreso, **Créditos / Conclusión** y *Acerca de*. |
+| **Créditos / Conclusión** | Conclusión del semestre y créditos del equipo. Se abre desde Ajustes o **sola al terminar la quinta misión**. |
+
+### Misiones
+
+| # | Misión | Comandos |
+|---:|---|---|
+| 1 | Bienvenida a la terminal | `pwd` |
+| 2 | Navegar directorios | `ls`, `cd Documentos` |
+| 3 | Crear archivos y carpetas | `mkdir proyectos`, `touch notas.txt` |
+| 4 | Copiar y mover elementos | `cp notas.txt copia.txt`, `mv copia.txt proyectos/` |
+| 5 | Administrador supremo | `sudo apt update` |
+
+- Cada misión vale **100 XP**. Hay pistas y mensajes que explican los errores más comunes.
+- Las mayúsculas importan, y se aceptan algunas variantes (por ejemplo `cd ~/Documentos` o `sudo apt-get update`).
+- *Restablecer progreso* borra las misiones completadas, pero conserva los ajustes de sonido y avisos.
+
+### Botón Atrás de Android
+
+- En una misión, regresa al Mapa.
+- En Créditos, regresa a Ajustes.
+- En el resto de los apartados, regresa a Inicio.
+- En la Portada y en Inicio no cierra la app.
+
+---
+
+## Cómo está hecha
+
+Android solo aporta el contenedor. Todo el juego es HTML, CSS y JavaScript local, que se muestra dentro de una `WebView`.
+
+| Ruta | Para qué sirve |
+|---|---|
+| `app/src/main/assets/app.js` | Pantallas, misiones, validación de comandos, progreso, integrantes, AFs y conclusión. |
+| `app/src/main/assets/styles.css` | Diseño: tema oscuro con naranja, tarjetas, barra inferior y diseño adaptable. |
+| `app/src/main/assets/index.html` | Página de entrada que carga el CSS y el JS. |
+| `app/src/main/assets/afs/` | Los 4 PDFs de las AFs (`AF1.pdf` a `AF4.pdf`). |
+| `app/src/main/assets/icons/` | Íconos de la barra inferior. |
+| `app/src/main/assets/equipo/` | Fotos de los integrantes. |
+| `app/src/main/java/com/equipo/ascensoaroot/MainActivity.kt` | Crea la WebView, maneja el botón Atrás y manda los enlaces a PDF al visor. |
+| `app/src/main/java/com/equipo/ascensoaroot/PdfViewerActivity.kt` | Visor de PDF propio, hecho con `PdfRenderer`. No necesita Internet ni otra app. |
+| `app/src/main/AndroidManifest.xml` | Declara las dos pantallas Android, la orientación vertical y el ícono. |
+| `tests/commands.test.cjs` | Pruebas de los comandos y de la ruta de misiones. |
+
+Datos técnicos: paquete `com.equipo.ascensoaroot`, Android 8.0 o superior (`minSdk 26`), `targetSdk 35`, Kotlin 2.0.21 y JDK 17.
+
+---
+
+## Cómo usarla
+
+### Requisitos
+
+- **Android Studio** (versión reciente) con **Android SDK 35**. Ya incluye el JDK que se necesita.
+- La **primera** sincronización de Gradle necesita Internet para descargar dependencias. Después, todo funciona sin conexión.
+
+### 1. Abrir el proyecto
+
+1. Clona el repositorio o descarga la carpeta.
+2. En Android Studio elige **File > Open** y selecciona la carpeta `ascenso-a-root`, la que contiene `settings.gradle.kts`.
+3. Espera a que termine **Gradle Sync**.
+
+### 2. En el emulador
+
+1. Abre **Tools > Device Manager > Create Device** (en algunas versiones es **Add a new device > Create Virtual Device**).
+2. Elige un teléfono, por ejemplo *Pixel 7*, y una imagen del sistema con **API 26 o superior** (se recomienda API 34 o 35).
+3. Arranca el emulador y, en la barra superior, selecciona el módulo **app** y ese emulador.
+4. Presiona **Run ▶** (`Shift + F10`). La app se instala y se abre.
+
+### 3. En un celular Android (por cable USB)
+
+1. En el teléfono activa las **Opciones de desarrollador**: *Ajustes > Acerca del teléfono* y toca **7 veces** *Número de compilación*. En algunas marcas está en *Información de software*.
+2. En *Opciones de desarrollador* activa **Depuración por USB**.
+3. Conecta el teléfono a la computadora y acepta el aviso **¿Permitir depuración USB?**
+4. En Android Studio selecciona tu teléfono en la lista de dispositivos y presiona **Run ▶**.
+
+### 4. En un celular sin cable (instalando el APK)
+
+1. Genera el APK desde PowerShell, en la raíz del proyecto:
+   ```powershell
+   .\gradlew.bat assembleDebug
+   ```
+   O en Android Studio: **Build > Build App Bundle(s) / APK(s) > Build APK(s)**.
+2. El archivo queda en:
+   ```text
+   app\build\outputs\apk\debug\app-debug.apk
+   ```
+3. Pásalo al teléfono (Drive, WhatsApp, cable…) y ábrelo. Android pedirá permitir **instalar apps de origen desconocido** para la app con la que lo abriste. Acepta e instala.
+
+> Es un APK de depuración (*debug*). Sirve para probar y entregar avances, pero no está firmado para publicarse en Play Store.
+
+Si ya tienes `adb` y el teléfono conectado, también puedes instalarlo con:
+
+```powershell
+adb install -r app\build\outputs\apk\debug\app-debug.apk
+```
+
+### 5. Ver solo la interfaz en la computadora
+
+Para revisar cambios de diseño sin compilar, sirve la carpeta `assets` con un servidor local y ábrela en el navegador:
+
+```powershell
+cd app\src\main\assets
+python -m http.server 8000
+```
+
+Luego entra a `http://localhost:8000`. Usa el modo de dispositivo móvil del navegador (`F12` y luego `Ctrl + Shift + M`).
+
+- Si abres `index.html` con doble clic, los íconos de la barra no se ven, porque el navegador bloquea las máscaras de imagen en archivos locales. Con el servidor sí aparecen.
+- En el navegador, los PDFs de las AFs se abren en una pestaña normal. El visor propio solo existe en Android.
+
+---
 
 ## Pruebas
 
-Con Node.js instalado, ejecuta `node --test tests/commands.test.cjs`. Las pruebas cubren la ruta de cinco misiones, los comandos alternativos de la misión 4 y los errores vistos en la grabación.
+Con Node.js instalado, desde la raíz del proyecto:
+
+```powershell
+node --test tests/commands.test.cjs
+```
+
+Las pruebas cubren completar las 5 misiones, el 100 % de avance y los casos especiales de la misión 4 (copiar y mover). No prueban la parte Android ni el diseño visual.
+
+---
 
 ## Dónde editar
 
-- `app/src/main/assets/index.html`: entrada de la interfaz.
-- `app/src/main/assets/styles.css`: estética y adaptación a pantalla móvil.
-- `app/src/main/assets/app.js`: pantallas, misiones, progreso y ajustes.
-- `app/src/main/assets/astronauta.png`: imagen proporcionada por el equipo.
-- `app/src/main/assets/app_logo.png`: logo usado dentro de la app.
-- `app/src/main/res/drawable-nodpi/app_logo.png`: ícono que aparece en el teléfono.
-- `app/src/main/java/com/equipo/ascensoaroot/MainActivity.kt`: contenedor Android.
-- `app/src/main/AndroidManifest.xml`: configuración de la actividad y ajuste al abrir el teclado.
-- `app/src/main/res/values/strings.xml`: nombre visible de la app.
+| Quiero cambiar… | Lugar |
+|---|---|
+| Textos, pasos y comandos de las misiones | Arreglo `missions` y función `checkCommand()` en `app.js` |
+| Introducción del PIA | `dashboard()` en `app.js` |
+| Integrantes | Arreglo `teamMembers` en `app.js` y fotos en `assets/equipo/` |
+| AFs (títulos, fechas, PDFs) | Arreglo `activities` en `app.js` y archivos en `assets/afs/` |
+| Conclusión y créditos | `credits()` en `app.js` |
+| Botones de la barra inferior | `nav()` en `app.js` e íconos en `assets/icons/` |
+| Colores y estilos | `styles.css` |
+| Nombre visible de la app | `app/src/main/res/values/strings.xml` |
+| Ícono del teléfono | `app/src/main/res/drawable-nodpi/app_logo.png` |
 
-El identificador de paquete es `com.equipo.ascensoaroot`.
+---
 
-## Pendiente para una entrega final
+## Notas
 
-- Probar el APK en teléfonos reales, incluidos tamaños de pantalla distintos.
-- Sustituir los símbolos provisionales por los íconos y tipografía definitivos si el equipo los crea.
-- Revisar el texto pedagógico de cada misión con la rúbrica del PIA.
-- Preparar manual y APK firmado si la entrega lo solicita.
+- La versión que se muestra en *Ajustes > Acerca de* (`1.6.7`) se escribe a mano en `app.js`. La versión del APK es `versionName` en `app/build.gradle.kts` (hoy `1.6.7`). Conviene mantener ambas iguales.
+- No se versionan `app/build/`, `.gradle/`, `.idea/`, `.kotlin/`, `local.properties` ni los APK, porque están en `.gitignore`.
