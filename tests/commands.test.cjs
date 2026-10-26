@@ -27,32 +27,46 @@ function appContext() {
   return { app, run: expression => vm.runInContext(expression, context) };
 }
 
-// Nivel de prueba con la misma forma que tendrán los niveles reales.
-const sampleLevel = {
-  id: 1, title: 'Nivel de prueba', commands: 'whoami', icon: '›', objective: 'Objetivo', lesson: 'Lección',
-  steps: [
-    { command: 'whoami', instruction: 'Identifícate.', hint: 'Escribe whoami.', output: 'explorador' },
-    { command: 'uname -r', instruction: 'Consulta el kernel.', hint: 'Escribe uname -r.', output: '6.8.0-generic' }
-  ],
-  ending: 'Fin'
-};
+// Pasos de prueba con la misma forma que tendrán los niveles reales.
+const sampleSteps = [
+  { command: 'whoami', instruction: 'Identifícate.', hint: 'Escribe whoami.', output: 'explorador' },
+  { command: 'uname -r', instruction: 'Consulta el kernel.', hint: 'Escribe uname -r.', output: '6.8.0-generic' }
+];
 
-test('sin niveles, todas las pantallas se muestran sin errores', () => {
+test('hay 4 mundos de 5 niveles y todas las pantallas se muestran', () => {
   const { app, run } = appContext();
+  assert.equal(run('missions.length'), 20);
+  assert.equal(run('worlds.map(w => missions.filter(m => m.world === w.id).length).join()'), '5,5,5,5');
   for (const screen of ['cover', 'home', 'dashboard', 'afs', 'map', 'team', 'settings', 'credits']) {
     run(`state.screen = '${screen}'; render()`);
     assert.ok(app.innerHTML.length > 0, screen);
   }
-  assert.equal(run('pct()'), 0);
-  run("state.screen = 'map'; render()");
-  assert.match(app.innerHTML, /En construcción/);
   run("state.screen = 'dashboard'; render()");
   assert.match(app.innerHTML, /Nuevas misiones en camino/);
 });
 
+test('el mapa muestra los 4 mundos con su barrera y los niveles sin pasos como próximamente', () => {
+  const { app, run } = appContext();
+  run("state.screen = 'map'; render()");
+  for (const theme of ['tierra', 'espacio', 'estacion', 'root']) assert.match(app.innerHTML, new RegExp(`world-${theme}`));
+  assert.equal((app.innerHTML.match(/class="world-gate locked"/g) || []).length, 3);
+  assert.match(app.innerHTML, /Destino final · Root/);
+  assert.match(app.innerHTML, /Próximamente/);
+  run('openMission(0)');
+  assert.equal(run('state.screen'), 'map');
+});
+
+test('la barrera de un mundo se abre al completar sus 5 niveles', () => {
+  const { app, run } = appContext();
+  run("data.completed = [1, 2, 3, 4, 5]; state.screen = 'map'; render()");
+  assert.equal((app.innerHTML.match(/class="world-gate open"/g) || []).length, 1);
+  assert.match(app.innerHTML, /world world-espacio current/);
+});
+
 test('el motor completa un nivel paso a paso y guarda el progreso', () => {
   const { run } = appContext();
-  run(`missions.push(${JSON.stringify(sampleLevel)}); openMission(0)`);
+  run(`missions[0].steps = ${JSON.stringify(sampleSteps)}; openMission(0)`);
+  assert.equal(run('state.screen'), 'mission');
   run("runCommand('ls')");
   assert.equal(run('state.step'), 0);
   run("runCommand('whoami')");
@@ -60,5 +74,7 @@ test('el motor completa un nivel paso a paso y guarda el progreso', () => {
   run("runCommand('uname   -r')");
   assert.equal(run('state.step'), 2);
   assert.equal(run('data.completed.includes(1)'), true);
-  assert.equal(run('pct()'), 100);
+  assert.equal(run('pct()'), 5);
+  run('openMission(1)');
+  assert.equal(run('state.screen'), 'mission', 'el nivel 2 no tiene pasos, así que no se abre');
 });

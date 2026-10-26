@@ -1,7 +1,26 @@
 /* Ascenso a Root: ejercicios locales. Nunca ejecuta comandos del teléfono. */
-// Los niveles se están rediseñando: 4 mundos de 5 niveles, uno por AF.
-// Cada nivel: { id, title, commands, icon, objective, lesson, steps: [{ command, instruction, hint, output }], ending }
-const missions = [];
+// El mapa va de la Tierra (abajo) a Root (arriba): 4 mundos de 5 niveles, uno por AF.
+const worlds = [
+  { id: 1, theme: 'tierra', name: 'Salir de la Tierra', af: 'AF1', topic: 'Arquitectura, desempeño y tipos de SO' },
+  { id: 2, theme: 'espacio', name: 'Navegar en el espacio', af: 'AF2', topic: 'Concurrencia' },
+  { id: 3, theme: 'estacion', name: 'Estación espacial', af: 'AF3', topic: 'Almacenaje, memoria y archivos' },
+  { id: 4, theme: 'root', name: 'Llegar a Root', af: 'AF4', topic: 'Redes y seguridad en sistemas distribuidos' }
+];
+const levelsPerWorld = 5;
+// Un nivel se puede jugar cuando tiene pasos: steps: [{ command, instruction, hint, output }].
+function level(world, title, commands = '') {
+  return { world, title, commands, icon: '›', objective: '', lesson: '', steps: [], ending: '' };
+}
+const missions = [
+  level(1, 'Despertar', 'whoami · cat · uname'),
+  level(1, 'Verificación de sistemas', 'lscpu · free · lsblk'),
+  level(1, 'Encendido de propulsores', 'systemctl'),
+  level(1, 'Prueba de rendimiento', 'uptime · nproc'),
+  level(1, 'Secuencia de despegue', 'systemctl'),
+  level(2, 'Nivel 1'), level(2, 'Nivel 2'), level(2, 'Nivel 3'), level(2, 'Nivel 4'), level(2, 'Nivel 5'),
+  level(3, 'Nivel 1'), level(3, 'Nivel 2'), level(3, 'Nivel 3'), level(3, 'Nivel 4'), level(3, 'Nivel 5'),
+  level(4, 'Nivel 1'), level(4, 'Nivel 2'), level(4, 'Nivel 3'), level(4, 'Nivel 4'), level(4, 'Nivel 5')
+].map((m, i) => ({ ...m, id: i + 1 }));
 
 const storageKey = 'ascenso-a-root-v1';
 const initialData = { completed: [], sound: true, notices: true };
@@ -28,6 +47,7 @@ function checkCommand(m, command) {
   return { ok: false };
 }
 function pct() { return missions.length ? Math.round((data.completed.length / missions.length) * 100) : 0; }
+function isReady(m) { return m.steps.length > 0; }
 function nextMissionIndex() { const n = missions.findIndex(m => !data.completed.includes(m.id)); return n === -1 ? missions.length - 1 : n; }
 function playTone() {
   if (!data.sound) return;
@@ -136,7 +156,7 @@ function home() {
 }
 function dashboard() {
   const next = missions[nextMissionIndex()];
-  const continueCard = next ? `<div class="hud-card continue-card glow"><div class="bar">${data.completed.length === missions.length ? 'Ruta completada' : 'Continuar ruta'}</div><div class="inner">
+  const continueCard = next && isReady(next) ? `<div class="hud-card continue-card glow"><div class="bar">${data.completed.length === missions.length ? 'Ruta completada' : 'Continuar ruta'}</div><div class="inner">
       <strong>${String(next.id).padStart(2,'0')}: ${next.title}</strong><small>COMANDO: ${safe(next.commands)}</small>
       <button class="primary-btn full" data-action="open-mission" data-index="${nextMissionIndex()}">${data.completed.length === missions.length ? 'Repetir misión' : '¡Comenzar ahora!'} ▶</button>
     </div></div>` : `<div class="hud-card continue-card"><div class="bar">Nuevas misiones en camino</div><div class="inner"><small>Estamos preparando los nuevos niveles de la expedición.</small></div></div>`;
@@ -161,24 +181,57 @@ function dashboard() {
     ${continueCard}
   </main>${nav('dashboard')}`;
 }
+// Escenografía de cada mundo (solo decorativa).
+function rocketSvg(flame) {
+  return `<svg viewBox="0 0 90 240"><polygon points="22,128 2,182 22,182" fill="#2a2525"/><polygon points="68,128 88,182 68,182" fill="#2a2525"/><rect x="8" y="166" width="10" height="14" rx="2" fill="#ff5c1a"/><rect x="72" y="166" width="10" height="14" rx="2" fill="#ff5c1a"/>
+    <rect x="22" y="36" width="46" height="150" rx="23" fill="#3d3838"/><rect x="48" y="46" width="16" height="132" rx="8" fill="#262222"/><rect x="28" y="50" width="5" height="124" rx="2.5" fill="#5a5353"/>
+    <rect x="22" y="140" width="46" height="7" fill="#ff5c1a"/><rect x="22" y="152" width="46" height="3" fill="#ff5c1a"/><circle cx="45" cy="89" r="11" fill="#0d0a0a" stroke="#ff5c1a" stroke-width="3"/><circle cx="42" cy="86" r="3" fill="#ff8d38"/>
+    <polygon points="22,58 45,12 68,58" fill="#ff5c1a"/><rect x="31" y="184" width="28" height="12" rx="3" fill="#1a1616" stroke="#4a4444"/>
+    ${flame ? '<ellipse cx="45" cy="214" rx="13" ry="22" fill="#ff5c1a"/><ellipse cx="45" cy="208" rx="7" ry="13" fill="#ffb347"/>' : ''}</svg>`;
+}
+const stationLights = Array.from({ length: 12 }, (_, k) => `<circle cx="${(170 + Math.cos(k * Math.PI / 6) * 128).toFixed(1)}" cy="${(170 + Math.sin(k * Math.PI / 6) * 128).toFixed(1)}" r="3.5" fill="#ff5c1a"/>`).join('');
+const scenery = {
+  tierra: `<div class="stars"></div><div class="earth"></div><div class="launch-pad"><i class="tower"></i>${rocketSvg(false)}</div>`,
+  espacio: `<div class="stars"></div><div class="nebula"></div><div class="planet"></div><div class="earth-far"></div><div class="rocket-fly">${rocketSvg(true)}</div>`,
+  estacion: `<div class="stars"></div><svg class="station" viewBox="0 0 340 340"><circle cx="170" cy="170" r="128" fill="none" stroke="#3a424c" stroke-width="18"/><rect x="160" y="40" width="20" height="260" fill="#2c333b"/><rect x="40" y="160" width="260" height="20" fill="#2c333b"/><rect x="-100" y="152" width="122" height="36" fill="#1b2633" stroke="#3a4a5c"/><rect x="318" y="152" width="122" height="36" fill="#1b2633" stroke="#3a4a5c"/><circle cx="170" cy="170" r="40" fill="#2c333b" stroke="#4a535e" stroke-width="5"/><circle cx="170" cy="170" r="16" fill="#ff5c1a" opacity=".45"/>${stationLights}</svg>`,
+  root: `<div class="stars"></div><div class="root-planet"></div><div class="shield"></div>`
+};
+// Camino de un mundo, del nivel 1 (abajo) al 5 (arriba), en el viewBox 342 × 520.
+const levelRoute = ['M72 468 C72 414 270 418 270 364', 'M270 364 C270 310 72 314 72 260', 'M72 260 C72 206 270 210 270 156', 'M270 156 C270 100 171 110 171 52'];
+const levelPlaces = ['left', 'right', 'left', 'right', 'center'];
+function worldDone(w) { return missions.every(m => m.world !== w.id || data.completed.includes(m.id)); }
+function levelState(m) {
+  if (data.completed.includes(m.id)) return 'complete';
+  if (m.id > data.completed.length + 1) return 'locked';
+  return isReady(m) ? 'current' : 'soon';
+}
+function levelNode(m, i) {
+  const status = levelState(m), playable = status === 'complete' || status === 'current';
+  const symbol = status === 'complete' ? '✓' : status === 'current' ? '▶' : '🔒';
+  const detail = status === 'soon' ? 'Próximamente' : safe(m.commands);
+  return `<div class="level-row ${levelPlaces[i]}"><button class="level-node ${status}" data-action="open-mission" data-index="${m.id - 1}" ${playable ? '' : 'disabled'} aria-label="Nivel ${i + 1}, ${safe(m.title)}${playable ? '' : ' (bloqueado)'}"><span>${symbol}</span></button>
+    <div class="level-label"><strong>${String(i + 1).padStart(2,'0')} · ${safe(m.title)}</strong>${i === levelsPerWorld - 1 ? '<b class="boss-chip">Jefe</b>' : ''}${detail ? `<small>${detail}</small>` : ''}</div></div>`;
+}
+function worldSection(w, current) {
+  const levels = missions.filter(m => m.world === w.id);
+  const route = levelRoute.map((d, i) => `<path class="${data.completed.includes(levels[i].id) ? 'reached' : ''}" d="${d}" />`).join('');
+  return `<section class="world world-${w.theme}${w.id === current ? ' current' : ''}" aria-label="Mundo ${w.id}: ${w.name}">
+    <div class="world-scenery" aria-hidden="true">${scenery[w.theme]}</div>
+    <header class="world-title"><span class="eyebrow">Mundo ${w.id} · ${w.af}</span><h2>${w.name}</h2><small>${w.topic}</small></header>
+    <div class="world-levels"><svg class="world-route" viewBox="0 0 342 520" preserveAspectRatio="none" aria-hidden="true">${route}</svg>${levels.map(levelNode).reverse().join('')}</div>
+  </section>`;
+}
+// Barrera arriba de cada mundo: se abre al completar sus 5 niveles. Sobre Root va el destino final.
+function worldGate(w) {
+  const next = worlds[w.id];
+  if (!next) return `<div class="world-gate final"><span class="gate-lock" aria-hidden="true">#</span><div><strong>Destino final · Root</strong><small>Supera el último nivel para ser root</small></div></div>`;
+  const open = worldDone(w);
+  return `<div class="world-gate ${open ? 'open' : 'locked'}"><span class="gate-lock" aria-hidden="true">${open ? '🔓' : '🔒'}</span><div><strong>Mundo ${next.id} · ${next.name}</strong><small>${open ? 'Desbloqueado · Adelante, explorador' : 'Bloqueado · Completa los 5 niveles'}</small></div></div>`;
+}
 function map() {
-  if (!missions.length) {
-    return `<main class="content">
-    ${sectionHeader('Mapa de misiones','Ruta a Root','En construcción')}
-    <p class="map-summary">Los nuevos niveles de la expedición están en camino.</p>
-  </main>${nav('map')}`;
-  }
-  const unlocked = data.completed.length + 1;
-  const complete = data.completed.length === missions.length;
-  return `<main class="content">
-    ${sectionHeader('Mapa de misiones','Introducción a Ubuntu',`${pct()}% completado`)}
-    <p class="map-summary">${complete ? '¡Ruta completada! Toca cualquier misión para practicar de nuevo.' : 'Completa un nivel para desbloquear el siguiente. Toca una misión disponible para jugar.'}</p>
-    <div class="mission-map"><svg class="map-route" viewBox="0 0 342 520" preserveAspectRatio="none" aria-hidden="true"><path d="M38 52 C135 52 210 156 304 156 C304 206 80 206 38 260 C38 314 260 314 304 364 C304 414 80 414 38 468" /></svg>${missions.map((m,i) => {
-      const complete = data.completed.includes(m.id), locked = m.id > unlocked;
-      const symbol = complete ? '✓' : locked ? '🔒' : m.icon;
-      return `<div class="map-row"><button class="map-node ${complete ? 'complete' : ''} ${locked ? 'locked' : ''}" data-action="open-mission" data-index="${i}" ${locked ? 'disabled' : ''} aria-label="${locked ? 'Bloqueada: ' : ''}Misión ${m.id}, ${m.title}">${symbol}</button><div class="map-info"><strong class="mission-name">${String(m.id).padStart(2,'0')}: ${m.title}</strong><div class="mission-command">COMANDO: <b>${safe(m.commands)}</b></div></div></div>`;
-    }).join('')}</div>
-    <button class="primary-btn full" data-action="open-mission" data-index="${nextMissionIndex()}">${complete ? 'Repetir última misión' : 'Iniciar misión'} ▶</button>
+  const current = missions[nextMissionIndex()].world;
+  return `<main class="content map-content">
+    <div class="world-map">${[...worlds].reverse().map(w => worldGate(w) + worldSection(w, current)).join('')}</div>
   </main>${nav('map')}`;
 }
 function settings() {
@@ -223,7 +276,7 @@ function credits() {
 function mission() {
   const m = missions[state.mission], finished = state.step >= m.steps.length;
   return `<main class="content mission-content">
-    <div class="mission-header"><span class="eyebrow">Misión ${String(m.id).padStart(2,'0')} / ${String(missions.length).padStart(2,'0')}</span><button class="back-button" data-action="nav" data-screen="map">← Mapa</button></div>
+    <div class="mission-header"><span class="eyebrow">Mundo ${m.world} · Nivel ${(m.id - 1) % levelsPerWorld + 1}</span><button class="back-button" data-action="nav" data-screen="map">← Mapa</button></div>
     <h1>${m.title}</h1>
     <div class="hud-card mission-brief"><span class="eyebrow">Objetivo</span><p>${m.objective}</p><p class="muted">${m.lesson}</p></div>
     <div class="steps" aria-label="Progreso de la misión">${m.steps.map((_,i) => `<span class="step ${i < state.step ? 'done' : ''}"></span>`).join('')}</div>
@@ -245,6 +298,8 @@ function render() {
 const screen = state.screen === 'cover' ? cover() : state.screen === 'team' ? team() : state.screen === 'afs' ? afs() : state.screen === 'credits' ? credits() : state.screen === 'home' ? home() : state.screen === 'dashboard' ? dashboard() : state.screen === 'map' ? map() : state.screen === 'settings' ? settings() : mission();  app.innerHTML = `<div class="top-rail" aria-hidden="true"></div>${screen}${state.confirmReset ? resetDialog() : ''}`;
   const content = app.querySelector?.('.content');
   if (content) content.scrollTop = previousScroll;
+  // Al entrar al mapa, se coloca en el mundo donde va el jugador.
+  if (state.screen === 'map' && renderedScreen !== 'map') app.querySelector?.('.world.current')?.scrollIntoView?.({ block: 'center' });
   renderedScreen = state.screen;
   if (state.screen === 'mission') {
     const log = document.getElementById('terminal-log');
@@ -252,7 +307,7 @@ const screen = state.screen === 'cover' ? cover() : state.screen === 'team' ? te
   }
 }
 function openMission(index) {
-  if (!Number.isInteger(index) || index < 0 || index >= missions.length || missions[index].id > data.completed.length + 1) return;
+  if (!Number.isInteger(index) || index < 0 || index >= missions.length || missions[index].id > data.completed.length + 1 || !isReady(missions[index])) return;
   state = { ...state, screen: 'mission', mission: index, step: 0, lines: [], hint: false, acceptedCommands: [], routeJustCompleted: false };
   render();
 }

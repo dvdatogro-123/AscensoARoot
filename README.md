@@ -24,14 +24,23 @@ Portada (Avance PIA) → Inicio (astronauta) → Dashboard
 | **Inicio** | Astronauta y botón *Comenzar expedición*. |
 | **Dashboard** | Introducción del PIA, porcentaje de avance, misiones completadas, XP y acceso a la siguiente misión. |
 | **AFs** | Las 4 actividades fundamentales del semestre. Al tocar una, el PDF se abre en un visor dentro de la app. |
-| **Mapa** | Botón central de la barra. Ruta de misiones que se desbloquean en orden (por ahora, en construcción). |
+| **Mapa** | Botón central de la barra. Un solo recorrido de la Tierra (abajo) a Root (arriba): 4 mundos de 5 niveles, separados por barreras con candado. |
 | **Equipo** | Integrantes en orden alfabético, con foto, matrícula y programa. |
 | **Ajustes** | Avisos, sonido, restablecer progreso, **Créditos / Conclusión** y *Acerca de*. |
 | **Créditos / Conclusión** | Conclusión del semestre y créditos del equipo. Se abre desde Ajustes o **sola al terminar la última misión**. |
 
 ### Misiones
 
-Las misiones se están rediseñando: serán **20 niveles en 4 mundos**, uno por cada AF (Salir de la Tierra, Navegar en el espacio, Estación espacial y Llegar a Root). Mientras tanto, el Mapa y el Dashboard muestran un aviso de *en construcción*.
+Son **20 niveles en 4 mundos**, uno por cada AF. Cada mundo tiene su propio fondo y una barrera arriba que se abre al completar sus 5 niveles. El nivel 5 de cada mundo es el jefe.
+
+| Mundo | AF | Fondo |
+|---|---|---|
+| 1 · Salir de la Tierra | AF1 · Arquitectura, desempeño y tipos de SO | La Tierra y la nave en su plataforma |
+| 2 · Navegar en el espacio | AF2 · Concurrencia | Espacio con nebulosas |
+| 3 · Estación espacial | AF3 · Almacenaje, memoria y archivos | La estación espacial |
+| 4 · Llegar a Root | AF4 · Redes y seguridad | El planeta Root y su escudo |
+
+Los niveles se están programando por partes. Un nivel sin pasos aparece en el mapa como *Próximamente* y no se puede abrir.
 
 - Cada misión vale **100 XP** y tiene pistas.
 - *Restablecer progreso* borra las misiones completadas, pero conserva los ajustes de sonido y avisos.
@@ -138,7 +147,7 @@ Con Node.js instalado, desde la raíz del proyecto:
 node --test tests/commands.test.cjs
 ```
 
-Las pruebas revisan que todas las pantallas se muestren sin niveles y que el motor complete un nivel de prueba paso a paso y guarde el avance. No prueban la parte Android ni el diseño visual.
+Las pruebas revisan que haya 4 mundos de 5 niveles, que todas las pantallas se muestren, que las barreras se abran al completar un mundo y que el motor complete un nivel de prueba paso a paso y guarde el avance. No prueban la parte Android ni el diseño visual.
 
 ---
 
@@ -146,7 +155,8 @@ Las pruebas revisan que todas las pantallas se muestren sin niveles y que el mot
 
 | Quiero cambiar… | Lugar |
 |---|---|
-| Textos, pasos y comandos de las misiones | Arreglo `missions` en `app.js` (por ahora vacío) |
+| Textos, pasos y comandos de las misiones | Arreglo `missions` en `app.js` (cada nivel con su `steps`) |
+| Nombres, AF y fondo de los mundos | Arreglo `worlds` y objeto `scenery` en `app.js`; estilos `.world-*` en `styles.css` |
 | Introducción del PIA | `dashboard()` en `app.js` |
 | Integrantes | Arreglo `teamMembers` en `app.js` y fotos en `assets/equipo/` |
 | AFs (títulos, fechas, PDFs) | Arreglo `activities` en `app.js` y archivos en `assets/afs/` |
