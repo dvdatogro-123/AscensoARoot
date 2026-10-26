@@ -24,23 +24,16 @@ Portada (Avance PIA) → Inicio (astronauta) → Dashboard
 | **Inicio** | Astronauta y botón *Comenzar expedición*. |
 | **Dashboard** | Introducción del PIA, porcentaje de avance, misiones completadas, XP y acceso a la siguiente misión. |
 | **AFs** | Las 4 actividades fundamentales del semestre. Al tocar una, el PDF se abre en un visor dentro de la app. |
-| **Mapa** | Botón central de la barra. Ruta de 5 misiones que se desbloquean en orden. |
+| **Mapa** | Botón central de la barra. Ruta de misiones que se desbloquean en orden (por ahora, en construcción). |
 | **Equipo** | Integrantes en orden alfabético, con foto, matrícula y programa. |
 | **Ajustes** | Avisos, sonido, restablecer progreso, **Créditos / Conclusión** y *Acerca de*. |
-| **Créditos / Conclusión** | Conclusión del semestre y créditos del equipo. Se abre desde Ajustes o **sola al terminar la quinta misión**. |
+| **Créditos / Conclusión** | Conclusión del semestre y créditos del equipo. Se abre desde Ajustes o **sola al terminar la última misión**. |
 
 ### Misiones
 
-| # | Misión | Comandos |
-|---:|---|---|
-| 1 | Bienvenida a la terminal | `pwd` |
-| 2 | Navegar directorios | `ls`, `cd Documentos` |
-| 3 | Crear archivos y carpetas | `mkdir proyectos`, `touch notas.txt` |
-| 4 | Copiar y mover elementos | `cp notas.txt copia.txt`, `mv copia.txt proyectos/` |
-| 5 | Administrador supremo | `sudo apt update` |
+Las misiones se están rediseñando: serán **20 niveles en 4 mundos**, uno por cada AF (Salir de la Tierra, Navegar en el espacio, Estación espacial y Llegar a Root). Mientras tanto, el Mapa y el Dashboard muestran un aviso de *en construcción*.
 
-- Cada misión vale **100 XP**. Hay pistas y mensajes que explican los errores más comunes.
-- Las mayúsculas importan, y se aceptan algunas variantes (por ejemplo `cd ~/Documentos` o `sudo apt-get update`).
+- Cada misión vale **100 XP** y tiene pistas.
 - *Restablecer progreso* borra las misiones completadas, pero conserva los ajustes de sonido y avisos.
 
 ### Botón Atrás de Android
@@ -67,7 +60,7 @@ Android solo aporta el contenedor. Todo el juego es HTML, CSS y JavaScript local
 | `app/src/main/java/com/equipo/ascensoaroot/MainActivity.kt` | Crea la WebView, maneja el botón Atrás y manda los enlaces a PDF al visor. |
 | `app/src/main/java/com/equipo/ascensoaroot/PdfViewerActivity.kt` | Visor de PDF propio, hecho con `PdfRenderer`. No necesita Internet ni otra app. |
 | `app/src/main/AndroidManifest.xml` | Declara las dos pantallas Android, la orientación vertical y el ícono. |
-| `tests/commands.test.cjs` | Pruebas de los comandos y de la ruta de misiones. |
+| `tests/commands.test.cjs` | Pruebas de las pantallas y del motor de misiones. |
 
 Datos técnicos: paquete `com.equipo.ascensoaroot`, Android 8.0 o superior (`minSdk 26`), `targetSdk 35`, Kotlin 2.0.21 y JDK 17.
 
@@ -145,7 +138,7 @@ Con Node.js instalado, desde la raíz del proyecto:
 node --test tests/commands.test.cjs
 ```
 
-Las pruebas cubren completar las 5 misiones, el 100 % de avance y los casos especiales de la misión 4 (copiar y mover). No prueban la parte Android ni el diseño visual.
+Las pruebas revisan que todas las pantallas se muestren sin niveles y que el motor complete un nivel de prueba paso a paso y guarde el avance. No prueban la parte Android ni el diseño visual.
 
 ---
 
@@ -153,7 +146,7 @@ Las pruebas cubren completar las 5 misiones, el 100 % de avance y los casos espe
 
 | Quiero cambiar… | Lugar |
 |---|---|
-| Textos, pasos y comandos de las misiones | Arreglo `missions` y función `checkCommand()` en `app.js` |
+| Textos, pasos y comandos de las misiones | Arreglo `missions` en `app.js` (por ahora vacío) |
 | Introducción del PIA | `dashboard()` en `app.js` |
 | Integrantes | Arreglo `teamMembers` en `app.js` y fotos en `assets/equipo/` |
 | AFs (títulos, fechas, PDFs) | Arreglo `activities` en `app.js` y archivos en `assets/afs/` |
@@ -167,5 +160,5 @@ Las pruebas cubren completar las 5 misiones, el 100 % de avance y los casos espe
 
 ## Notas
 
-- La versión que se muestra en *Ajustes > Acerca de* (`1.6.7`) se escribe a mano en `app.js`. La versión del APK es `versionName` en `app/build.gradle.kts` (hoy `1.6.7`). Conviene mantener ambas iguales.
+- La versión que se muestra en *Ajustes > Acerca de* (`1.7.0`) se escribe a mano en `app.js`. La versión del APK es `versionName` en `app/build.gradle.kts` (hoy `1.7.0`). Conviene mantener ambas iguales.
 - No se versionan `app/build/`, `.gradle/`, `.idea/`, `.kotlin/`, `local.properties` ni los APK, porque están en `.gitignore`.

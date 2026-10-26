@@ -27,57 +27,38 @@ function appContext() {
   return { app, run: expression => vm.runInContext(expression, context) };
 }
 
-test('las cinco misiones se completan con los comandos enseñados', () => {
-  const { run } = appContext();
-  const commands = [
-    ['pwd'],
-    ['ls', 'cd Documentos'],
-    ['mkdir proyectos', 'touch notas.txt'],
-    ['cp notas.txt copia.txt', 'mv copia.txt proyectos/'],
-    ['sudo apt update']
-  ];
-  commands.forEach((missionCommands, index) => {
-    run(`openMission(${index})`);
-    missionCommands.forEach(command => run(`runCommand(${JSON.stringify(command)})`));
-    assert.equal(run('state.step === missions[state.mission].steps.length'), true);
-  });
-  assert.equal(run('pct()'), 100);
+// Nivel de prueba con la misma forma que tendrán los niveles reales.
+const sampleLevel = {
+  id: 1, title: 'Nivel de prueba', commands: 'whoami', icon: '›', objective: 'Objetivo', lesson: 'Lección',
+  steps: [
+    { command: 'whoami', instruction: 'Identifícate.', hint: 'Escribe whoami.', output: 'explorador' },
+    { command: 'uname -r', instruction: 'Consulta el kernel.', hint: 'Escribe uname -r.', output: '6.8.0-generic' }
+  ],
+  ending: 'Fin'
+};
+
+test('sin niveles, todas las pantallas se muestran sin errores', () => {
+  const { app, run } = appContext();
+  for (const screen of ['cover', 'home', 'dashboard', 'afs', 'map', 'team', 'settings', 'credits']) {
+    run(`state.screen = '${screen}'; render()`);
+    assert.ok(app.innerHTML.length > 0, screen);
+  }
+  assert.equal(run('pct()'), 0);
   run("state.screen = 'map'; render()");
-  assert.match(run('app.innerHTML'), /¡Ruta completada!/);
-  assert.match(run('app.innerHTML'), /Repetir última misión/);
+  assert.match(app.innerHTML, /En construcción/);
+  run("state.screen = 'dashboard'; render()");
+  assert.match(app.innerHTML, /Nuevas misiones en camino/);
 });
 
-test('la misión 4 acepta nombres de copia y rutas de destino válidas', () => {
-  for (const destination of ['proyectos', 'proyectos/', './proyectos', 'proyectos/respaldo.txt']) {
-    const { run } = appContext();
-    run('data.completed = [1, 2, 3]; openMission(3)');
-    run("runCommand('cp notas.txt copias.txt')");
-    assert.equal(run('state.copyName'), 'copias.txt');
-    assert.match(run('app.innerHTML'), /Mueve copias.txt a la carpeta proyectos/);
-    run(`runCommand(${JSON.stringify(`mv copias.txt ${destination}`)})`);
-    assert.equal(run('data.completed.includes(4)'), true, destination);
-  }
-});
-
-test('la misión 4 explica los errores que aparecieron en la grabación', () => {
+test('el motor completa un nivel paso a paso y guarda el progreso', () => {
   const { run } = appContext();
-  run('data.completed = [1, 2, 3]; openMission(3)');
-  run("runCommand('mv notas.txt copias.txt')");
-  assert.match(run('state.lines.at(-1).text'), /Primero crea una copia con cp/);
-  run("runCommand('cp notas.txt copia.txt')");
-  run("runCommand('mv copia.txt proyecto/')");
-  assert.match(run('state.lines.at(-1).text'), /con s/);
+  run(`missions.push(${JSON.stringify(sampleLevel)}); openMission(0)`);
+  run("runCommand('ls')");
+  assert.equal(run('state.step'), 0);
+  run("runCommand('whoami')");
   assert.equal(run('state.step'), 1);
-  run("runCommand('mv copia.txt proyectos')");
+  run("runCommand('uname   -r')");
   assert.equal(run('state.step'), 2);
-});
-
-test('no da por bueno mover el original ni una ruta fuera de proyectos', () => {
-  const { run } = appContext();
-  run('data.completed = [1, 2, 3]; openMission(3)');
-  run("runCommand('cp notas.txt copia.txt')");
-  for (const command of ['mv notas.txt proyectos', 'mv copia.txt proyecto', 'mv copia.txt proyectos/..']) {
-    run(`runCommand(${JSON.stringify(command)})`);
-    assert.equal(run('state.step'), 1, command);
-  }
+  assert.equal(run('data.completed.includes(1)'), true);
+  assert.equal(run('pct()'), 100);
 });
