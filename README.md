@@ -13,8 +13,8 @@ App educativa para Android, hecha como Producto Integrador de Aprendizaje (PIA) 
 ### Flujo de pantallas
 
 ```text
-Portada (Avance PIA) → Inicio (astronauta) → Dashboard
-                                                │
+Portada (Avance PIA) → Inicio (astronauta) → Registro de usuario (solo la primera vez) → Dashboard
+                                                                                          │
           Barra inferior: Dashboard · AFs · [Mapa] · Equipo · Ajustes
 ```
 
@@ -22,6 +22,7 @@ Portada (Avance PIA) → Inicio (astronauta) → Dashboard
 |---|---|
 | **Portada** | Logos de la UANL y la FIME, materia, maestra y semestre. Botón *Continuar*. |
 | **Inicio** | Astronauta y botón *Comenzar expedición*. |
+| **Registro de usuario** | Solo la primera vez. Ubuntu pide un nombre de usuario y lo ajusta al formato de Linux (minúsculas, sin espacios ni acentos). Si queda vacío, es `explorador`. Ese nombre aparece en `whoami` y en la terminal. |
 | **Dashboard** | Introducción del PIA, porcentaje de avance, misiones completadas, XP y acceso a la siguiente misión. |
 | **AFs** | Las 4 actividades fundamentales del semestre. Al tocar una, el PDF se abre en un visor dentro de la app. |
 | **Mapa** | Botón central de la barra. Un solo recorrido de la Tierra (abajo) a Root (arriba): 4 mundos de 5 niveles, separados por barreras con candado. |
@@ -40,10 +41,22 @@ Son **20 niveles en 4 mundos**, uno por cada AF. Cada mundo tiene su propio fond
 | 3 · Estación espacial | AF3 · Almacenaje, memoria y archivos | La estación espacial |
 | 4 · Llegar a Root | AF4 · Redes y seguridad | El planeta Root y su escudo |
 
-Los niveles se están programando por partes. Un nivel sin pasos aparece en el mapa como *Próximamente* y no se puede abrir.
+Los niveles se programan por partes: por ahora está listo el **Mundo 1**. Un nivel sin pasos aparece en el mapa como *Próximamente* y no se puede abrir.
 
-- Cada misión vale **100 XP** y tiene pistas.
-- *Restablecer progreso* borra las misiones completadas, pero conserva los ajustes de sonido y avisos.
+| # | Nivel del Mundo 1 | Comandos | Panel de la nave |
+|---:|---|---|---|
+| 1 | Despertar | `whoami`, `cat /etc/os-release`, `uname -r` | Cabina: se enciende el ojo de Ubuntu, su núcleo y las luces |
+| 2 | Verificación de sistemas | `lscpu`, `free -h`, `lsblk` | Medidores de procesador, memoria y almacenamiento |
+| 3 | Encendido de propulsores | `systemctl --failed`, `status`, `start` | Servicios combustible → propulsores; el cohete enciende motores |
+| 4 | Prueba de rendimiento | `uptime`, `nproc`, `ls`, `cat`, `systemctl start` | Carga del sistema con tendencia y modos de navegación |
+| 5 | Secuencia de despegue (jefe) | `systemctl reboot` y lo aprendido | Animación del arranque, cuenta regresiva y despegue |
+
+- En cada nivel habla **Ubuntu**, la IA de la nave, de forma seria. Los errores comunes no solo se marcan: Ubuntu explica qué pasó.
+- Se aceptan variantes válidas de Linux: espacios extra, `.service` al final o `/` al final de una ruta.
+- Bajo la terminal hay atajos: `TAB` (completa la palabra), `↑`/`↓` (historial), `/`, `-`, `|`, `~` y `clear`.
+- **Bitácora:** lista los comandos aprendidos, con qué hacen y un ejemplo.
+- Cada nivel vale **100 XP**. El jefe vale **200 XP** y cada pista que se ve en él resta 50 (mínimo 50).
+- *Restablecer progreso* borra los niveles completados y los XP, pero conserva el nombre de usuario y los ajustes de sonido y avisos.
 
 ### Botón Atrás de Android
 
@@ -60,7 +73,9 @@ Android solo aporta el contenedor. Todo el juego es HTML, CSS y JavaScript local
 
 | Ruta | Para qué sirve |
 |---|---|
-| `app/src/main/assets/app.js` | Pantallas, misiones, validación de comandos, progreso, integrantes, AFs y conclusión. |
+| `app/src/main/assets/app.js` | Pantallas, mapa, motor de los niveles (validación, animaciones, XP, bitácora), registro de usuario, integrantes, AFs y conclusión. |
+| `app/src/main/assets/niveles.js` | Contenido de los niveles: lo que dice Ubuntu, comandos, respuestas de la terminal, errores explicados, pistas y el panel de cada nivel. También la bitácora. |
+| `app/src/main/assets/figuras/` | Figuras del juego en PNG: `cohete.png` y `ojo-ubuntu.png`. |
 | `app/src/main/assets/styles.css` | Diseño: tema oscuro con naranja, tarjetas, barra inferior y diseño adaptable. |
 | `app/src/main/assets/index.html` | Página de entrada que carga el CSS y el JS. |
 | `app/src/main/assets/afs/` | Los 4 PDFs de las AFs (`AF1.pdf` a `AF4.pdf`). |
@@ -147,7 +162,7 @@ Con Node.js instalado, desde la raíz del proyecto:
 node --test tests/commands.test.cjs
 ```
 
-Las pruebas revisan que haya 4 mundos de 5 niveles, que todas las pantallas se muestren, que las barreras se abran al completar un mundo y que el motor complete un nivel de prueba paso a paso y guarde el avance. No prueban la parte Android ni el diseño visual.
+Las pruebas juegan los 5 niveles del Mundo 1 con sus comandos reales y revisan que se abra la barrera del Mundo 2, el ajuste del nombre de usuario, las variantes aceptadas y los errores explicados, los modos rechazados del nivel 4, el arranque, las pistas con descuento y el despegue del jefe, y la bitácora. No prueban la parte Android ni el diseño visual.
 
 ---
 
@@ -155,7 +170,9 @@ Las pruebas revisan que haya 4 mundos de 5 niveles, que todas las pantallas se m
 
 | Quiero cambiar… | Lugar |
 |---|---|
-| Textos, pasos y comandos de las misiones | Arreglo `missions` en `app.js` (cada nivel con su `steps`) |
+| Textos, pasos, comandos y panel de los niveles | `niveles.js` (por ahora `world1Levels`); se conectan a su mundo en `levelContent` de `app.js` |
+| Comandos de la bitácora | Arreglo `glossary` en `niveles.js` |
+| Nombres de los niveles en el mapa | Arreglo `missions` en `app.js` |
 | Nombres, AF y fondo de los mundos | Arreglo `worlds` y objeto `scenery` en `app.js`; estilos `.world-*` en `styles.css` |
 | Introducción del PIA | `dashboard()` en `app.js` |
 | Integrantes | Arreglo `teamMembers` en `app.js` y fotos en `assets/equipo/` |
