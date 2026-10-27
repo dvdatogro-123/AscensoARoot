@@ -11,7 +11,7 @@ const levelsPerWorld = 5;
 function level(world, title, commands = '') {
   return { world, title, commands, tag: '', steps: [], extras: {}, ending: '', boss: false, setup: () => ({}), panel: () => '' };
 }
-const levelContent = { 1: world1Levels, 2: world2Levels };
+const levelContent = { 1: world1Levels, 2: world2Levels, 3: world3Levels };
 const missions = [
   level(1, 'Despertar', 'whoami · cat · uname'),
   level(1, 'Verificación de sistemas', 'lscpu · free · lsblk'),
@@ -23,7 +23,11 @@ const missions = [
   level(2, 'Trabajo en paralelo', '& · jobs'),
   level(2, 'Sección crítica', 'cat · systemctl'),
   level(2, 'Abrazo mortal', 'ps · kill · systemctl'),
-  level(3, 'Nivel 1'), level(3, 'Nivel 2'), level(3, 'Nivel 3'), level(3, 'Nivel 4'), level(3, 'Nivel 5'),
+  level(3, 'Acoplamiento', 'pwd · cd'),
+  level(3, 'Memoria al límite', 'free · top · kill'),
+  level(3, 'Almacén lleno', 'df · rm'),
+  level(3, 'Compuerta sellada', 'ls -l · chmod'),
+  level(3, 'Falla del núcleo', 'lo aprendido'),
   level(4, 'Nivel 1'), level(4, 'Nivel 2'), level(4, 'Nivel 3'), level(4, 'Nivel 4'), level(4, 'Nivel 5')
 ].map((m, i) => ({ ...m, ...(levelContent[m.world]?.[i % levelsPerWorld] || {}), id: i + 1 }));
 
@@ -83,7 +87,7 @@ function checkCommand(m, command) {
   const earlier = m.steps.slice(0, state.step).reverse().find(s => pick(s.answers, command) !== undefined);
   if (earlier) {
     const previous = asAnswer(pick(earlier.answers, command));
-    return previous.anim ? { ok: false, extra: true, note: 'Ese procedimiento ya se completó.' } : { ok: false, extra: true, out: previous.out, note: previous.note };
+    return previous.anim ? { ok: false, extra: true, note: 'Ese procedimiento ya se completó.' } : { ok: false, extra: true, out: previous.out, note: previous.note, message: previous.message };
   }
   return { ok: false };
 }
@@ -283,7 +287,7 @@ function settings() {
     <button class="setting-row danger" data-action="confirm-reset"><span class="left"><span class="symbol">↶</span>Restablecer progreso</span></button>
     <button class="setting-row" data-action="nav" data-screen="credits"><span class="left"><span class="symbol">★</span>Créditos / Conclusión</span><span class="row-arrow" aria-hidden="true">▶</span></button>
     <div class="setting-row"><span class="left"><span class="symbol">⚒</span>Acerca de Ascenso a Root</span></div>
-    <p class="about">Versión 1.10.0 · Aplicación educativa sobre Ubuntu. Los comandos se simulan dentro de la aplicación y no modifican el teléfono.</p>
+    <p class="about">Versión 1.11.0 · Aplicación educativa sobre Ubuntu. Los comandos se simulan dentro de la aplicación y no modifican el teléfono.</p>
   </main>${nav('settings')}`;
 }
 function credits() {
@@ -330,7 +334,7 @@ function mission() {
     <div class="level-meta"><span class="af-chip">${world.af} · ${world.topic.split(',')[0]}</span>${m.boss ? '<span class="boss-tag">Jefe · 200 XP</span>' : ''}<span class="level-dots" role="img" aria-label="Nivel ${number} de ${levelsPerWorld}">${dots}</span></div>
     <section class="ship-panel" aria-label="Panel de la nave"><span class="panel-tag">${m.tag}</span>${m.panel(view)}</section>
     <section class="ubuntu-msg" aria-live="polite"><img class="ubuntu-avatar" src="figuras/ojo-ubuntu.png" alt=""><div><span class="ubuntu-name">Ubuntu${finished ? ' · nivel completado' : ` · paso ${state.step + 1} de ${m.steps.length}`}</span><p>${safe(fill(finished ? m.ending : step.say))}</p></div></section>
-    <div class="terminal"><div class="terminal-head"><i></i><i></i><i></i><span>${safe(userName())}@nave:~</span></div>
+    <div class="terminal"><div class="terminal-head"><i></i><i></i><i></i><span>${safe(userName())}@nave:${safe(state.flags.cwd || '~')}</span></div>
       <div class="terminal-body" id="terminal-log" aria-live="polite"><div class="terminal-line output">Terminal de la nave. Escriba un comando y pulse Ejecutar.</div>${state.lines.map(terminalLine).join('')}</div>
       ${finished ? '' : `<form class="terminal-form" id="command-form"><span class="prompt">$</span><input id="command-input" aria-label="Escriba un comando" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${state.busy ? 'Procesando…' : 'Escriba un comando'}" value="${safe(state.draft)}" ${state.busy ? 'disabled' : ''}><button type="submit" ${state.busy ? 'disabled' : ''}>Ejecutar</button></form>`}
     </div>
@@ -428,6 +432,10 @@ const animations = {
   engine(done) {
     const frames = [25, 50, 75, 100].map(p => () => { state.flags.thrust = p; state.lines.push({ kind: 'boot', text: `Motor principal · empuje ${p} %` }); });
     playFrames(frames, 650, () => later(done, 900));
+  },
+  core(done) {
+    const frames = [25, 50, 75, 100].map(p => () => { state.flags.core = p; state.lines.push({ kind: 'boot', text: `Núcleo de energía · ${p} %` }); });
+    playFrames(frames, 650, () => later(done, 900));
   }
 };
 function completeLevel(m) {
@@ -468,9 +476,10 @@ function runCommand(input) {
     const run = state.run;
     return animations[result.anim](() => { if (state.run !== run) return; state.busy = false; advance(m); refreshLevel(); });
   }
+  // message se muestra como error; en una respuesta correcta (Permiso denegado) el paso avanza igual.
+  if (result.message) state.lines.push({ kind: 'error', text: fill(result.message) });
   if (result.ok) advance(m);
-  else if (result.message) state.lines.push({ kind: 'error', text: fill(result.message) });
-  else if (!result.extra) state.lines.push({ kind: 'error', text: `Comando no reconocido para este paso.${data.notices ? ' Toque «Ver pista» si lo necesita.' : ''}` });
+  else if (!result.message && !result.extra) state.lines.push({ kind: 'error', text: `Comando no reconocido para este paso.${data.notices ? ' Toque «Ver pista» si lo necesita.' : ''}` });
   refreshLevel();
 }
 // Atajos sobre el campo de comando, sin volver a dibujar la pantalla.

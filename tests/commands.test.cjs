@@ -142,6 +142,75 @@ test('el jefe del Mundo 2 acepta detener cualquiera de los dos robots', () => {
   assert.match(app.innerHTML, /\+200 XP/);
 });
 
+// Comandos que completan cada nivel del Mundo 3.
+const world3 = [
+  ['pwd', 'cd /estacion', 'ls', 'cd acceso', 'cat codigo.txt'],
+  ['free -h', 'top', 'kill {pid}', 'free -h'],
+  ['df -h', 'ls -lh /estacion/registros', 'rm /estacion/registros/registro_2019.log', 'df -h'],
+  ['cd /estacion/acceso', './abrir-compuerta', 'ls -l', 'chmod +x abrir-compuerta', './abrir-compuerta'],
+  ['free -h', 'top', 'kill {pid}', 'df -h', 'ls -lh /estacion/registros', 'rm /estacion/registros/respaldo_2020.log', 'cd /estacion/energia', './reiniciar-nucleo', 'chmod +x reiniciar-nucleo', './reiniciar-nucleo']
+];
+
+test('el Mundo 3 se completa y abre la barrera del Mundo 4', () => {
+  const { app, run } = appContext();
+  run('data.completed = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; data.xp = {}');
+  world3.forEach((commands, index) => {
+    run(`openMission(${index + 10})`);
+    assert.equal(run('state.screen'), 'mission', `nivel ${index + 11}`);
+    play(run, commands);
+    assert.equal(run(`data.completed.includes(${index + 11})`), true, `nivel ${index + 11}`);
+  });
+  assert.equal(run('state.flags.core'), 100);
+  run("state.screen = 'map'; render()");
+  assert.equal((app.innerHTML.match(/class="world-gate open"/g) || []).length, 3);
+});
+
+test('cd cambia la carpeta de la terminal y las rutas mal escritas se explican', () => {
+  const { app, run } = appContext();
+  run('data.completed = Array.from({ length: 10 }, (_, i) => i + 1); openMission(10)');
+  play(run, ['pwd', 'cd estacion']);
+  assert.match(run('state.lines.at(-1).text'), /empieza con \//);
+  play(run, ['cd /estacion/']);
+  assert.match(app.innerHTML, /@nave:\/estacion</);
+  play(run, ['ls', 'cd ..']);
+  assert.match(run('state.lines.at(-1).text'), /sube una carpeta/);
+  assert.equal(run('state.step'), 3);
+  play(run, ['sudo cd acceso']);
+  assert.match(run('state.lines.at(-1).text'), /Root/);
+});
+
+test('rm no borra el registro actual y Permiso denegado avanza el paso', () => {
+  const { run } = appContext();
+  run('data.completed = Array.from({ length: 12 }, (_, i) => i + 1); openMission(12)');
+  play(run, ['df -h', 'ls /estacion/registros']);
+  assert.match(run('state.lines.at(-1).text'), /-lh/);
+  play(run, ['ls -lh /estacion/registros', 'rm /estacion/registros/registro_2026.log']);
+  assert.match(run('state.lines.at(-1).text'), /Negativo/);
+  assert.equal(run('state.step'), 2);
+  run('data.completed.push(13); openMission(13)');
+  play(run, ['cd /estacion/acceso', 'abrir-compuerta']);
+  assert.match(run('state.lines.at(-1).text'), /\.\/ antes/);
+  play(run, ['./abrir-compuerta']);
+  assert.equal(run("state.lines.at(-1).kind"), 'error');
+  assert.match(run('state.lines.at(-1).text'), /Permiso denegado/);
+  assert.equal(run('state.step'), 2);
+  play(run, ['ls -l', 'chmod +x abrir-compuerta', 'ls -l']);
+  assert.match(run('state.lines.at(-1).text'), /-rwxr-xr-x/, 'ls -l muestra la x después de chmod');
+  assert.equal(run('state.step'), 4);
+});
+
+test('en el jefe del Mundo 3, el reinicio explica qué falla lo bloquea', () => {
+  const { app, run } = appContext();
+  run('data.completed = Array.from({ length: 14 }, (_, i) => i + 1); openMission(14)');
+  play(run, ['./reiniciar-nucleo']);
+  assert.match(run('state.lines.at(-1).text'), /memoria insuficiente/);
+  play(run, ['free -h', 'top', 'kill {pid}', './reiniciar-nucleo']);
+  assert.match(run('state.lines.at(-1).text'), /espacio en disco/);
+  play(run, ['df -h', 'ls -lh /estacion/registros', 'rm /estacion/registros/respaldo_2020.log', 'cd /estacion/energia', './reiniciar-nucleo', 'chmod +x reiniciar-nucleo', './reiniciar-nucleo']);
+  assert.equal(run('data.completed.includes(15)'), true);
+  assert.match(app.innerHTML, /\+200 XP/);
+});
+
 test('el nombre de usuario se ajusta al formato de Linux y aparece en whoami', () => {
   const { app, run } = appContext();
   run("registerName('  David Torres ')");

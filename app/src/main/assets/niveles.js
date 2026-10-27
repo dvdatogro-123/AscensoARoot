@@ -483,6 +483,276 @@ const world2Levels = [
   }
 ];
 
+// Mundo 3: la carpeta actual vive en state.flags.cwd (la muestra la cabecera de la terminal).
+// Una respuesta puede traer message: se muestra como error aunque el paso avance (por ejemplo, Permiso denegado).
+const sudoCheck = command => /^sudo\b/.test(command) ? { ok: false, message: 'sudo todavía no está disponible para usted. Lo obtendrá al llegar a Root.' } : undefined;
+// Combina varias revisiones: la primera que responde gana.
+function checks(...fns) { return (command, f) => { for (const fn of fns) { const r = fn(command, f); if (r) return r; } }; }
+// Muestra una salida sin avanzar ni marcar error, para comandos cuya salida cambia en este paso.
+const showIn = (cmd, out) => command => command === cmd ? { ok: false, extra: true, out } : undefined;
+const lsIn = out => showIn('ls', out);
+const cdUp = 'cd .. sube una carpeta. Desde aquí lo llevaría a otra ubicación. El código está en acceso: cd acceso.';
+const freeFull = '        total   usado   libre\nMem:    8.0Gi   7.8Gi   0.2Gi\nSwap:   4.0Gi   3.1Gi   0.9Gi';
+const freeKb = 'Valores en kilobytes. Con -h se muestran en formato legible.';
+const dfFull = 'Disco       Tamaño  Usado  Libre  Uso%  Montado en\n/dev/sda1     96G    94G     2G   98%  /';
+const lsRegistros = 'total 42G\n-rw-r--r--  1 {user} {user}   41G  registro_2019.log\n-rw-r--r--  1 {user} {user}  1.2G  registro_2026.log';
+const keepCurrentLog = 'Negativo. registro_2026.log es el registro actual de la estación y no tiene respaldo. El antiguo es el de 2019.';
+const deniedDoor = 'bash: ./abrir-compuerta: Permiso denegado';
+const lsDoor = '-rw-r--r--  1 {user} {user}  2.1K  abrir-compuerta\n-rw-r--r--  1 {user} {user}    38  codigo.txt';
+const deniedCore = 'bash: ./reiniciar-nucleo: Permiso denegado';
+const lsBackup = 'total 40G\n-rw-r--r--  1 {user} {user}   38G  respaldo_2020.log\n-rw-r--r--  1 {user} {user}  1.3G  registro_2026.log';
+// Jefe: ./reiniciar-nucleo explica cuál falla lo sigue bloqueando.
+function coreCheck(step) {
+  return command => {
+    if (command !== './reiniciar-nucleo' || step >= 7) return undefined;
+    if (step < 3) return { ok: false, message: 'Reinicio fallido: memoria insuficiente.' };
+    if (step < 6) return { ok: false, message: 'Reinicio fallido: no hay espacio en disco para guardar el registro.' };
+    return { ok: false, message: 'bash: ./reiniciar-nucleo: No existe el archivo. El programa está en /estacion/energia.' };
+  };
+}
+
+function treeNode(name, depth, status) {
+  return `<div class="tree-node ${status}" style="--d:${depth}"><span>${name}</span>${status === 'here' ? '<b>Aquí</b>' : ''}</div>`;
+}
+
+const world3Levels = [
+  {
+    tag: 'Sistema de archivos',
+    steps: [
+      { say: 'Acoplamiento completado. La estación guarda su información en archivos, organizados en carpetas dentro de carpetas, todas a partir de la raíz: /. Para saber en qué carpeta se encuentra: pwd.',
+        hint: 'Escriba pwd.',
+        answers: { 'pwd': '/home/{user}' },
+        check: sudoCheck },
+      { say: 'Usted está en su carpeta personal. Para entrar a otra carpeta se usa cd seguido de su ruta. Entre a la estación: cd /estacion.',
+        hint: 'Escriba cd /estacion.',
+        answers: { 'cd /estacion': { out: '', set: { cwd: '/estacion' } } },
+        errors: { 'cd estacion': 'Desde su carpeta personal no existe estacion. La ruta completa empieza con /: cd /estacion.', 'cd': 'Indique a qué carpeta: cd /estacion.' },
+        check: checks(sudoCheck, lsIn('Documentos  Descargas')) },
+      { say: 'Ahora se encuentra en /estacion. Vea qué contiene.',
+        hint: 'Escriba ls.',
+        answers: { 'ls': 'acceso  energia  registros', 'ls /estacion': 'acceso  energia  registros' },
+        check: sudoCheck },
+      { say: 'El código de acoplamiento está en la carpeta acceso. Entre.',
+        hint: 'Escriba cd acceso.',
+        answers: { 'cd acceso': { out: '', set: { cwd: '/estacion/acceso' } }, 'cd /estacion/acceso': { out: '', set: { cwd: '/estacion/acceso' } } },
+        errors: { 'cd ..': cdUp, 'cd energia': 'El código está en acceso, no en energia.', 'cd registros': 'El código está en acceso, no en registros.' },
+        check: sudoCheck },
+      { say: 'Lea el código: está en el archivo codigo.txt.',
+        hint: 'Escriba cat codigo.txt.',
+        answers: { 'cat codigo.txt': 'CÓDIGO DE ACCESO: ESTACION-7741', 'cat /estacion/acceso/codigo.txt': 'CÓDIGO DE ACCESO: ESTACION-7741' },
+        check: checks(sudoCheck, lsIn('abrir-compuerta  codigo.txt')) }
+    ],
+    ending: 'Acceso concedido. Un sistema de archivos organiza la información en un árbol que empieza en la raíz /. Una ruta es el camino desde la raíz hasta un archivo: /estacion/acceso/codigo.txt. Siguiente procedimiento: revisión de la memoria.',
+    panel(v) {
+      const s = v.step, cwd = v.flags.cwd || `/home/${v.user}`;
+      const node = (name, depth, path) => treeNode(name, depth, s >= 1 && cwd === path ? 'here' : 'known');
+      const hidden = Array.from({ length: 3 }, () => treeNode('???', 2, 'unknown')).join('');
+      return `<div class="fs-grid">
+        <div class="tree">
+          ${node('/', 0, '/')}${node(`home/${safe(v.user)}`, 1, `/home/${v.user}`)}${node('estacion', 1, '/estacion')}
+          ${s >= 3 ? node('acceso', 2, '/estacion/acceso') + treeNode('energia', 2, 'known') + treeNode('registros', 2, 'known') : hidden}
+          ${s >= 4 ? treeNode('codigo.txt', 3, v.done ? 'open' : 'file') : ''}
+        </div>
+        <div class="gauges">
+          ${readout('Ruta actual', s >= 1 ? safe(cwd).replace(/\/(?=.)/g, '/<wbr>') : '???', s >= 1 ? 'ok' : 'pending', s >= 1 ? 'Verificada' : 'Pendiente')}
+          ${readout('Compuerta', v.done ? 'Abierta' : 'Cerrada', v.done ? 'ok' : 'fail', v.done ? 'ESTACION-7741' : 'Sin código')}
+        </div>
+      </div>`;
+    }
+  },
+  {
+    tag: 'Memoria de la estación',
+    setup: () => ({ pid: randomPid() }),
+    steps: [
+      { say: 'Los sistemas de la estación responden con lentitud. Revise la memoria con free -h.',
+        hint: 'Escriba free -h.',
+        answers: { 'free -h': freeFull, 'free': { out: '        total     usado     libre\nMem:  8048432   7864120    184312\nSwap: 4194300   3250176    944124', note: freeKb } },
+        check: checks(sudoCheck, killCheck) },
+      { say: 'La RAM está casi llena. Cuando eso pasa, uso el swap: una parte del disco que funciona como memoria de respaldo. Es mucho más lento que la RAM. Averigüe qué proceso la consume: top.',
+        hint: 'Escriba top.',
+        answers: { 'top': { out: 'top - 11:02:40 up 2:13,  load average: 2.10, 1.90, 1.60\n  PID USUARIO  %CPU  %MEM  COMMAND\n {pid} {user}    6.2  71.4  fuga_memoria\n  812 {user}    9.8   4.1  soporte_vital\n  903 {user}    3.1   2.0  navegacion', note: 'Esta vez observe la columna %MEM: cuánta memoria usa cada proceso.' } },
+        check: checks(sudoCheck, killCheck) },
+      { say: 'fuga_memoria pide memoria y nunca la libera. Deténgalo con kill y su PID.',
+        hint: 'El PID de fuga_memoria es {pid}. Escriba kill {pid}.',
+        answers: { 'kill {pid}': { out: '', note: 'Proceso {pid} terminado. Memoria liberada.' }, 'kill -9 {pid}': { out: '', note: 'Proceso {pid} terminado a la fuerza. Memoria liberada.' } },
+        check: checks(sudoCheck, killCheck) },
+      { say: 'Verifique la memoria.',
+        hint: 'Escriba free -h.',
+        answers: { 'free -h': '        total   usado   libre\nMem:    8.0Gi   2.3Gi   5.7Gi\nSwap:   4.0Gi   0.2Gi   3.8Gi', 'free': { out: '        total     usado     libre\nMem:  8048432   2411724   5636708\nSwap: 4194300    209715   3984585', note: freeKb } },
+        check: checks(sudoCheck, killCheck) }
+    ],
+    ending: 'Memoria estable. La RAM es rápida pero limitada; la memoria virtual amplía el espacio usando el disco, a costa de velocidad. Una fuga de memoria es un proceso que reserva memoria y no la devuelve. Siguiente procedimiento: revisión del almacén.',
+    panel(v) {
+      const s = v.step, fixed = s >= 4;
+      const rows = s >= 2
+        ? procRow('fuga_memoria', s >= 3 ? 'Terminado' : `PID ${v.flags.pid} · 71 %`, s >= 3 ? 'off' : 'fail', s >= 3 ? undefined : 71) + procRow('soporte_vital', 'PID 812 · 4 %', 'active', 4) + procRow('navegacion', 'PID 903 · 2 %', 'active', 2)
+        : unknownProcs(3, true);
+      return `<div class="w2-stack">
+        <div class="readout-pair">
+          ${readout('RAM · rápida', s >= 1 ? (fixed ? '2.3 / 8.0 GiB' : '7.8 / 8.0 GiB') : '???', s >= 1 ? (fixed ? 'ok' : 'fail') : 'pending', s >= 1 ? (fixed ? '29 % · Estable' : '97 % · Casi llena') : 'Pendiente', s >= 1 ? (fixed ? 29 : 97) : 0)}
+          ${readout('Swap · lenta', s >= 1 ? (fixed ? '0.2 / 4.0 GiB' : '3.1 / 4.0 GiB') : '???', s >= 1 ? 'ok' : 'pending', s >= 1 ? (fixed ? '5 % · En reposo' : '77 % · En uso') : 'Pendiente', s >= 1 ? (fixed ? 5 : 77) : 0)}
+        </div>
+        <div class="proc-list">${rows}</div>
+      </div>`;
+    }
+  },
+  {
+    tag: 'Almacenamiento',
+    steps: [
+      { say: 'No es posible guardar los datos del acoplamiento. Revise el espacio en disco: df -h.',
+        hint: 'Escriba df -h.',
+        answers: { 'df -h': dfFull, 'df': { out: 'Disco       Bloques    Usados  Disponibles  Uso%  Montado en\n/dev/sda1  100663296  98566144    2097152    98%  /', note: 'Valores en bloques de 1 KB. Con -h se muestran en formato legible.' } },
+        check: sudoCheck },
+      { say: 'Disco casi lleno. Los registros de la estación ocupan mucho espacio. Vea sus tamaños: ls -lh /estacion/registros. Con -l veo los detalles de cada archivo y con -h los tamaños en formato legible.',
+        hint: 'Escriba ls -lh /estacion/registros.',
+        answers: { 'ls -lh /estacion/registros': lsRegistros, 'ls -l /estacion/registros': { out: 'total 44040192\n-rw-r--r--  1 {user} {user}  44023414784  registro_2019.log\n-rw-r--r--  1 {user} {user}   1288490188  registro_2026.log', note: 'Tamaños en bytes. Con -h se leen mejor.' } },
+        errors: { 'ls /estacion/registros': 'Así solo veo los nombres. Agregue -lh para ver los tamaños: ls -lh /estacion/registros.' },
+        check: sudoCheck },
+      { say: 'El registro de 2019 es antiguo y ya fue respaldado en la Tierra. Bórrelo con rm y su ruta. Lo que se borra con rm no va a una papelera: desaparece.',
+        hint: 'Escriba rm /estacion/registros/registro_2019.log.',
+        answers: { 'rm /estacion/registros/registro_2019.log': '' },
+        errors: {
+          'rm /estacion/registros/registro_2026.log': keepCurrentLog,
+          'rm registro_2019.log': 'Ese archivo no está en su carpeta actual. Use la ruta completa: rm /estacion/registros/registro_2019.log.',
+          'rm -r /estacion/registros': 'Eso borraría la carpeta completa, incluido el registro actual. Borre solo el archivo de 2019.',
+          'rm': 'Indique qué archivo borrar.'
+        },
+        check: sudoCheck },
+      { say: 'Archivo eliminado. Verifique el espacio.',
+        hint: 'Escriba df -h.',
+        answers: { 'df -h': 'Disco       Tamaño  Usado  Libre  Uso%  Montado en\n/dev/sda1     96G    53G    43G   55%  /' },
+        errors: { 'rm /estacion/registros/registro_2026.log': keepCurrentLog },
+        check: sudoCheck }
+    ],
+    ending: 'Datos del acoplamiento guardados. La memoria se borra al apagar; el almacenamiento conserva la información. Por eso el disco también se administra: cuando se llena, nada nuevo se puede guardar. Siguiente procedimiento: compuerta interior.',
+    panel(v) {
+      const s = v.step, freed = s >= 3, pct = s >= 4 ? 55 : 98;
+      const files = s >= 2
+        ? procRow('registro_2019.log', freed ? 'Borrado' : '41G', freed ? 'off' : 'fail', freed ? undefined : 100) + procRow('registro_2026.log', '1.2G', 'active', 3)
+        : unknownProcs(2, true);
+      return `<div class="disk-grid">
+        <div class="disk-ring ${s >= 1 ? (pct > 90 ? 'fail' : 'ok') : 'idle'}" style="--pct:${s >= 1 ? pct : 0}%"><strong>${s >= 1 ? `${pct} %` : '???'}</strong><small>/dev/sda1</small></div>
+        <div class="w2-stack">
+          <span class="readout-label">/estacion/registros</span>
+          <div class="proc-list">${files}</div>
+          <p class="disk-note${v.done ? ' ok' : ''}">${v.done ? 'Datos del acoplamiento guardados' : 'Datos del acoplamiento: sin espacio'}</p>
+        </div>
+      </div>`;
+    }
+  },
+  {
+    tag: 'Compuerta interior',
+    steps: [
+      { say: 'La compuerta interior se abre con el programa abrir-compuerta, que está en /estacion/acceso. Entre a esa carpeta.',
+        hint: 'Escriba cd /estacion/acceso.',
+        answers: { 'cd /estacion/acceso': { out: '', set: { cwd: '/estacion/acceso' } } },
+        errors: { 'cd acceso': 'Desde su carpeta personal no existe acceso. Use la ruta completa: cd /estacion/acceso.' },
+        check: sudoCheck },
+      { say: 'Para ejecutar un programa de la carpeta actual se escribe ./ antes de su nombre. Ejecútelo: ./abrir-compuerta.',
+        hint: 'Escriba ./abrir-compuerta.',
+        answers: { './abrir-compuerta': { message: deniedDoor } },
+        errors: { 'abrir-compuerta': 'Para ejecutar un programa de la carpeta actual se escribe ./ antes del nombre: ./abrir-compuerta.', 'chmod +x abrir-compuerta': 'Primero ejecútelo para ver qué ocurre: ./abrir-compuerta.' },
+        check: checks(sudoCheck, lsIn('abrir-compuerta  codigo.txt')) },
+      { say: 'Permiso denegado. Cada archivo indica qué se puede hacer con él. Revise los permisos: ls -l.',
+        hint: 'Escriba ls -l.',
+        answers: { 'ls -l': lsDoor, 'ls -l abrir-compuerta': '-rw-r--r--  1 {user} {user}  2.1K  abrir-compuerta' },
+        check: checks(sudoCheck, lsIn('abrir-compuerta  codigo.txt')) },
+      { say: 'Las letras rw-r--r-- son los permisos: r es leer, w es escribir y x es ejecutar. El primer grupo es el suyo y no tiene x. Agréguela: chmod +x abrir-compuerta.',
+        hint: 'Escriba chmod +x abrir-compuerta.',
+        answers: { 'chmod +x abrir-compuerta': '', 'chmod u+x abrir-compuerta': { out: '', note: 'Correcto. u+x agrega la x solo para usted, el dueño.' } },
+        errors: { 'chmod 777 abrir-compuerta': 'Eso daría a cualquiera permiso de modificarlo. Solo hace falta agregar x: chmod +x abrir-compuerta.', 'chmod +x': 'Indique el archivo: chmod +x abrir-compuerta.' },
+        check: checks(sudoCheck, lsIn('abrir-compuerta  codigo.txt')) },
+      { say: 'Permiso agregado. Ejecute el programa de nuevo.',
+        hint: 'Escriba ./abrir-compuerta.',
+        answers: { './abrir-compuerta': 'Abriendo compuerta interior…\nCompuerta interior: abierta.' },
+        check: checks(sudoCheck, lsIn('abrir-compuerta  codigo.txt'), showIn('ls -l', '-rwxr-xr-x  1 {user} {user}  2.1K  abrir-compuerta\n-rw-r--r--  1 {user} {user}    38  codigo.txt')) }
+    ],
+    ending: 'Compuerta abierta. Cada archivo indica quién puede leerlo, modificarlo o ejecutarlo. Así el sistema de archivos protege la información y evita que se ejecuten programas por error. Siguiente procedimiento: núcleo de energía.',
+    panel(v) {
+      const s = v.step, exec = s >= 4;
+      const group = (who, perm, mine) => `<div class="perm${mine ? ' mine' : ''}"><small>${who}</small><code>${perm}</code></div>`;
+      const owner = s < 3 ? '???' : exec ? 'rwx' : 'rw<i>-</i>';
+      return `<div class="door-grid">
+        <div class="door ${v.done ? 'open' : s >= 2 ? 'fail' : 'idle'}"><i></i><i></i><span>${v.done ? 'Abierta' : 'Sellada'}</span></div>
+        <div class="w2-stack">
+          <span class="readout-label">Permisos · abrir-compuerta</span>
+          <div class="perms">${group('Dueño', owner, true)}${group('Grupo', s < 3 ? '???' : exec ? 'r-x' : 'r--')}${group('Otros', s < 3 ? '???' : exec ? 'r-x' : 'r--')}</div>
+          <p class="perm-legend"><b>r</b> leer · <b>w</b> escribir · <b>x</b> ejecutar</p>
+          ${readout('Ejecución', v.done ? 'Completada' : exec ? 'Permitida' : s >= 2 ? 'Denegada' : 'Sin probar', exec ? 'ok' : s >= 2 ? 'fail' : 'pending', exec ? 'Tiene x' : s >= 3 ? 'Falta x' : 'Pendiente')}
+        </div>
+      </div>`;
+    }
+  },
+  {
+    tag: 'Núcleo de energía',
+    boss: true,
+    setup: () => ({ pid: randomPid() }),
+    steps: [
+      { say: 'Alerta: el núcleo de energía de la estación se apaga y el reinicio está fallando. Hay varias causas. Empiece por la memoria.',
+        hint: 'Revise la memoria: free -h.',
+        answers: { 'free -h': '        total   usado   libre\nMem:    8.0Gi   7.9Gi   0.1Gi\nSwap:   4.0Gi   3.6Gi   0.4Gi' },
+        check: checks(sudoCheck, coreCheck(0), killCheck) },
+      { say: 'Memoria casi agotada. Encuentre el proceso que la consume.',
+        hint: 'Use top y observe la columna %MEM.',
+        answers: { 'top': '  PID USUARIO  %CPU  %MEM  COMMAND\n {pid} {user}    7.4  74.2  fuga_nucleo\n  812 {user}    9.8   4.1  soporte_vital\n  903 {user}    3.1   2.0  navegacion' },
+        check: checks(sudoCheck, coreCheck(1), killCheck) },
+      { say: 'Resuélvalo.',
+        hint: 'Detenga fuga_nucleo: kill {pid}.',
+        answers: { 'kill {pid}': { out: '', note: 'Proceso {pid} terminado. Memoria liberada.' }, 'kill -9 {pid}': { out: '', note: 'Proceso {pid} terminado. Memoria liberada.' } },
+        check: checks(sudoCheck, coreCheck(2), killCheck) },
+      { say: 'Primera falla resuelta. El reinicio también necesita guardar un registro. Revise el disco.',
+        hint: 'Revise el espacio: df -h.',
+        answers: { 'df -h': 'Disco       Tamaño  Usado  Libre  Uso%  Montado en\n/dev/sda1     96G    95G     1G   99%  /' },
+        check: checks(sudoCheck, coreCheck(3), killCheck) },
+      { say: 'Disco lleno. Los registros están en /estacion/registros. Vea qué ocupa espacio.',
+        hint: 'Vea los tamaños: ls -lh /estacion/registros.',
+        answers: { 'ls -lh /estacion/registros': lsBackup },
+        check: checks(sudoCheck, coreCheck(4), killCheck) },
+      { say: 'El respaldo de 2020 ya existe también en la Tierra. Libere espacio.',
+        hint: 'Bórrelo: rm /estacion/registros/respaldo_2020.log.',
+        answers: { 'rm /estacion/registros/respaldo_2020.log': '' },
+        errors: { 'rm /estacion/registros/registro_2026.log': keepCurrentLog.replace('El antiguo es el de 2019.', 'El que puede borrarse es el respaldo de 2020.') },
+        check: checks(sudoCheck, coreCheck(5), killCheck) },
+      { say: 'Segunda falla resuelta. El programa de reinicio está en /estacion/energia.',
+        hint: 'Entre a la carpeta: cd /estacion/energia.',
+        answers: { 'cd /estacion/energia': { out: '', set: { cwd: '/estacion/energia' } } },
+        check: checks(sudoCheck, coreCheck(6), killCheck) },
+      { say: 'Ejecute el programa de reinicio.',
+        hint: 'Escriba ./reiniciar-nucleo.',
+        answers: { './reiniciar-nucleo': { message: deniedCore } },
+        check: checks(sudoCheck, lsIn('reiniciar-nucleo'), killCheck) },
+      { say: 'Tercera falla. Usted ya sabe qué le falta a este archivo.',
+        hint: 'Le falta el permiso de ejecución: chmod +x reiniciar-nucleo.',
+        answers: { 'chmod +x reiniciar-nucleo': '', 'chmod u+x reiniciar-nucleo': '' },
+        check: checks(sudoCheck, lsIn('reiniciar-nucleo'), showIn('ls -l', '-rw-r--r--  1 {user} {user}  3.4K  reiniciar-nucleo'), killCheck) },
+      { say: 'Las tres fallas están resueltas. Reinicie el núcleo.',
+        hint: 'Escriba ./reiniciar-nucleo.',
+        answers: { './reiniciar-nucleo': { anim: 'core' } },
+        check: checks(sudoCheck, lsIn('reiniciar-nucleo'), killCheck) }
+    ],
+    ending: 'Núcleo de energía en línea. Memoria, almacenamiento y permisos: cuando uno falla, la estación entera se detiene. Administrarlos es lo que mantiene a un sistema rápido, estable y protegido. Próximo destino: Root.',
+    panel(v) {
+      const s = v.step, core = v.flags.core || 0;
+      const fault = (n, name, solvedAt, seenAt, detail) => {
+        const status = s >= solvedAt ? 'active' : s >= seenAt ? 'fail' : 'idle';
+        return procRow(`${n} · ${name}`, status === 'active' ? 'Resuelta' : status === 'fail' ? detail : 'Sin revisar', status);
+      };
+      return `<div class="core-grid">
+        <div class="core${core ? ' on' : ''}" style="--power:${core / 100}"><i></i><strong>${core} %</strong></div>
+        <div class="w2-stack">
+          <span class="readout-label">Fallas del reinicio</span>
+          <div class="proc-list">
+            ${fault(1, 'Memoria', 3, 1, 'RAM 98 %')}
+            ${fault(2, 'Disco', 6, 4, 'Disco 99 %')}
+            ${fault(3, 'Permisos', 9, 8, 'Sin x')}
+          </div>
+          <p class="disk-note${core ? ' ok' : ''}">${core ? 'Reinicio en curso' : 'Reinicio del núcleo bloqueado'}</p>
+        </div>
+      </div>`;
+    }
+  }
+];
+
 // Bitácora: un comando se registra al completar el paso donde se enseña.
 const glossary = [
   { cmd: 'whoami', level: 1, step: 0, text: 'Dice quién eres en la computadora.', example: 'whoami' },
@@ -503,5 +773,13 @@ const glossary = [
   { cmd: 'top', level: 7, step: 0, text: 'Muestra qué procesos usan más el procesador, en tiempo real.', example: 'top' },
   { cmd: 'renice', level: 7, step: 1, text: 'Cambia la prioridad de un proceso. Un número más alto le da menos turnos de procesador.', example: 'renice 10 -p 812' },
   { cmd: '&', level: 8, step: 0, text: 'Al final de un comando, lo ejecuta en segundo plano y deja libre la terminal.', example: 'reparar-casco &' },
-  { cmd: 'jobs', level: 8, step: 2, text: 'Muestra los trabajos que corren en segundo plano.', example: 'jobs' }
+  { cmd: 'jobs', level: 8, step: 2, text: 'Muestra los trabajos que corren en segundo plano.', example: 'jobs' },
+  { cmd: 'pwd', level: 11, step: 0, text: 'Dice en qué carpeta se encuentra.', example: 'pwd' },
+  { cmd: 'cd', level: 11, step: 1, text: 'Entra a otra carpeta. cd .. sube una carpeta.', example: 'cd /estacion' },
+  { cmd: 'df -h', level: 13, step: 0, text: 'Muestra cuánto espacio queda en el disco.', example: 'df -h' },
+  { cmd: 'ls -lh', level: 13, step: 1, text: 'Muestra los archivos con sus detalles y su tamaño.', example: 'ls -lh /estacion/registros' },
+  { cmd: 'rm', level: 13, step: 2, text: 'Borra un archivo. No hay papelera: desaparece.', example: 'rm /estacion/registros/registro_2019.log' },
+  { cmd: './', level: 14, step: 1, text: 'Ejecuta un programa que está en la carpeta actual.', example: './abrir-compuerta' },
+  { cmd: 'ls -l', level: 14, step: 2, text: 'Muestra los permisos de los archivos: r leer, w escribir, x ejecutar.', example: 'ls -l' },
+  { cmd: 'chmod +x', level: 14, step: 3, text: 'Da permiso de ejecución a un archivo.', example: 'chmod +x abrir-compuerta' }
 ];

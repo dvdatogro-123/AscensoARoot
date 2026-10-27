@@ -384,6 +384,60 @@ p { line-height: 1.48; }
 .cycle.locked { color: var(--danger); text-shadow: 0 0 8px var(--danger); animation: alert-blink 1.2s steps(2, jump-none) infinite; }
 .boss-row { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; align-items: center; margin-top: 10px; }
 
+/* ===== Mundo 3: memoria y archivos ===== */
+.readout.fail .gauge-bar i { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+.disk-note { margin: auto 0 0; color: var(--danger); font-size: .66rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.disk-note.ok { color: var(--bright); }
+/* Nivel 1: árbol de carpetas */
+.fs-grid { display: grid; grid-template-columns: minmax(0, 1fr) 112px; gap: 10px; height: 100%; }
+.fs-grid .gauges { justify-content: flex-start; }
+.fs-grid .readout-value { white-space: normal; font-size: .78rem; }
+.tree { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.tree-node { display: flex; align-items: center; justify-content: space-between; gap: 6px; min-width: 0; margin-left: calc(var(--d) * 14px); padding: 3px 8px; border: 1px solid var(--ship-line); border-radius: var(--radius-s); background: var(--ship-card); color: var(--muted); font-family: var(--font-mono); font-size: .72rem; font-weight: 700; transition: border-color .4s, background-color .4s; }
+.tree-node span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tree-node.here { border-color: var(--orange); background: var(--status-ok-bg); color: var(--white); }
+.tree-node b { flex: none; color: var(--orange); font-family: Arial, sans-serif; font-size: .56rem; letter-spacing: .08em; text-transform: uppercase; }
+.tree-node.unknown { border-style: dashed; color: var(--idle); }
+.tree-node.file { border-style: dashed; border-color: var(--bright); color: var(--bright); }
+.tree-node.open { border-color: var(--orange); color: var(--orange); }
+/* Nivel 3: uso del disco */
+.disk-grid { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; align-items: center; height: 100%; }
+.disk-ring { position: relative; display: grid; place-content: center; width: 84px; height: 84px; border-radius: 50%; background: conic-gradient(var(--ring) var(--pct), #2e2424 0); --ring: var(--idle); text-align: center; transition: background .9s; }
+.disk-ring::before { content: ""; position: absolute; inset: 9px; border-radius: 50%; background: var(--ship-bg); }
+.disk-ring > * { position: relative; }
+.disk-ring.fail { --ring: var(--danger); }
+.disk-ring.ok { --ring: var(--orange); }
+.disk-ring strong { color: var(--white); font-family: var(--font-mono); font-size: 1rem; }
+.disk-ring.fail strong { color: var(--danger); }
+.disk-ring small { color: var(--muted); font-family: var(--font-mono); font-size: .58rem; }
+/* Nivel 4: compuerta y permisos */
+.door-grid { display: grid; grid-template-columns: 82px minmax(0, 1fr); gap: 12px; height: 100%; }
+.door { position: relative; display: flex; overflow: hidden; border: 2px solid var(--idle); border-radius: var(--radius-m); background: #1a1414; }
+.door i { flex: 1; background: repeating-linear-gradient(#241c1c 0 10px, #1d1616 10px 20px); transition: transform 1s var(--ease-out); }
+.door i + i { border-left: 2px solid var(--idle); }
+.door span { position: absolute; left: 50%; top: 50%; padding: 3px 6px; transform: translate(-50%, -50%); border: 1px solid var(--idle); border-radius: 4px; background: var(--ship-bg); color: var(--idle); font-size: .58rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.door.fail, .door.fail i + i, .door.fail span { border-color: var(--danger); }
+.door.fail span { color: var(--danger); }
+.door.open { border-color: var(--orange); background: var(--status-ok-bg); }
+.door.open i:first-child { transform: translateX(-85%); }
+.door.open i + i { transform: translateX(85%); border-color: var(--orange); }
+.door.open span { border-color: var(--orange); color: var(--orange); }
+.perms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+.perm { display: flex; flex-direction: column; align-items: center; padding: 4px 2px; border: 1px solid var(--ship-line); border-radius: var(--radius-s); background: var(--ship-card); }
+.perm.mine { border-color: var(--orange); }
+.perm small { color: var(--muted); font-size: .56rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.perm code { color: var(--white); font-family: var(--font-mono); font-size: 1rem; font-weight: 700; }
+.perm code i { color: var(--danger); font-style: normal; outline: 1px dashed var(--danger); outline-offset: 1px; }
+.perm-legend { margin: 0; color: var(--muted); font-family: var(--font-mono); font-size: .66rem; }
+.perm-legend b { color: var(--bright); }
+/* Nivel 5: núcleo de energía */
+.core-grid { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px; align-items: center; height: 100%; }
+.core { position: relative; display: grid; place-items: center; width: 96px; height: 96px; border: 2px solid var(--idle); border-radius: 50%; background: radial-gradient(circle, rgba(243,92,25,calc(var(--power) * .8)) 0 30%, rgba(243,92,25,calc(var(--power) * .2)) 60%, transparent 70%); transition: border-color .5s; }
+.core i { position: absolute; inset: 14px; border: 2px dashed var(--idle); border-radius: 50%; }
+.core.on { border-color: var(--orange); box-shadow: 0 0 calc(var(--power) * 24px) rgba(243,92,25,.7); }
+.core.on i { border-color: var(--bright); animation: radar-sweep 3s linear infinite; }
+.core strong { position: relative; color: var(--white); font-family: var(--font-mono); font-size: 1rem; }
+
 /* Mensaje de Ubuntu */
 .ubuntu-msg { display: flex; align-items: flex-start; gap: 12px; margin: 12px 0; padding: 11px 12px; border: 1px solid var(--line); border-left: 3px solid var(--orange); border-radius: 0 var(--radius-s) var(--radius-s) 0; background: rgba(33,28,34,.85); }
 .ubuntu-avatar { flex: none; width: 38px; height: 38px; }

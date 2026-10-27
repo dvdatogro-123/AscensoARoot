@@ -41,7 +41,7 @@ Son **20 niveles en 4 mundos**, uno por cada AF. Cada mundo tiene su propio fond
 | 3 · Estación espacial | AF3 · Almacenaje, memoria y archivos | La estación espacial |
 | 4 · Llegar a Root | AF4 · Redes y seguridad | El planeta Root y su escudo |
 
-Los niveles se programan por partes: por ahora están listos el **Mundo 1** y el **Mundo 2**. Un nivel sin pasos aparece en el mapa como *Próximamente* y no se puede abrir.
+Los niveles se programan por partes: por ahora están listos los **mundos 1, 2 y 3**. Un nivel sin pasos aparece en el mapa como *Próximamente* y no se puede abrir.
 
 | # | Nivel del Mundo 1 | Comandos | Panel de la nave |
 |---:|---|---|---|
@@ -58,6 +58,14 @@ Los niveles se programan por partes: por ahora están listos el **Mundo 1** y el
 | 3 | Trabajo en paralelo | `&`, `jobs` | Casco reparándose en segundo plano mientras se corrige el rumbo |
 | 4 | Sección crítica | `cat`, `systemctl start` | Tanque compartido: condición de carrera (45 L contra 35 L) y semáforo |
 | 5 | Abrazo mortal (jefe) | lo aprendido | Dos robots bloqueados; se detiene uno (cualquiera), se activa el semáforo y enciende el motor principal |
+
+| # | Nivel del Mundo 3 | Comandos | Panel de la nave |
+|---:|---|---|---|
+| 1 | Acoplamiento | `pwd`, `cd` | Árbol de carpetas con "Aquí" en la carpeta actual; la cabecera de la terminal muestra la ruta |
+| 2 | Memoria al límite | `free -h`, `top`, `kill` | RAM y swap; `fuga_memoria` tiene un PID distinto en cada partida |
+| 3 | Almacén lleno | `df -h`, `ls -lh`, `rm` | Disco al 98 % y registros con su tamaño; el registro actual no se puede borrar |
+| 4 | Compuerta sellada | `./`, `ls -l`, `chmod +x` | Compuerta y permisos `rw-` → `rwx` |
+| 5 | Falla del núcleo (jefe) | lo aprendido | Tres fallas encadenadas (memoria, disco, permisos) y el núcleo que se enciende |
 
 - En cada nivel habla **Ubuntu**, la IA de la nave, de forma seria. Los errores comunes no solo se marcan: Ubuntu explica qué pasó.
 - Se aceptan variantes válidas de Linux: espacios extra, `.service` al final o `/` al final de una ruta.
@@ -170,7 +178,7 @@ Con Node.js instalado, desde la raíz del proyecto:
 node --test tests/commands.test.cjs
 ```
 
-Las pruebas juegan los 10 niveles de los Mundos 1 y 2 con sus comandos reales y revisan que se abran las barreras de los Mundos 2 y 3, los PID aleatorios y los errores de `kill`, que `soporte_vital` no se pueda detener, las dos formas de resolver el jefe del Mundo 2, el ajuste del nombre de usuario, las variantes aceptadas y los errores explicados, los modos rechazados del nivel 4, el arranque, las pistas con descuento y el despegue del jefe, y la bitácora. No prueban la parte Android ni el diseño visual.
+Las pruebas juegan los 15 niveles de los mundos 1 a 3 con sus comandos reales y revisan que se abran las barreras de los mundos 2, 3 y 4, las rutas de `cd`, que `rm` no borre el registro actual, el *Permiso denegado* y las fallas del jefe del Mundo 3, los PID aleatorios y los errores de `kill`, que `soporte_vital` no se pueda detener, las dos formas de resolver el jefe del Mundo 2, el ajuste del nombre de usuario, las variantes aceptadas y los errores explicados, los modos rechazados del nivel 4, el arranque, las pistas con descuento y el despegue del jefe, y la bitácora. No prueban la parte Android ni el diseño visual.
 
 ---
 
@@ -178,7 +186,7 @@ Las pruebas juegan los 10 niveles de los Mundos 1 y 2 con sus comandos reales y 
 
 | Quiero cambiar… | Lugar |
 |---|---|
-| Textos, pasos, comandos y panel de los niveles | `niveles.js` (`world1Levels`, `world2Levels`); se conectan a su mundo en `levelContent` de `app.js` |
+| Textos, pasos, comandos y panel de los niveles | `niveles.js` (`world1Levels`, `world2Levels`, `world3Levels`); se conectan a su mundo en `levelContent` de `app.js` |
 | Comandos de la bitácora | Arreglo `glossary` en `niveles.js` |
 | Nombres de los niveles en el mapa | Arreglo `missions` en `app.js` |
 | Nombres, AF y fondo de los mundos | Arreglo `worlds` y objeto `scenery` en `app.js`; estilos `.world-*` en `styles.css` |
@@ -195,5 +203,5 @@ Las pruebas juegan los 10 niveles de los Mundos 1 y 2 con sus comandos reales y 
 
 ## Notas
 
-- La versión que se muestra en *Ajustes > Acerca de* (`1.10.0`) se escribe a mano en `app.js`. La versión del APK es `versionName` en `app/build.gradle.kts` (hoy `1.10.0`). Conviene mantener ambas iguales.
+- La versión que se muestra en *Ajustes > Acerca de* (`1.11.0`) se escribe a mano en `app.js`. La versión del APK es `versionName` en `app/build.gradle.kts` (hoy `1.11.0`). Conviene mantener ambas iguales.
 - No se versionan `app/build/`, `.gradle/`, `.idea/`, `.kotlin/`, `local.properties` ni los APK, porque están en `.gitignore`.
