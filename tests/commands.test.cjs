@@ -28,8 +28,12 @@ function appContext() {
   for (const file of ['niveles.js', 'app.js']) vm.runInContext(fs.readFileSync(path.join(assets, file), 'utf8'), context);
   return { app, run: expression => vm.runInContext(expression, context) };
 }
+// {dato} en un comando se rellena con state.flags en el momento de escribirlo, como haría el jugador al leer la terminal.
 function play(run, commands) {
-  for (const command of commands) run(`runCommand(${JSON.stringify(command)})`);
+  for (const command of commands) {
+    const typed = command.replace(/\{(\w+)\}/g, (_, key) => run(`state.flags.${key}`));
+    run(`runCommand(${JSON.stringify(typed)})`);
+  }
 }
 
 // Comandos que completan cada nivel del Mundo 1, tal como se diseñaron.
@@ -63,7 +67,79 @@ test('el Mundo 1 se completa con los comandos de cada nivel y abre la barrera de
   run("state.screen = 'map'; render()");
   assert.equal((app.innerHTML.match(/class="world-gate open"/g) || []).length, 1);
   run('openMission(5)');
-  assert.equal(run('state.screen'), 'map', 'el Mundo 2 todavía no tiene niveles');
+  assert.equal(run('state.screen'), 'mission', 'el Mundo 2 ya se puede jugar');
+});
+
+// Comandos que completan cada nivel del Mundo 2.
+const world2 = [
+  ['ps -e', 'kill {pid}', 'ps -e'],
+  ['top', 'renice 10 -p 812', 'top'],
+  ['reparar-casco &', 'ajustar-rumbo', 'jobs'],
+  ['cat /nave/combustible.log', 'systemctl start semaforo-combustible', 'cat /nave/combustible.log'],
+  ['ps -e', 'cat /nave/robots.txt', 'kill {pidB}', 'systemctl start semaforo-herramientas', 'systemctl start {killed}', 'systemctl start motor-principal']
+];
+
+test('el Mundo 2 se completa y abre la barrera del Mundo 3', () => {
+  const { app, run } = appContext();
+  run('data.completed = [1, 2, 3, 4, 5]; data.xp = {}');
+  world2.forEach((commands, index) => {
+    run(`openMission(${index + 5})`);
+    assert.equal(run('state.screen'), 'mission', `nivel ${index + 6}`);
+    play(run, commands);
+    assert.equal(run(`data.completed.includes(${index + 6})`), true, `nivel ${index + 6}`);
+  });
+  assert.equal(run('state.flags.thrust'), 100);
+  run("state.screen = 'map'; render()");
+  assert.equal((app.innerHTML.match(/class="world-gate open"/g) || []).length, 2);
+});
+
+test('el PID de señal_fantasma cambia en cada partida y kill explica los errores', () => {
+  const { app, run } = appContext();
+  run('data.completed = [1, 2, 3, 4, 5]; openMission(5)');
+  const pid = run('state.flags.pid');
+  assert.ok(pid >= 2000 && pid < 8000);
+  play(run, ['ps -e']);
+  assert.match(run('state.lines.at(-1).text'), new RegExp(`${pid} \\?.*señal_fantasma`));
+  assert.match(app.innerHTML, new RegExp(`PID ${pid}`));
+  play(run, ['kill 1']);
+  assert.match(run('state.lines.at(-1).text'), /systemd/);
+  play(run, ['kill señal_fantasma']);
+  assert.match(run('state.lines.at(-1).text'), /número PID/);
+  play(run, ['kill 99999']);
+  assert.match(run('state.lines.at(-1).text'), /No existe ese proceso/);
+  assert.equal(run('state.step'), 1);
+  play(run, ['kill {pid}', 'kill {pid}']);
+  assert.match(run('state.lines.at(-1).text'), /No existe ese proceso/, 'un proceso terminado ya no existe');
+  assert.equal(run('state.step'), 2);
+});
+
+test('soporte_vital no se puede detener y renice negativo se rechaza', () => {
+  const { run } = appContext();
+  run('data.completed = [1, 2, 3, 4, 5, 6]; openMission(6)');
+  play(run, ['top', 'kill 812']);
+  assert.match(run('state.lines.at(-1).text'), /oxígeno/);
+  play(run, ['renice -10 -p 812']);
+  assert.match(run('state.lines.at(-1).text'), /más prioridad/);
+  assert.equal(run('state.step'), 1);
+  run('data.completed.push(7); openMission(7)');
+  play(run, ['reparar-casco']);
+  assert.match(run('state.lines.at(-1).text'), /Agregue &/);
+  assert.equal(run('state.step'), 0);
+});
+
+test('el jefe del Mundo 2 acepta detener cualquiera de los dos robots', () => {
+  const { app, run } = appContext();
+  run('data.completed = [1, 2, 3, 4, 5, 6, 7, 8, 9]; openMission(9)');
+  play(run, ['systemctl start motor-principal', 'ps -e', 'kill {pidA}']);
+  assert.match(run('state.lines.at(-1).text'), /averigüe por qué/);
+  play(run, ['cat /nave/robots.txt', 'kill {pidA}']);
+  assert.equal(run('state.flags.killed'), 'robot-a');
+  assert.match(run("state.lines.filter(l => l.kind === 'ubuntu').at(-1).text"), /robot-b la tomó/);
+  play(run, ['systemctl start robot-a']);
+  assert.match(run('state.lines.at(-1).text'), /Sin semáforo/);
+  play(run, ['systemctl start semaforo-herramientas', 'systemctl start robot-a', 'systemctl start motor-principal']);
+  assert.equal(run('data.completed.includes(10)'), true);
+  assert.match(app.innerHTML, /\+200 XP/);
 });
 
 test('el nombre de usuario se ajusta al formato de Linux y aparece en whoami', () => {

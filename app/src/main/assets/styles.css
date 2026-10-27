@@ -343,6 +343,47 @@ p { line-height: 1.48; }
 .launching .rocket { animation: liftoff 2.6s cubic-bezier(.55, 0, .8, .25) forwards; }
 @keyframes liftoff { 0%, 12% { transform: translate(0, 0); } 4% { transform: translate(-1px, 1px); } 8% { transform: translate(1px, 0); } 100% { transform: translate(0, -330px); } }
 
+/* ===== Mundo 2: procesos y concurrencia ===== */
+.readout.fail { border-style: solid; border-color: var(--danger); background: var(--status-fail-bg); }
+.readout.fail .readout-state { color: var(--danger); }
+.w2-stack { display: flex; flex-direction: column; gap: 8px; height: 100%; }
+.readout-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.proc-list { display: grid; gap: 4px; }
+.proc { display: grid; grid-template-columns: 9px minmax(0, 1fr) auto; align-items: center; gap: 3px 8px; padding: 4px 8px; border: 1px solid var(--ship-line); border-radius: var(--radius-s); background: var(--ship-card); font-size: .72rem; font-weight: 800; transition: opacity .4s, border-color .4s; }
+.proc-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; letter-spacing: .03em; }
+.proc code { color: var(--muted); font-family: var(--font-mono); font-size: .68rem; white-space: nowrap; }
+.proc .gauge-bar { grid-column: 2 / -1; margin: 0; }
+.proc.active { border-color: var(--status-ok); }
+.proc.fail { border-color: var(--danger); color: var(--danger); animation: alert-blink 1.2s steps(2, jump-none) infinite; }
+.proc.fail .gauge-bar i { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+.proc.off { opacity: .45; }
+.proc.off .proc-name { text-decoration: line-through; }
+.proc.idle { border-style: dashed; border-color: var(--idle); color: var(--idle); }
+/* Nivel 1: señal de comunicaciones */
+.comms { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+.signal { display: flex; align-items: flex-end; gap: 3px; height: 30px; padding-right: 4px; }
+.signal i { width: 6px; height: calc(20% + var(--i) * 20%); border-radius: 2px; background: var(--danger); animation: static-noise .5s steps(3) infinite alternate; animation-delay: calc(var(--i) * -110ms); }
+.signal.clean i { background: var(--orange); box-shadow: var(--glow); animation: none; }
+@keyframes static-noise { 50% { opacity: .25; transform: scaleY(.4); } }
+/* Nivel 4: tanque compartido */
+.tank-grid { display: grid; grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr); gap: 8px; align-items: center; height: calc(100% - 22px); }
+.tank-side { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.tank-center { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.tank { position: relative; width: 52px; height: 104px; overflow: hidden; border: 2px solid var(--idle); border-radius: var(--radius-m); background: #1a1414; }
+.tank i { position: absolute; left: 0; right: 0; bottom: 0; height: var(--fill); background: linear-gradient(var(--bright), #b73713); transition: height .9s var(--ease-out); }
+.tank small { position: absolute; left: 0; right: 0; bottom: 6px; color: #170d0a; font-family: var(--font-mono); font-size: .72rem; font-weight: 800; text-align: center; }
+.lamp { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--idle); font-size: .58rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.lamp i { width: 14px; height: 14px; border-radius: 50%; background: var(--idle); transition: background-color .4s, box-shadow .4s; }
+.lamp.on { color: var(--bright); }
+.lamp.on i { background: var(--orange); box-shadow: var(--glow); }
+/* Nivel 5: abrazo mortal */
+.deadlock { display: grid; grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr); gap: 6px; align-items: center; }
+.robot .module-state { min-height: 2.4em; line-height: 1.2; }
+.robot.off { opacity: .5; }
+.cycle { color: var(--idle); font-size: 1.4rem; text-align: center; }
+.cycle.locked { color: var(--danger); text-shadow: 0 0 8px var(--danger); animation: alert-blink 1.2s steps(2, jump-none) infinite; }
+.boss-row { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; align-items: center; margin-top: 10px; }
+
 /* Mensaje de Ubuntu */
 .ubuntu-msg { display: flex; align-items: flex-start; gap: 12px; margin: 12px 0; padding: 11px 12px; border: 1px solid var(--line); border-left: 3px solid var(--orange); border-radius: 0 var(--radius-s) var(--radius-s) 0; background: rgba(33,28,34,.85); }
 .ubuntu-avatar { flex: none; width: 38px; height: 38px; }

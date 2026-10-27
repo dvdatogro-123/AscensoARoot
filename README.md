@@ -41,7 +41,7 @@ Son **20 niveles en 4 mundos**, uno por cada AF. Cada mundo tiene su propio fond
 | 3 · Estación espacial | AF3 · Almacenaje, memoria y archivos | La estación espacial |
 | 4 · Llegar a Root | AF4 · Redes y seguridad | El planeta Root y su escudo |
 
-Los niveles se programan por partes: por ahora está listo el **Mundo 1**. Un nivel sin pasos aparece en el mapa como *Próximamente* y no se puede abrir.
+Los niveles se programan por partes: por ahora están listos el **Mundo 1** y el **Mundo 2**. Un nivel sin pasos aparece en el mapa como *Próximamente* y no se puede abrir.
 
 | # | Nivel del Mundo 1 | Comandos | Panel de la nave |
 |---:|---|---|---|
@@ -51,9 +51,17 @@ Los niveles se programan por partes: por ahora está listo el **Mundo 1**. Un ni
 | 4 | Prueba de rendimiento | `uptime`, `nproc`, `ls`, `cat`, `systemctl start` | Carga del sistema con tendencia y modos de navegación |
 | 5 | Secuencia de despegue (jefe) | `systemctl reboot` y lo aprendido | Animación del arranque, cuenta regresiva y despegue |
 
+| # | Nivel del Mundo 2 | Comandos | Panel de la nave |
+|---:|---|---|---|
+| 1 | Sistemas en vuelo | `ps -e`, `kill` | Señal con interferencia y lista de procesos; `señal_fantasma` tiene un PID distinto en cada partida |
+| 2 | Proceso desbocado | `top`, `renice` | Uso de procesador por proceso; `soporte_vital` no se puede detener, solo bajar su prioridad |
+| 3 | Trabajo en paralelo | `&`, `jobs` | Casco reparándose en segundo plano mientras se corrige el rumbo |
+| 4 | Sección crítica | `cat`, `systemctl start` | Tanque compartido: condición de carrera (45 L contra 35 L) y semáforo |
+| 5 | Abrazo mortal (jefe) | lo aprendido | Dos robots bloqueados; se detiene uno (cualquiera), se activa el semáforo y enciende el motor principal |
+
 - En cada nivel habla **Ubuntu**, la IA de la nave, de forma seria. Los errores comunes no solo se marcan: Ubuntu explica qué pasó.
 - Se aceptan variantes válidas de Linux: espacios extra, `.service` al final o `/` al final de una ruta.
-- Bajo la terminal hay atajos: `TAB` (completa la palabra), `↑`/`↓` (historial), `/`, `-`, `|`, `~` y `clear`.
+- Bajo la terminal hay atajos: `TAB` (completa la palabra), `↑`/`↓` (historial), `/`, `-`, `&`, `~` y `clear`.
 - **Bitácora:** lista los comandos aprendidos, con qué hacen y un ejemplo.
 - Cada nivel vale **100 XP**. El jefe vale **200 XP** y cada pista que se ve en él resta 50 (mínimo 50).
 - *Restablecer progreso* borra los niveles completados y los XP, pero conserva el nombre de usuario y los ajustes de sonido y avisos.
@@ -162,7 +170,7 @@ Con Node.js instalado, desde la raíz del proyecto:
 node --test tests/commands.test.cjs
 ```
 
-Las pruebas juegan los 5 niveles del Mundo 1 con sus comandos reales y revisan que se abra la barrera del Mundo 2, el ajuste del nombre de usuario, las variantes aceptadas y los errores explicados, los modos rechazados del nivel 4, el arranque, las pistas con descuento y el despegue del jefe, y la bitácora. No prueban la parte Android ni el diseño visual.
+Las pruebas juegan los 10 niveles de los Mundos 1 y 2 con sus comandos reales y revisan que se abran las barreras de los Mundos 2 y 3, los PID aleatorios y los errores de `kill`, que `soporte_vital` no se pueda detener, las dos formas de resolver el jefe del Mundo 2, el ajuste del nombre de usuario, las variantes aceptadas y los errores explicados, los modos rechazados del nivel 4, el arranque, las pistas con descuento y el despegue del jefe, y la bitácora. No prueban la parte Android ni el diseño visual.
 
 ---
 
@@ -170,7 +178,7 @@ Las pruebas juegan los 5 niveles del Mundo 1 con sus comandos reales y revisan q
 
 | Quiero cambiar… | Lugar |
 |---|---|
-| Textos, pasos, comandos y panel de los niveles | `niveles.js` (por ahora `world1Levels`); se conectan a su mundo en `levelContent` de `app.js` |
+| Textos, pasos, comandos y panel de los niveles | `niveles.js` (`world1Levels`, `world2Levels`); se conectan a su mundo en `levelContent` de `app.js` |
 | Comandos de la bitácora | Arreglo `glossary` en `niveles.js` |
 | Nombres de los niveles en el mapa | Arreglo `missions` en `app.js` |
 | Nombres, AF y fondo de los mundos | Arreglo `worlds` y objeto `scenery` en `app.js`; estilos `.world-*` en `styles.css` |
@@ -187,5 +195,5 @@ Las pruebas juegan los 5 niveles del Mundo 1 con sus comandos reales y revisan q
 
 ## Notas
 
-- La versión que se muestra en *Ajustes > Acerca de* (`1.9.1`) se escribe a mano en `app.js`. La versión del APK es `versionName` en `app/build.gradle.kts` (hoy `1.9.1`). Conviene mantener ambas iguales.
+- La versión que se muestra en *Ajustes > Acerca de* (`1.10.0`) se escribe a mano en `app.js`. La versión del APK es `versionName` en `app/build.gradle.kts` (hoy `1.10.0`). Conviene mantener ambas iguales.
 - No se versionan `app/build/`, `.gradle/`, `.idea/`, `.kotlin/`, `local.properties` ni los APK, porque están en `.gitignore`.

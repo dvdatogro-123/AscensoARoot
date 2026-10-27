@@ -9,16 +9,20 @@ const worlds = [
 const levelsPerWorld = 5;
 // Un nivel se puede jugar cuando tiene pasos. El contenido de cada mundo vive en niveles.js.
 function level(world, title, commands = '') {
-  return { world, title, commands, tag: '', steps: [], extras: {}, ending: '', boss: false, panel: () => '' };
+  return { world, title, commands, tag: '', steps: [], extras: {}, ending: '', boss: false, setup: () => ({}), panel: () => '' };
 }
-const levelContent = { 1: world1Levels };
+const levelContent = { 1: world1Levels, 2: world2Levels };
 const missions = [
   level(1, 'Despertar', 'whoami · cat · uname'),
   level(1, 'Verificación de sistemas', 'lscpu · free · lsblk'),
   level(1, 'Encendido de propulsores', 'systemctl'),
   level(1, 'Prueba de rendimiento', 'uptime · nproc'),
   level(1, 'Secuencia de despegue', 'systemctl'),
-  level(2, 'Nivel 1'), level(2, 'Nivel 2'), level(2, 'Nivel 3'), level(2, 'Nivel 4'), level(2, 'Nivel 5'),
+  level(2, 'Sistemas en vuelo', 'ps · kill'),
+  level(2, 'Proceso desbocado', 'top · renice'),
+  level(2, 'Trabajo en paralelo', '& · jobs'),
+  level(2, 'Sección crítica', 'cat · systemctl'),
+  level(2, 'Abrazo mortal', 'ps · kill · systemctl'),
   level(3, 'Nivel 1'), level(3, 'Nivel 2'), level(3, 'Nivel 3'), level(3, 'Nivel 4'), level(3, 'Nivel 5'),
   level(4, 'Nivel 1'), level(4, 'Nivel 2'), level(4, 'Nivel 3'), level(4, 'Nivel 4'), level(4, 'Nivel 5')
 ].map((m, i) => ({ ...m, ...(levelContent[m.world]?.[i % levelsPerWorld] || {}), id: i + 1 }));
@@ -53,22 +57,32 @@ function toUsername(raw) {
   const word = String(raw).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim().split(/\s+/)[0] || '';
   return word.replace(/[^a-z0-9_-]/g, '').slice(0, 16) || 'explorador';
 }
-function fill(text) { return String(text).replace(/\{user\}/g, userName()); }
+// {user} es el nombre del jugador; cualquier otro {dato} sale de state.flags (por ejemplo, un PID aleatorio).
+function fill(text) { return String(text).replace(/\{(\w+)\}/g, (all, key) => key === 'user' ? userName() : state.flags[key] ?? all); }
 // Acepta variantes que en Linux significan lo mismo: espacios extra, ".service" y "/" al final de una ruta.
 function normalizeCommand(input) {
   return input.trim().replace(/\s+/g, ' ').replace(/\.service\b/g, '').replace(/(\S)\/+(?=\s|$)/g, '$1');
 }
 function asAnswer(value) { return typeof value === 'string' ? { out: value } : value; }
+// Las claves pueden llevar {dato}: se comparan ya rellenadas.
+function pick(dict, command) {
+  const key = Object.keys(dict || {}).find(k => fill(k) === command);
+  return key === undefined ? undefined : dict[key];
+}
 function checkCommand(m, command) {
   const step = m.steps[state.step];
-  if (step.answers[command] !== undefined) return { ok: true, ...asAnswer(step.answers[command]) };
-  if (m.extras[command] !== undefined) return { ok: false, extra: true, ...asAnswer(m.extras[command]) };
-  const error = step.errors?.[command];
+  const answer = pick(step.answers, command);
+  if (answer !== undefined) return { ok: true, ...asAnswer(answer) };
+  const extra = pick(m.extras, command);
+  if (extra !== undefined) return { ok: false, extra: true, ...asAnswer(extra) };
+  const error = pick(step.errors, command);
   if (error !== undefined) return { ok: false, ...(typeof error === 'string' ? { message: error } : error) };
+  const checked = step.check?.(command, state.flags);
+  if (checked) return checked;
   // Como en una terminal real, un comando de un paso anterior se puede volver a ejecutar para consultar su salida.
-  const earlier = m.steps.slice(0, state.step).reverse().find(s => s.answers[command] !== undefined);
+  const earlier = m.steps.slice(0, state.step).reverse().find(s => pick(s.answers, command) !== undefined);
   if (earlier) {
-    const previous = asAnswer(earlier.answers[command]);
+    const previous = asAnswer(pick(earlier.answers, command));
     return previous.anim ? { ok: false, extra: true, note: 'Ese procedimiento ya se completó.' } : { ok: false, extra: true, out: previous.out, note: previous.note };
   }
   return { ok: false };
@@ -269,7 +283,7 @@ function settings() {
     <button class="setting-row danger" data-action="confirm-reset"><span class="left"><span class="symbol">↶</span>Restablecer progreso</span></button>
     <button class="setting-row" data-action="nav" data-screen="credits"><span class="left"><span class="symbol">★</span>Créditos / Conclusión</span><span class="row-arrow" aria-hidden="true">▶</span></button>
     <div class="setting-row"><span class="left"><span class="symbol">⚒</span>Acerca de Ascenso a Root</span></div>
-    <p class="about">Versión 1.9.1 · Aplicación educativa sobre Ubuntu. Los comandos se simulan dentro de la aplicación y no modifican el teléfono.</p>
+    <p class="about">Versión 1.10.0 · Aplicación educativa sobre Ubuntu. Los comandos se simulan dentro de la aplicación y no modifican el teléfono.</p>
   </main>${nav('settings')}`;
 }
 function credits() {
@@ -297,7 +311,7 @@ function credits() {
   </main>${nav('settings')}`;
 }
 // Pantalla de nivel: panel de la nave, mensaje de Ubuntu y terminal.
-const termKeys = [['Tab', 'TAB', 'Autocompletar'], ['up', '↑', 'Comando anterior'], ['down', '↓', 'Comando siguiente'], ['/', '/', 'Barra'], ['-', '-', 'Guion'], ['|', '|', 'Barra vertical'], ['~', '~', 'Virgulilla'], ['clear', 'clear', 'Limpiar terminal']];
+const termKeys = [['Tab', 'TAB', 'Autocompletar'], ['up', '↑', 'Comando anterior'], ['down', '↓', 'Comando siguiente'], ['/', '/', 'Barra'], ['-', '-', 'Guion'], ['&', '&', 'Segundo plano'], ['~', '~', 'Virgulilla'], ['clear', 'clear', 'Limpiar terminal']];
 const bookIcon = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
 function terminalLine(line) {
   const prefix = line.kind === 'command' ? '<span class="prompt">$ </span>' : line.kind === 'ubuntu' ? '<span class="prompt">UBUNTU › </span>' : '';
@@ -373,7 +387,7 @@ const screen = state.screen === 'cover' ? cover() : state.screen === 'team' ? te
 }
 function openMission(index) {
   if (!Number.isInteger(index) || index < 0 || index >= missions.length || missions[index].id > data.completed.length + 1 || !isReady(missions[index])) return;
-  state = { ...state, screen: 'mission', mission: index, step: 0, lines: [], hint: false, flags: {}, history: [], historyIndex: 0, draft: '', hintsUsed: 0, earnedXp: null, busy: false, showLog: false, routeJustCompleted: false, run: state.run + 1 };
+  state = { ...state, screen: 'mission', mission: index, step: 0, lines: [], hint: false, flags: missions[index].setup(), history: [], historyIndex: 0, draft: '', hintsUsed: 0, earnedXp: null, busy: false, showLog: false, routeJustCompleted: false, run: state.run + 1 };
   renderedScreen = null;
   render();
 }
@@ -410,6 +424,10 @@ const animations = {
     const frames = Array.from({ length: 10 }, (_, i) => () => { state.flags.count = 10 - i; });
     frames.push(() => { state.flags.launch = true; state.lines.push({ kind: 'boot', text: 'T-0 · ¡Despegue!' }); });
     playFrames(frames, 420, () => later(done, 2600));
+  },
+  engine(done) {
+    const frames = [25, 50, 75, 100].map(p => () => { state.flags.thrust = p; state.lines.push({ kind: 'boot', text: `Motor principal · empuje ${p} %` }); });
+    playFrames(frames, 650, () => later(done, 900));
   }
 };
 function completeLevel(m) {
@@ -464,7 +482,8 @@ function pressKey(key) {
   if (key === 'Tab') {
     // Como en bash, completa la palabra que se está escribiendo.
     const typed = field.value.replace(/^\s+/, '');
-    const options = [...Object.keys(m.steps[state.step]?.answers || {}), ...Object.keys(m.extras), ...glossary.filter(learnedState).map(g => g.example)];
+    // Las respuestas con {dato} (como un PID) no se autocompletan: el jugador debe leerlo en la terminal.
+    const options = [...Object.keys(m.steps[state.step]?.answers || {}).filter(k => !/\{(?!user\})/.test(k)).map(fill), ...Object.keys(m.extras), ...glossary.filter(learnedState).map(g => g.example)];
     const match = typed && options.find(o => o.startsWith(typed) && o !== typed);
     if (match) { const end = match.indexOf(' ', typed.length + (match[typed.length] === ' ' ? 1 : 0)); field.value = end === -1 ? match : match.slice(0, end); }
   } else if (key === 'up' || key === 'down') {

@@ -230,6 +230,259 @@ const world1Levels = [
   }
 ];
 
+// Mundo 2: en los textos, {pid}, {pidA}, {pidB} y {killed} vienen de setup() o de set (state.flags).
+// Un paso puede tener check(comando, flags) para respuestas que dependen del comando, como kill con cualquier PID.
+const protectedPids = {
+  1: 'PID 1 es systemd, el primer proceso del sistema. Si se detiene, la nave se apaga. Operación cancelada.',
+  812: 'PID 812 es soporte_vital. Produce el oxígeno de la tripulación. Operación cancelada.',
+  903: 'PID 903 es navegacion. Sin él la nave pierde el rumbo. Operación cancelada.',
+  1210: 'PID 1210 es bash, su propia terminal. Si lo detiene, se cierra su sesión. Operación cancelada.'
+};
+function killTarget(command) { return command.match(/^kill(?: -9| -15)? (\S+)$/)?.[1] ?? null; }
+function killCheck(command) {
+  if (command === 'kill') return { ok: false, message: 'Indique el número del proceso: kill <PID>.' };
+  const target = killTarget(command);
+  if (target === null) return undefined;
+  if (!/^\d+$/.test(target)) return { ok: false, message: 'kill necesita el número PID, no el nombre del proceso. Consulte la lista con ps -e.' };
+  if (protectedPids[target]) return { ok: false, message: protectedPids[target] };
+  return { ok: false, message: `kill: (${target}) - No existe ese proceso. Verifique el PID con ps -e.` };
+}
+function randomPid() { return 2000 + Math.floor(Math.random() * 6000); }
+const psStart = '  PID TTY      TIME     CMD\n    1 ?        00:00:02 systemd\n  812 ?        00:00:41 soporte_vital\n  903 ?        00:00:12 navegacion\n 1210 pts/0    00:00:00 bash\n';
+const psEnd = ' 9412 pts/0    00:00:00 ps';
+const lifeSupportKill = 'Negativo. soporte_vital produce el oxígeno de la tripulación. Detenerlo no es una opción. Reduzca su prioridad.';
+const hullBlocks = 'La terminal quedaría ocupada durante toda la reparación y no podría corregir el rumbo. Agregue & al final: reparar-casco &.';
+const fuelLog = '10:21:04.120  motor-izq  lee tanque: 50 L\n10:21:04.121  motor-der  lee tanque: 50 L\n10:21:04.300  motor-der  consume 10 L → escribe 40 L\n10:21:04.302  motor-izq  consume  5 L → escribe 45 L\nREGISTRO: 45 L · MEDICIÓN: 35 L';
+const fuelLogFixed = '10:23:10.050  motor-izq  toma el semáforo · lee 50 L\n10:23:10.051  motor-der  espera el semáforo…\n10:23:10.250  motor-izq  consume  5 L → escribe 45 L · libera\n10:23:10.251  motor-der  toma el semáforo · lee 45 L\n10:23:10.450  motor-der  consume 10 L → escribe 35 L · libera\nREGISTRO: 35 L · MEDICIÓN: 35 L';
+const robotsFile = 'robot-a   tiene: llave      espera: soldador\nrobot-b   tiene: soldador   espera: llave';
+const motorBlocked = 'Fallo: reparación del motor principal incompleta. Los robots no han terminado.';
+const robotTools = { 'robot-a': 'la llave', 'robot-b': 'el soldador' };
+// kill en el jefe: un robot solo se detiene después de leer robots.txt, en el paso 3.
+function robotCheck(step) {
+  return (command, f) => {
+    const target = killTarget(command);
+    const robot = target === String(f.pidA) ? 'robot-a' : target === String(f.pidB) ? 'robot-b' : null;
+    if (!robot) {
+      if (step === 3 && f.killed && command === `systemctl start ${f.killed}`) return { ok: false, message: 'Sin semáforo, los robots pueden volver a bloquearse. Active primero semaforo-herramientas.' };
+      return killCheck(command);
+    }
+    if (step < 2) return { ok: false, message: 'Antes de detener un robot, averigüe por qué no avanza. Su registro está en /nave/robots.txt.' };
+    if (step > 2) return { ok: false, message: robot === f.killed ? `kill: (${target}) - No existe ese proceso.` : 'No es necesario. El abrazo mortal ya se rompió.' };
+    const other = robot === 'robot-a' ? 'robot-b' : 'robot-a';
+    return { ok: true, set: { killed: robot, other }, note: `Proceso ${target} terminado. ${robot} soltó ${robotTools[robot]}; ${other} la tomó y completó su parte de la reparación.` };
+  };
+}
+
+function procRow(name, detail, status, cpu) {
+  return `<div class="proc ${status}"><i class="led"></i><span class="proc-name">${name}</span><code>${detail}</code>${cpu === undefined ? '' : `<span class="gauge-bar"><i style="--fill:${cpu}%"></i></span>`}</div>`;
+}
+function unknownProcs(count, bars) {
+  return Array.from({ length: count }, () => procRow('???', 'PID ???', 'idle', bars ? 0 : undefined)).join('');
+}
+
+const world2Levels = [
+  {
+    tag: 'Comunicaciones',
+    setup: () => ({ pid: randomPid() }),
+    steps: [
+      { say: 'Interferencia en comunicaciones. La provoca un programa en ejecución. A un programa en ejecución se le llama proceso. Para ver todos los procesos de la nave: ps -e.',
+        hint: 'Escriba ps -e.',
+        answers: {
+          'ps -e': `${psStart} {pid} ?        00:00:58 señal_fantasma\n${psEnd}`,
+          'ps -A': `${psStart} {pid} ?        00:00:58 señal_fantasma\n${psEnd}`,
+          'ps': { out: `  PID TTY      TIME     CMD\n 1210 pts/0    00:00:00 bash\n${psEnd}`, note: 'Sin -e solo veo los procesos de su terminal. Agregue -e para verlos todos.' }
+        },
+        check: killCheck },
+      { say: 'Cada proceso tiene un número único: su PID. señal_fantasma no pertenece a ningún sistema de la nave. Para detener un proceso se usa kill seguido de su PID. Búsquelo en la lista.',
+        hint: 'El PID de señal_fantasma es {pid}. Escriba kill {pid}.',
+        answers: {
+          'kill {pid}': { out: '', note: 'Proceso {pid} terminado.' },
+          'kill -9 {pid}': { out: '', note: 'Proceso {pid} terminado a la fuerza. Sin -9, kill le pide al proceso que se cierre por sí mismo; es la forma recomendada.' }
+        },
+        check: killCheck },
+      { say: 'Interferencia eliminada. Confirme con ps -e que el proceso ya no existe.',
+        hint: 'Escriba ps -e.',
+        answers: { 'ps -e': psStart + psEnd, 'ps -A': psStart + psEnd },
+        check: killCheck }
+    ],
+    ending: 'Comunicaciones estables. Un programa es un archivo guardado; un proceso es ese programa en ejecución. Yo ejecuto muchos a la vez y los distingo por su PID. Siguiente procedimiento: revisión del procesador.',
+    panel(v) {
+      const s = v.step, gone = s >= 2;
+      const bars = Array.from({ length: 5 }, (_, i) => `<i style="--i:${i}"></i>`).join('');
+      const rows = s >= 1
+        ? procRow('systemd', 'PID 1', 'active') + procRow('soporte_vital', 'PID 812', 'active') + procRow('navegacion', 'PID 903', 'active') + procRow('señal_fantasma', gone ? 'Terminado' : `PID ${v.flags.pid}`, gone ? 'off' : 'fail')
+        : unknownProcs(4);
+      return `<div class="w2-stack">
+        <div class="comms">${readout('Señal', gone ? 'Estable' : 'Interferencia', gone ? 'ok' : 'fail', gone ? 'Señal limpia' : 'Origen desconocido')}<span class="signal${gone ? ' clean' : ''}" aria-hidden="true">${bars}</span></div>
+        <div class="proc-list">${rows}</div>
+      </div>`;
+    }
+  },
+  {
+    tag: 'Procesador',
+    steps: [
+      { say: 'La navegación responde con lentitud. Algún proceso acapara el procesador. top muestra qué procesos lo usan más.',
+        hint: 'Escriba top.',
+        answers: { 'top': { out: 'top - 10:14:02 up 47 min,  load average: 3.92, 3.10, 2.20\n  PID USUARIO  NI  %CPU  %MEM  COMMAND\n  812 {user}    0  97.3   4.1  soporte_vital\n  903 {user}    0   1.8   2.0  navegacion\n    1 root      0   0.2   0.3  systemd', note: 'En una terminal real, top se actualiza cada segundo y se cierra con la tecla q.' } },
+        errors: { 'kill 812': lifeSupportKill },
+        check: killCheck },
+      { say: 'soporte_vital usa 97 % del procesador y deja sin turno a la navegación. No puede detenerse: produce el oxígeno. Puede, en cambio, bajar su prioridad. La columna NI muestra el valor nice: va de -20 (más prioridad) a 19 (menos). Comando: renice 10 -p 812.',
+        hint: 'Escriba renice 10 -p 812.',
+        answers: {
+          'renice 10 -p 812': '812 (process ID) old priority 0, new priority 10',
+          'renice -n 10 -p 812': '812 (process ID) old priority 0, new priority 10',
+          'renice +10 -p 812': '812 (process ID) old priority 0, new priority 10',
+          'renice 10 812': { out: '812 (process ID) old priority 0, new priority 10', note: 'Correcto. Sin -p, renice también entiende que 812 es un PID.' }
+        },
+        errors: {
+          'kill 812': lifeSupportKill,
+          'renice -10 -p 812': 'Un valor negativo le daría más prioridad y el problema empeoraría. Use 10.',
+          'renice 10 -p 903': 'PID 903 es navegacion, el proceso afectado. Bajarle la prioridad lo haría más lento. El que acapara es 812.',
+          'renice 10': 'Indique a qué proceso: renice 10 -p 812.'
+        },
+        check: killCheck },
+      { say: 'Prioridad ajustada. Verifique el nuevo reparto del procesador con top.',
+        hint: 'Escriba top.',
+        answers: { 'top': 'top - 10:15:30 up 48 min,  load average: 3.95, 3.30, 2.40\n  PID USUARIO  NI  %CPU  %MEM  COMMAND\n  812 {user}   10  58.4   4.1  soporte_vital\n  903 {user}    0  39.1   2.0  navegacion\n    1 root      0   0.2   0.3  systemd' },
+        errors: { 'kill 812': lifeSupportKill },
+        check: killCheck }
+    ],
+    ending: 'Navegación en tiempo normal. El planificador reparte el procesador en turnos muy cortos entre los procesos. Un valor nice alto hace que un proceso ceda turnos a los demás: soporte_vital sigue funcionando, pero ya no acapara. Siguiente procedimiento: reparación del casco.',
+    panel(v) {
+      const s = v.step, fixed = s >= 2;
+      const rows = s >= 1
+        ? procRow('soporte_vital', `PID 812 · NI ${fixed ? 10 : 0} · ${fixed ? '58' : '97'} %`, fixed ? 'active' : 'fail', fixed ? 58 : 97) + procRow('navegacion', `PID 903 · NI 0 · ${fixed ? '39' : '2'} %`, 'active', fixed ? 39 : 2) + procRow('systemd', 'PID 1 · NI 0 · 0 %', 'active', 0)
+        : unknownProcs(3, true);
+      return `<div class="w2-stack">
+        <div class="readout-pair">${readout('Oxígeno', '21 %', 'ok', 'Estable')}${readout('Navegación', s >= 3 ? 'Normal' : 'Lenta', s >= 3 ? 'ok' : 'fail', s >= 3 ? 'Estable' : 'Sin turno')}</div>
+        <div class="proc-list">${rows}</div>
+      </div>`;
+    }
+  },
+  {
+    tag: 'Casco exterior',
+    steps: [
+      { say: 'Daño en el casco por micrometeoritos. La reparación tarda varios minutos y el rumbo también necesita corrección. Si ejecuta reparar-casco de la forma normal, la terminal queda ocupada hasta que termine. Con & al final, el comando corre en segundo plano y la terminal queda libre.',
+        hint: 'Escriba reparar-casco & (con un espacio antes de &).',
+        answers: { 'reparar-casco &': '[1] 2231', 'reparar-casco&': '[1] 2231' },
+        errors: { 'reparar-casco': hullBlocks, 'ajustar-rumbo': 'Primero inicie la reparación del casco en segundo plano: reparar-casco &.' } },
+      { say: 'Reparación en curso como trabajo [1], con PID 2231. La terminal sigue libre. Corrija el rumbo: ajustar-rumbo.',
+        hint: 'Escriba ajustar-rumbo.',
+        answers: { 'ajustar-rumbo': 'Corrigiendo rumbo… desvío 12° → 0°\nTrayectoria estable.' },
+        errors: { 'reparar-casco &': 'La reparación ya está en curso como trabajo [1].', 'reparar-casco': 'La reparación ya está en curso como trabajo [1].' } },
+      { say: 'Rumbo corregido mientras el casco seguía en reparación. Para ver los trabajos en segundo plano: jobs.',
+        hint: 'Escriba jobs.',
+        answers: { 'jobs': '[1]+  Ejecutando    reparar-casco &' } }
+    ],
+    ending: 'Reparación del casco completada: [1]+ Hecho. Dos tareas avanzaron al mismo tiempo; eso es concurrencia. Con un solo núcleo alterno entre ellas en turnos de milisegundos; con varios núcleos pueden correr en paralelo. Siguiente procedimiento: revisión del tanque de combustible.',
+    panel(v) {
+      const s = v.step, done = v.done;
+      const hull = done ? 100 : [0, 35, 70][s];
+      return `<div class="pad-grid">
+        <div class="pad-scene small">${rocket(true)}</div>
+        <div class="gauges">
+          ${readout('Casco', done ? 'Reparado' : s >= 1 ? `Reparando · ${hull} %` : 'Dañado', done ? 'ok' : s >= 1 ? 'ok' : 'fail', done ? '[1] Hecho' : s >= 1 ? '[1] Segundo plano' : 'Micrometeoritos', hull)}
+          ${readout('Rumbo', s >= 2 ? '0°' : '12°', s >= 2 ? 'ok' : 'fail', s >= 2 ? 'Trayectoria estable' : 'Desviado')}
+          ${readout('Terminal', 'Libre', 'ok', s >= 1 ? 'Lista para otro comando' : 'Esperando comando')}
+        </div>
+      </div>`;
+    }
+  },
+  {
+    tag: 'Tanque de combustible',
+    steps: [
+      { say: 'Alerta: el registro de combustible no coincide con la medición del tanque. Dos motores consumen del mismo tanque al mismo tiempo. Revise el registro: cat /nave/combustible.log.',
+        hint: 'Escriba cat /nave/combustible.log.',
+        answers: { 'cat /nave/combustible.log': fuelLog },
+        errors: { 'cat combustible.log': 'Ese archivo no está aquí. Se encuentra en /nave: cat /nave/combustible.log.' } },
+      { say: 'Se consumieron 15 L de 50: deben quedar 35. Ambos motores leyeron 50 L antes de que el otro escribiera, y la última escritura borró la anterior. Es una condición de carrera. Leer y escribir el tanque es una sección crítica: solo un proceso a la vez debe ejecutarla. Un semáforo lo garantiza. Inicie semaforo-combustible.',
+        hint: 'Escriba systemctl start semaforo-combustible.',
+        answers: { 'systemctl start semaforo-combustible': 'semaforo-combustible.service: active (running)' },
+        errors: {
+          'systemctl stop motor-izq': 'Detener un motor no resuelve el problema: ambos deben funcionar. Sincronícelos con un semáforo.',
+          'systemctl stop motor-der': 'Detener un motor no resuelve el problema: ambos deben funcionar. Sincronícelos con un semáforo.'
+        } },
+      { say: 'Semáforo activo. Repetí el consumo desde 50 L con los motores sincronizados. Revise el registro.',
+        hint: 'Escriba cat /nave/combustible.log.',
+        answers: { 'cat /nave/combustible.log': fuelLogFixed } }
+    ],
+    ending: 'Registro y medición coinciden: 35 L. Con el semáforo, un motor espera mientras el otro usa el tanque, y ningún consumo se pierde. Cuando varios procesos comparten un dato, la sección crítica debe protegerse. Siguiente procedimiento: reparación del motor principal.',
+    panel(v) {
+      const s = v.step, sem = s >= 2, fixed = s >= 3;
+      return `<div class="tank-grid">
+        <div class="tank-side">
+          <span class="mini-module active"><i class="led"></i>Motor izq.</span>
+          ${readout('Registro', s >= 1 ? (fixed ? '35 L' : '45 L') : '???', s >= 1 ? (fixed ? 'ok' : 'fail') : 'pending', s >= 1 ? (fixed ? 'Coincide' : 'No coincide') : 'Pendiente')}
+        </div>
+        <div class="tank-center">
+          <div class="tank"><i style="--fill:70%"></i><small>35 L</small></div>
+          <span class="lamp${sem ? ' on' : ''}"><i></i>Semáforo</span>
+        </div>
+        <div class="tank-side">
+          <span class="mini-module active"><i class="led"></i>Motor der.</span>
+          ${readout('Medición', '35 L', 'ok', 'Sensor')}
+        </div>
+      </div>
+      <p class="panel-foot">Sección crítica <code>leer → consumir → escribir</code></p>`;
+    }
+  },
+  {
+    tag: 'Taller de robots',
+    boss: true,
+    setup: () => { const pidA = randomPid(); return { pidA, pidB: pidA + 1 + Math.floor(Math.random() * 400) }; },
+    steps: [
+      { say: 'Motor principal detenido. Su reparación está asignada a dos robots, pero no hay avance. Usted ya sabe cómo ver lo que está en ejecución.',
+        hint: 'Liste los procesos: ps -e.',
+        answers: { 'ps -e': `${psStart} {pidA} ?        00:03:12 robot-a\n {pidB} ?        00:03:12 robot-b\n${psEnd}`, 'ps -A': `${psStart} {pidA} ?        00:03:12 robot-a\n {pidB} ?        00:03:12 robot-b\n${psEnd}` },
+        errors: { 'systemctl start motor-principal': motorBlocked },
+        check: robotCheck(0) },
+      { say: 'Ambos robots están en ejecución, pero ninguno avanza. Su registro de herramientas está en /nave/robots.txt.',
+        hint: 'Lea el archivo: cat /nave/robots.txt.',
+        answers: { 'cat /nave/robots.txt': robotsFile },
+        errors: { 'systemctl start motor-principal': motorBlocked },
+        check: robotCheck(1) },
+      { say: 'Cada robot retiene una herramienta y espera la del otro. Ninguno la soltará: es un abrazo mortal. Rompa el ciclo.',
+        hint: 'Detenga uno de los robots con kill y su PID, por ejemplo kill {pidB}.',
+        answers: {},
+        errors: { 'systemctl start motor-principal': motorBlocked },
+        check: robotCheck(2) },
+      { say: 'Ciclo roto. Si reinicia ahora el robot detenido, el abrazo mortal puede repetirse. Primero imponga orden en el uso de las herramientas.',
+        hint: 'Active el semáforo de herramientas: systemctl start semaforo-herramientas.',
+        answers: { 'systemctl start semaforo-herramientas': 'semaforo-herramientas.service: active (running)' },
+        errors: { 'systemctl start motor-principal': motorBlocked },
+        check: robotCheck(3) },
+      { say: 'Semáforo activo: cada robot deberá tomar las dos herramientas a la vez o ninguna. Reinicie el robot que detuvo.',
+        hint: 'Escriba systemctl start {killed}.',
+        answers: { 'systemctl start {killed}': '{killed}.service: active (running)\nReparación del motor principal: completada.' },
+        errors: { 'systemctl start motor-principal': motorBlocked },
+        check: robotCheck(4) },
+      { say: 'Ambos robots en línea. Encienda el motor principal.',
+        hint: 'Escriba systemctl start motor-principal.',
+        answers: { 'systemctl start motor-principal': { anim: 'engine' } },
+        check: robotCheck(5) }
+    ],
+    ending: 'Motor principal en línea. Un abrazo mortal ocurre cuando cada proceso retiene un recurso y espera otro que nadie soltará. Usted rompió el ciclo al quitarle su herramienta a un robot, y el semáforo impide que vuelva a formarse: ningún robot retiene una herramienta mientras espera otra. Próximo destino: estación espacial.',
+    panel(v) {
+      const s = v.step, f = v.flags;
+      const robot = (id, label, pid, has, wants) => {
+        const killed = f.killed === id;
+        const status = s < 1 ? 'idle' : s < 3 ? 'fail' : killed && s < 5 ? 'off' : 'active';
+        const state = s < 1 ? 'Sin datos' : s < 2 ? 'Sin avance' : s < 3 ? `Tiene: ${has}<br>Espera: ${wants}` : killed ? (s < 5 ? 'Detenido' : 'En línea') : 'Parte completada';
+        return `<div class="module robot ${status}"><span class="module-head"><i class="led"></i>${label}</span><code>PID ${s >= 1 ? pid : '???'}</code><span class="module-state">${state}</span></div>`;
+      };
+      return `<div class="deadlock">
+        ${robot('robot-a', 'Robot A', f.pidA, 'llave', 'soldador')}
+        <span class="cycle${s >= 2 && s < 3 ? ' locked' : ''}" aria-hidden="true">⇄</span>
+        ${robot('robot-b', 'Robot B', f.pidB, 'soldador', 'llave')}
+      </div>
+      <div class="boss-row">
+        <span class="mini-module ${s >= 4 ? 'active' : ''}"><i class="led"></i>Semáforo</span>
+        <div class="readout ${f.thrust ? 'ok' : 'pending'}"><span class="readout-label">Motor principal</span><span class="gauge-bar"><i style="--fill:${f.thrust || 0}%"></i></span><span class="readout-state">${f.thrust ? `Empuje ${f.thrust} %` : 'Detenido'}</span></div>
+      </div>`;
+    }
+  }
+];
+
 // Bitácora: un comando se registra al completar el paso donde se enseña.
 const glossary = [
   { cmd: 'whoami', level: 1, step: 0, text: 'Dice quién eres en la computadora.', example: 'whoami' },
@@ -244,5 +497,11 @@ const glossary = [
   { cmd: 'uptime', level: 4, step: 0, text: 'Dice cuánto tiempo lleva encendida y qué tan ocupada está.', example: 'uptime' },
   { cmd: 'nproc', level: 4, step: 1, text: 'Dice cuántos núcleos tiene el procesador.', example: 'nproc' },
   { cmd: 'ls', level: 4, step: 2, text: 'Muestra lo que hay dentro de una carpeta.', example: 'ls /sistemas/navegacion' },
-  { cmd: 'systemctl reboot', level: 5, step: 0, text: 'Reinicia la computadora.', example: 'systemctl reboot' }
+  { cmd: 'systemctl reboot', level: 5, step: 0, text: 'Reinicia la computadora.', example: 'systemctl reboot' },
+  { cmd: 'ps -e', level: 6, step: 0, text: 'Muestra todos los procesos (programas en ejecución) con su número PID.', example: 'ps -e' },
+  { cmd: 'kill', level: 6, step: 1, text: 'Detiene un proceso usando su número PID.', example: 'kill 4821' },
+  { cmd: 'top', level: 7, step: 0, text: 'Muestra qué procesos usan más el procesador, en tiempo real.', example: 'top' },
+  { cmd: 'renice', level: 7, step: 1, text: 'Cambia la prioridad de un proceso. Un número más alto le da menos turnos de procesador.', example: 'renice 10 -p 812' },
+  { cmd: '&', level: 8, step: 0, text: 'Al final de un comando, lo ejecuta en segundo plano y deja libre la terminal.', example: 'reparar-casco &' },
+  { cmd: 'jobs', level: 8, step: 2, text: 'Muestra los trabajos que corren en segundo plano.', example: 'jobs' }
 ];
