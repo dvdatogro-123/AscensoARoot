@@ -211,6 +211,69 @@ test('en el jefe del Mundo 3, el reinicio explica qué falla lo bloquea', () => 
   assert.match(app.innerHTML, /\+200 XP/);
 });
 
+// Comandos que completan cada nivel del Mundo 4.
+const world4 = [
+  ['ip a', 'ping -c 4 root', 'ping -c 4 estacion'],
+  ['ss -tuln', 'ps -e', 'kill {pid}', 'ss -tuln'],
+  ['ufw status', 'sudo ufw status', 'sudo ufw deny 31337', 'sudo ufw enable', 'sudo ufw status'],
+  ['ls /transmision', 'cat /transmision/firma.txt', 'sha256sum /transmision/ruta_a.txt /transmision/ruta_b.txt', 'cat /transmision/ruta_a.txt'],
+  ['ss -tuln', 'ps -e', 'kill {pid}', 'sudo ufw deny 4444', 'cat /transmision/firma_llave.txt', 'sha256sum /transmision/llave_root.txt', 'ping -c 4 root', 'sudo -i', 'whoami']
+];
+
+test('el Mundo 4 completa la ruta: el prompt cambia a # y se ofrece la conclusión', () => {
+  const { app, run } = appContext();
+  run('data.completed = Array.from({ length: 15 }, (_, i) => i + 1); data.xp = {}');
+  world4.forEach((commands, index) => {
+    run(`openMission(${index + 15})`);
+    assert.equal(run('state.screen'), 'mission', `nivel ${index + 16}`);
+    play(run, commands);
+    assert.equal(run(`data.completed.includes(${index + 16})`), true, `nivel ${index + 16}`);
+  });
+  assert.equal(run('state.flags.root'), true);
+  assert.equal(run('state.lines.at(-1).text'), 'root');
+  assert.equal(run("state.lines.filter(l => l.kind === 'command').at(-1).root"), true);
+  assert.match(app.innerHTML, /root@nave:~#/);
+  assert.match(app.innerHTML, /<span class="prompt"># <\/span>whoami/);
+  assert.equal(run('data.completed.length'), 20);
+  assert.equal(run('state.routeJustCompleted'), true);
+  assert.match(app.innerHTML, /Ver conclusión/);
+});
+
+test('ufw sin sudo pide ser root y el firewall rechaza reglas peligrosas', () => {
+  const { run } = appContext();
+  run('data.completed = Array.from({ length: 17 }, (_, i) => i + 1); openMission(17)');
+  play(run, ['ufw status']);
+  assert.equal(run("state.lines.at(-1).kind"), 'error');
+  assert.equal(run('state.step'), 1, 'el error de root es parte del nivel');
+  play(run, ['ufw status']);
+  assert.match(run('state.lines.at(-1).text'), /Use sudo/);
+  play(run, ['sudo ufw status']);
+  assert.match(run("state.lines.filter(l => l.kind === 'output').at(-1).text"), /\[sudo\] contraseña para explorador/);
+  play(run, ['sudo ufw allow 31337']);
+  assert.match(run('state.lines.at(-1).text'), /abriría la puerta trasera/);
+  play(run, ['sudo ufw deny 31337', 'sudo ufw disable']);
+  assert.match(run('state.lines.at(-1).text'), /sin protección/);
+  assert.equal(run('state.step'), 3);
+});
+
+test('la ruta alterada se detecta y el jefe no deja ser root antes de tiempo', () => {
+  const { run } = appContext();
+  run('data.completed = Array.from({ length: 18 }, (_, i) => i + 1); openMission(18)');
+  play(run, ['ls /transmision', 'cat /transmision/firma.txt', 'cat /transmision/ruta_b.txt']);
+  assert.match(run('state.lines.at(-1).text'), /fue alterada/);
+  play(run, ['sha256sum /transmision/ruta_a.txt']);
+  assert.match(run('state.lines.at(-1).text'), /dos huellas/);
+  assert.equal(run('state.step'), 2);
+  run('data.completed.push(19); openMission(19)');
+  play(run, ['sudo -i']);
+  assert.match(run('state.lines.at(-1).text'), /rechaza la sesión/);
+  play(run, ['ping -c 4 root']);
+  assert.match(run('state.lines.at(-1).text'), /tráfico sospechoso/);
+  play(run, ['ss -tuln', 'ps -e', 'kill {pid}', 'sudo ufw deny 4444', 'ping -c 4 root']);
+  assert.match(run('state.lines.at(-1).text'), /verifique la llave/);
+  assert.equal(run('state.flags.root'), undefined);
+});
+
 test('el nombre de usuario se ajusta al formato de Linux y aparece en whoami', () => {
   const { app, run } = appContext();
   run("registerName('  David Torres ')");

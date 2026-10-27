@@ -438,6 +438,38 @@ p { line-height: 1.48; }
 .core.on i { border-color: var(--bright); animation: radar-sweep 3s linear infinite; }
 .core strong { position: relative; color: var(--white); font-family: var(--font-mono); font-size: 1rem; }
 
+/* ===== Mundo 4: redes y seguridad ===== */
+/* Nivel 1: enlaces de red */
+.link-row { display: grid; grid-template-columns: 54px minmax(0, 1fr) 74px; gap: 6px; align-items: center; }
+.net-node { display: flex; flex-direction: column; align-items: center; padding: 4px 2px; border: 1px solid var(--orange); border-radius: var(--radius-s); background: var(--ship-card); font-size: .66rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.net-node code { color: var(--muted); font-family: var(--font-mono); font-size: .58rem; letter-spacing: 0; }
+.link-line { display: flex; align-items: center; justify-content: space-around; height: 2px; background: var(--idle); }
+.link-line i { width: 8px; height: 8px; border-radius: 50%; background: var(--idle); }
+.link-row.ok .link-line, .link-row.ok .link-line i { background: var(--orange); box-shadow: var(--glow); }
+.link-row.ok .link-line i { animation: packet 1.2s ease-in-out infinite; }
+.link-row.ok .link-line i:nth-child(2) { animation-delay: .15s; } .link-row.ok .link-line i:nth-child(3) { animation-delay: .3s; } .link-row.ok .link-line i:nth-child(4) { animation-delay: .45s; }
+@keyframes packet { 50% { transform: scale(1.4); } }
+.link-row.fail .link-line { background: repeating-linear-gradient(90deg, var(--danger) 0 6px, transparent 6px 12px); }
+.link-row.fail .link-line i { opacity: 0; }
+.link-row.fail .net-node:last-child { border-color: var(--danger); color: var(--danger); }
+.link-row.idle .net-node:last-child { border-style: dashed; border-color: var(--idle); color: var(--muted); }
+.link-stats { margin: -4px 0 0; color: var(--idle); font-family: var(--font-mono); font-size: .62rem; text-align: center; }
+.link-stats.ok { color: var(--bright); }
+.link-stats.fail { color: var(--danger); }
+/* Nivel 3: firewall */
+.wall { position: relative; display: grid; place-items: center; border: 2px solid var(--idle); border-radius: var(--radius-m); background: repeating-linear-gradient(#2a2121 0 14px, #1a1414 14px 17px), #1a1414; transition: border-color .5s, box-shadow .5s; }
+.wall span { padding: 3px 6px; border: 1px solid var(--idle); border-radius: 4px; background: var(--ship-bg); color: var(--muted); font-size: .58rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.wall.on { border-color: var(--orange); background: repeating-linear-gradient(rgba(243,92,25,.35) 0 14px, #1a1414 14px 17px), #1a1414; box-shadow: 0 0 16px rgba(243,92,25,.45); }
+.wall.on span { border-color: var(--orange); color: var(--orange); }
+/* Nivel 5: descenso a Root */
+.root-grid { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px; height: 100%; }
+.root-view { position: relative; overflow: hidden; border: 1px solid var(--ship-line); border-radius: var(--radius-m); background: #0a0406; }
+.root-world { position: absolute; left: -60%; right: -60%; top: calc(62% - var(--descent) * 9%); height: 200px; border-radius: 50%; background: repeating-linear-gradient(175deg, #e2501a 0 14px, #b23a10 14px 24px, #ff7a32 24px 32px); transition: top .7s var(--ease-out); }
+.root-shield { position: absolute; left: -75%; right: -75%; top: 46%; height: 240px; border: 2px dashed var(--danger); border-radius: 50%; transition: border-color .5s, opacity .5s; }
+.root-view.open .root-shield { border-color: var(--orange); opacity: .5; }
+.root-view span { position: absolute; left: 0; right: 0; top: 8px; color: var(--danger); font-size: .56rem; font-weight: 800; letter-spacing: .06em; text-align: center; text-transform: uppercase; }
+.root-view.open span { color: var(--bright); }
+
 /* Mensaje de Ubuntu */
 .ubuntu-msg { display: flex; align-items: flex-start; gap: 12px; margin: 12px 0; padding: 11px 12px; border: 1px solid var(--line); border-left: 3px solid var(--orange); border-radius: 0 var(--radius-s) var(--radius-s) 0; background: rgba(33,28,34,.85); }
 .ubuntu-avatar { flex: none; width: 38px; height: 38px; }

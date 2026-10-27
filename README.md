@@ -41,7 +41,7 @@ Son **20 niveles en 4 mundos**, uno por cada AF. Cada mundo tiene su propio fond
 | 3 · Estación espacial | AF3 · Almacenaje, memoria y archivos | La estación espacial |
 | 4 · Llegar a Root | AF4 · Redes y seguridad | El planeta Root y su escudo |
 
-Los niveles se programan por partes: por ahora están listos los **mundos 1, 2 y 3**. Un nivel sin pasos aparece en el mapa como *Próximamente* y no se puede abrir.
+Los **20 niveles** están programados. Si en el futuro se agrega un nivel sin pasos, aparece en el mapa como *Próximamente* y no se puede abrir.
 
 | # | Nivel del Mundo 1 | Comandos | Panel de la nave |
 |---:|---|---|---|
@@ -66,6 +66,16 @@ Los niveles se programan por partes: por ahora están listos los **mundos 1, 2 y
 | 3 | Almacén lleno | `df -h`, `ls -lh`, `rm` | Disco al 98 % y registros con su tamaño; el registro actual no se puede borrar |
 | 4 | Compuerta sellada | `./`, `ls -l`, `chmod +x` | Compuerta y permisos `rw-` → `rwx` |
 | 5 | Falla del núcleo (jefe) | lo aprendido | Tres fallas encadenadas (memoria, disco, permisos) y el núcleo que se enciende |
+
+| # | Nivel del Mundo 4 | Comandos | Panel de la nave |
+|---:|---|---|---|
+| 1 | Contacto con Root | `ip a`, `ping -c 4` | IP de la nave y enlaces con Root (responde) y con la estación (100 % perdidos) |
+| 2 | Puerta trasera | `ss -tuln`, `ps -e`, `kill` | Puertos abiertos; el 31337 lo abrió el troyano `actualizador` (PID aleatorio) |
+| 3 | Muro de fuego | `sudo`, `ufw` | Firewall: `ufw` sin `sudo` pide ser root; se bloquea el 31337 y se activa |
+| 4 | Transmisión alterada | `sha256sum` | Huella oficial y dos rutas: una coincide y la otra fue alterada |
+| 5 | Ascenso a Root (jefe) | `sudo -i` y lo aprendido | Cryptojacking, llave verificada y descenso; el prompt cambia de `$` a `#` y `whoami` responde `root` |
+
+Al completar el nivel 20 se abre la conclusión.
 
 - En cada nivel habla **Ubuntu**, la IA de la nave, de forma seria. Los errores comunes no solo se marcan: Ubuntu explica qué pasó.
 - Se aceptan variantes válidas de Linux: espacios extra, `.service` al final o `/` al final de una ruta.
@@ -178,7 +188,7 @@ Con Node.js instalado, desde la raíz del proyecto:
 node --test tests/commands.test.cjs
 ```
 
-Las pruebas juegan los 15 niveles de los mundos 1 a 3 con sus comandos reales y revisan que se abran las barreras de los mundos 2, 3 y 4, las rutas de `cd`, que `rm` no borre el registro actual, el *Permiso denegado* y las fallas del jefe del Mundo 3, los PID aleatorios y los errores de `kill`, que `soporte_vital` no se pueda detener, las dos formas de resolver el jefe del Mundo 2, el ajuste del nombre de usuario, las variantes aceptadas y los errores explicados, los modos rechazados del nivel 4, el arranque, las pistas con descuento y el despegue del jefe, y la bitácora. No prueban la parte Android ni el diseño visual.
+Las pruebas juegan los 20 niveles con sus comandos reales y revisan que se abran las barreras, que al final el prompt cambie a `#` y se ofrezca la conclusión, que `ufw` sin `sudo` pida ser root, la ruta alterada, las rutas de `cd`, que `rm` no borre el registro actual, el *Permiso denegado* y las fallas del jefe del Mundo 3, los PID aleatorios y los errores de `kill`, que `soporte_vital` no se pueda detener, las dos formas de resolver el jefe del Mundo 2, el ajuste del nombre de usuario, las variantes aceptadas y los errores explicados, los modos rechazados del nivel 4, el arranque, las pistas con descuento y el despegue del jefe, y la bitácora. No prueban la parte Android ni el diseño visual.
 
 ---
 
@@ -186,7 +196,7 @@ Las pruebas juegan los 15 niveles de los mundos 1 a 3 con sus comandos reales y 
 
 | Quiero cambiar… | Lugar |
 |---|---|
-| Textos, pasos, comandos y panel de los niveles | `niveles.js` (`world1Levels`, `world2Levels`, `world3Levels`); se conectan a su mundo en `levelContent` de `app.js` |
+| Textos, pasos, comandos y panel de los niveles | `niveles.js` (`world1Levels` a `world4Levels`); se conectan a su mundo en `levelContent` de `app.js` |
 | Comandos de la bitácora | Arreglo `glossary` en `niveles.js` |
 | Nombres de los niveles en el mapa | Arreglo `missions` en `app.js` |
 | Nombres, AF y fondo de los mundos | Arreglo `worlds` y objeto `scenery` en `app.js`; estilos `.world-*` en `styles.css` |
@@ -203,5 +213,5 @@ Las pruebas juegan los 15 niveles de los mundos 1 a 3 con sus comandos reales y 
 
 ## Notas
 
-- La versión que se muestra en *Ajustes > Acerca de* (`1.11.0`) se escribe a mano en `app.js`. La versión del APK es `versionName` en `app/build.gradle.kts` (hoy `1.11.0`). Conviene mantener ambas iguales.
+- La versión que se muestra en *Ajustes > Acerca de* (`1.12.0`) se escribe a mano en `app.js`. La versión del APK es `versionName` en `app/build.gradle.kts` (hoy `1.12.0`). Conviene mantener ambas iguales.
 - No se versionan `app/build/`, `.gradle/`, `.idea/`, `.kotlin/`, `local.properties` ni los APK, porque están en `.gitignore`.

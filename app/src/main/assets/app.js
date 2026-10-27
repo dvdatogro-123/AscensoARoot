@@ -1,17 +1,17 @@
 /* Ascenso a Root: ejercicios locales. Nunca ejecuta comandos del teléfono. */
 // El mapa va de la Tierra (abajo) a Root (arriba): 4 mundos de 5 niveles, uno por AF.
 const worlds = [
-  { id: 1, theme: 'tierra', name: 'Salir de la Tierra', af: 'AF1', topic: 'Arquitectura, desempeño y tipos de SO' },
-  { id: 2, theme: 'espacio', name: 'Navegar en el espacio', af: 'AF2', topic: 'Concurrencia' },
-  { id: 3, theme: 'estacion', name: 'Estación espacial', af: 'AF3', topic: 'Almacenaje, memoria y archivos' },
-  { id: 4, theme: 'root', name: 'Llegar a Root', af: 'AF4', topic: 'Redes y seguridad en sistemas distribuidos' }
+  { id: 1, theme: 'tierra', name: 'Salir de la Tierra', af: 'AF1', topic: 'Arquitectura, desempeño y tipos de SO', short: 'Arquitectura' },
+  { id: 2, theme: 'espacio', name: 'Navegar en el espacio', af: 'AF2', topic: 'Concurrencia', short: 'Concurrencia' },
+  { id: 3, theme: 'estacion', name: 'Estación espacial', af: 'AF3', topic: 'Almacenaje, memoria y archivos', short: 'Memoria y archivos' },
+  { id: 4, theme: 'root', name: 'Llegar a Root', af: 'AF4', topic: 'Redes y seguridad en sistemas distribuidos', short: 'Redes y seguridad' }
 ];
 const levelsPerWorld = 5;
 // Un nivel se puede jugar cuando tiene pasos. El contenido de cada mundo vive en niveles.js.
 function level(world, title, commands = '') {
   return { world, title, commands, tag: '', steps: [], extras: {}, ending: '', boss: false, setup: () => ({}), panel: () => '' };
 }
-const levelContent = { 1: world1Levels, 2: world2Levels, 3: world3Levels };
+const levelContent = { 1: world1Levels, 2: world2Levels, 3: world3Levels, 4: world4Levels };
 const missions = [
   level(1, 'Despertar', 'whoami · cat · uname'),
   level(1, 'Verificación de sistemas', 'lscpu · free · lsblk'),
@@ -28,7 +28,11 @@ const missions = [
   level(3, 'Almacén lleno', 'df · rm'),
   level(3, 'Compuerta sellada', 'ls -l · chmod'),
   level(3, 'Falla del núcleo', 'lo aprendido'),
-  level(4, 'Nivel 1'), level(4, 'Nivel 2'), level(4, 'Nivel 3'), level(4, 'Nivel 4'), level(4, 'Nivel 5')
+  level(4, 'Contacto con Root', 'ip a · ping'),
+  level(4, 'Puerta trasera', 'ss -tuln'),
+  level(4, 'Muro de fuego', 'sudo · ufw'),
+  level(4, 'Transmisión alterada', 'sha256sum'),
+  level(4, 'Ascenso a Root', 'sudo -i')
 ].map((m, i) => ({ ...m, ...(levelContent[m.world]?.[i % levelsPerWorld] || {}), id: i + 1 }));
 
 const storageKey = 'ascenso-a-root-v1';
@@ -287,7 +291,7 @@ function settings() {
     <button class="setting-row danger" data-action="confirm-reset"><span class="left"><span class="symbol">↶</span>Restablecer progreso</span></button>
     <button class="setting-row" data-action="nav" data-screen="credits"><span class="left"><span class="symbol">★</span>Créditos / Conclusión</span><span class="row-arrow" aria-hidden="true">▶</span></button>
     <div class="setting-row"><span class="left"><span class="symbol">⚒</span>Acerca de Ascenso a Root</span></div>
-    <p class="about">Versión 1.11.0 · Aplicación educativa sobre Ubuntu. Los comandos se simulan dentro de la aplicación y no modifican el teléfono.</p>
+    <p class="about">Versión 1.12.0 · Aplicación educativa sobre Ubuntu. Los comandos se simulan dentro de la aplicación y no modifican el teléfono.</p>
   </main>${nav('settings')}`;
 }
 function credits() {
@@ -318,7 +322,8 @@ function credits() {
 const termKeys = [['Tab', 'TAB', 'Autocompletar'], ['up', '↑', 'Comando anterior'], ['down', '↓', 'Comando siguiente'], ['/', '/', 'Barra'], ['-', '-', 'Guion'], ['&', '&', 'Segundo plano'], ['~', '~', 'Virgulilla'], ['clear', 'clear', 'Limpiar terminal']];
 const bookIcon = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
 function terminalLine(line) {
-  const prefix = line.kind === 'command' ? '<span class="prompt">$ </span>' : line.kind === 'ubuntu' ? '<span class="prompt">UBUNTU › </span>' : '';
+  // Después de sudo -i, los comandos se escriben como root: el prompt cambia de $ a #.
+  const prefix = line.kind === 'command' ? `<span class="prompt">${line.root ? '#' : '$'} </span>` : line.kind === 'ubuntu' ? '<span class="prompt">UBUNTU › </span>' : '';
   return `<div class="terminal-line ${line.kind}">${prefix}${safe(line.text)}</div>`;
 }
 function mission() {
@@ -331,12 +336,12 @@ function mission() {
   return `<main class="content level-content">
     <div class="level-top"><span class="eyebrow">Mundo ${m.world} · ${world.name}</span><button class="back-button" data-action="nav" data-screen="map">← Mapa</button></div>
     <h1 class="level-title">${safe(m.title)}</h1>
-    <div class="level-meta"><span class="af-chip">${world.af} · ${world.topic.split(',')[0]}</span>${m.boss ? '<span class="boss-tag">Jefe · 200 XP</span>' : ''}<span class="level-dots" role="img" aria-label="Nivel ${number} de ${levelsPerWorld}">${dots}</span></div>
+    <div class="level-meta"><span class="af-chip">${world.af} · ${world.short}</span>${m.boss ? '<span class="boss-tag">Jefe · 200 XP</span>' : ''}<span class="level-dots" role="img" aria-label="Nivel ${number} de ${levelsPerWorld}">${dots}</span></div>
     <section class="ship-panel" aria-label="Panel de la nave"><span class="panel-tag">${m.tag}</span>${m.panel(view)}</section>
     <section class="ubuntu-msg" aria-live="polite"><img class="ubuntu-avatar" src="figuras/ojo-ubuntu.png" alt=""><div><span class="ubuntu-name">Ubuntu${finished ? ' · nivel completado' : ` · paso ${state.step + 1} de ${m.steps.length}`}</span><p>${safe(fill(finished ? m.ending : step.say))}</p></div></section>
-    <div class="terminal"><div class="terminal-head"><i></i><i></i><i></i><span>${safe(userName())}@nave:${safe(state.flags.cwd || '~')}</span></div>
+    <div class="terminal"><div class="terminal-head"><i></i><i></i><i></i><span>${state.flags.root ? 'root' : safe(userName())}@nave:${safe(state.flags.cwd || '~')}${state.flags.root ? '#' : ''}</span></div>
       <div class="terminal-body" id="terminal-log" aria-live="polite"><div class="terminal-line output">Terminal de la nave. Escriba un comando y pulse Ejecutar.</div>${state.lines.map(terminalLine).join('')}</div>
-      ${finished ? '' : `<form class="terminal-form" id="command-form"><span class="prompt">$</span><input id="command-input" aria-label="Escriba un comando" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${state.busy ? 'Procesando…' : 'Escriba un comando'}" value="${safe(state.draft)}" ${state.busy ? 'disabled' : ''}><button type="submit" ${state.busy ? 'disabled' : ''}>Ejecutar</button></form>`}
+      ${finished ? '' : `<form class="terminal-form" id="command-form"><span class="prompt">${state.flags.root ? '#' : '$'}</span><input id="command-input" aria-label="Escriba un comando" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="${state.busy ? 'Procesando…' : 'Escriba un comando'}" value="${safe(state.draft)}" ${state.busy ? 'disabled' : ''}><button type="submit" ${state.busy ? 'disabled' : ''}>Ejecutar</button></form>`}
     </div>
     ${finished ? `<div class="success-panel"><strong>Nivel completado · +${state.earnedXp ?? levelXp(m)} XP</strong>${m.boss && state.hintsUsed ? `<p>Pistas usadas: ${state.hintsUsed}.</p>` : ''}
       ${state.routeJustCompleted ? `<p class="route-done">¡Completó toda la ruta! En un momento se abre la conclusión.</p><button class="primary-btn full" data-action="open-credits">Ver conclusión ▶</button>` : `<div class="success-actions">${canContinue ? `<button class="primary-btn full" data-action="open-mission" data-index="${next.id - 1}">Siguiente nivel ▶</button>` : ''}<button class="secondary-btn full" data-action="nav" data-screen="map">Volver al mapa</button></div>`}</div>`
@@ -433,6 +438,12 @@ const animations = {
     const frames = [25, 50, 75, 100].map(p => () => { state.flags.thrust = p; state.lines.push({ kind: 'boot', text: `Motor principal · empuje ${p} %` }); });
     playFrames(frames, 650, () => later(done, 900));
   },
+  descent(done) {
+    const stages = ['Credenciales de root aceptadas.', 'Atravesando el escudo de Root…', 'Descenso a la plataforma 0…', 'Aterrizaje completado.'];
+    const frames = stages.map((text, i) => () => { state.flags.descent = i + 1; state.lines.push({ kind: 'boot', text }); });
+    frames.push(() => { state.flags.root = true; state.lines.push({ kind: 'boot', text: 'Sesión de root iniciada.' }); });
+    playFrames(frames, 750, () => later(done, 700));
+  },
   core(done) {
     const frames = [25, 50, 75, 100].map(p => () => { state.flags.core = p; state.lines.push({ kind: 'boot', text: `Núcleo de energía · ${p} %` }); });
     playFrames(frames, 650, () => later(done, 900));
@@ -465,7 +476,7 @@ function runCommand(input) {
   state.historyIndex = state.history.length;
   const command = normalizeCommand(raw);
   if (command === 'clear') { state.lines = []; return refreshLevel(); }
-  state.lines.push({ kind: 'command', text: raw });
+  state.lines.push({ kind: 'command', text: raw, root: Boolean(state.flags.root) });
   const result = checkCommand(m, command);
   if (result.set) Object.assign(state.flags, result.set);
   if (result.out) state.lines.push({ kind: 'output', text: fill(result.out) });

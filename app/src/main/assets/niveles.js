@@ -753,6 +753,236 @@ const world3Levels = [
   }
 ];
 
+// Mundo 4: sudo ya está disponible. Después de sudo -i, state.flags.root cambia el prompt a #.
+const pingRoot = 'PING root (10.0.0.1) 56 bytes de datos.\n64 bytes from root (10.0.0.1): tiempo=12 ms\n64 bytes from root (10.0.0.1): tiempo=11 ms\n64 bytes from root (10.0.0.1): tiempo=12 ms\n64 bytes from root (10.0.0.1): tiempo=13 ms\n\n--- root ping statistics ---\n4 paquetes enviados, 4 recibidos, 0 % perdidos';
+const pingLost = (host, ip) => `PING ${host} (${ip}) 56 bytes de datos.\n\n--- ${host} ping statistics ---\n4 paquetes enviados, 0 recibidos, 100 % perdidos`;
+const pingForever = 'En una terminal real, ping sin -c no se detiene hasta pulsar Ctrl + C. Con -c 4 envía solo 4 paquetes.';
+const ipAddr = '1: lo: <LOOPBACK,UP> mtu 65536\n    inet 127.0.0.1/8 scope host lo\n2: eth0: <BROADCAST,MULTICAST,UP> mtu 1500\n    inet 10.0.4.17/24 brd 10.0.4.255 scope global eth0';
+const ssHead = 'Netid  State   Local Address:Port\ntcp    LISTEN  0.0.0.0:22\ntcp    LISTEN  0.0.0.0:443';
+const ssOptions = 'Sin opciones, ss muestra las conexiones activas. -t es TCP, -u es UDP, -l los puertos que esperan conexiones y -n los muestra con números.';
+const needsRoot = { ok: false, message: 'ERROR: necesita ser root para ejecutar este comando. Use sudo antes del comando.' };
+const ufwCheck = command => /^ufw\b/.test(command) ? needsRoot : undefined;
+const sudoPass = '[sudo] contraseña para {user}: ••••••\n';
+const fakeRoute = { out: 'Aterrizaje: plataforma 9\nCoordenadas: 47:12:08 · espacio abierto', message: 'Esa ruta fue alterada: su huella no coincide con la firma. Llevaría la nave lejos de Root.' };
+const hashA = '9f2c81e0…5d7aa41b', hashB = '7d104b9e…62f1c03e', hashKey = '3b8e0a71…94c2f7d2';
+// Jefe: Root rechaza la conexión hasta que la nave esté limpia y la llave verificada.
+function rootCheck(step) {
+  return command => {
+    if (/^ping( -c \d+)? root$/.test(command) && step < 6) return { ok: false, out: pingLost('root', '10.0.0.1'), message: step < 4 ? 'Root sigue bloqueando la nave: detecta tráfico sospechoso.' : 'Root espera que verifique la llave antes de aceptar la conexión.' };
+    if (command === 'sudo -i' && step < 7) return { ok: false, message: 'Root rechaza la sesión: la nave todavía no es segura.' };
+    return ufwCheck(command) || killCheck(command);
+  };
+}
+
+function linkRow(target, ip, status, stats) {
+  return `<div class="link-row ${status}"><span class="net-node">Nave</span><span class="link-line"><i></i><i></i><i></i><i></i></span><span class="net-node">${target}<code>${ip}</code></span></div>${stats ? `<p class="link-stats ${status}">${stats}</p>` : ''}`;
+}
+
+const world4Levels = [
+  {
+    tag: 'Red de Root',
+    steps: [
+      { say: 'Llegamos a la órbita de Root. Root no es una estación: es una red de equipos que se comunican entre sí, un sistema distribuido. Cada equipo de una red tiene una dirección IP. Consulte la nuestra: ip a.',
+        hint: 'Escriba ip a.',
+        answers: { 'ip a': ipAddr, 'ip addr': ipAddr, 'ip address': ipAddr },
+        errors: { 'ifconfig': 'Comando antiguo. En Ubuntu se usa ip a.', 'ip': 'Indique qué consultar: ip a muestra las direcciones.' } },
+      { say: 'Nuestra dirección es 10.0.4.17. Para comprobar que Root responde se usa ping. Con -c 4 envío solo 4 paquetes: ping -c 4 root.',
+        hint: 'Escriba ping -c 4 root.',
+        answers: { 'ping -c 4 root': pingRoot, 'ping -c 4 10.0.0.1': pingRoot, 'ping root': { out: pingRoot, note: pingForever } } },
+      { say: 'Root responde: 4 paquetes enviados, 4 recibidos. Verifique también la estación que dejamos atrás: ping -c 4 estacion.',
+        hint: 'Escriba ping -c 4 estacion.',
+        answers: { 'ping -c 4 estacion': pingLost('estacion', '10.0.3.2'), 'ping estacion': { out: pingLost('estacion', '10.0.3.2'), note: pingForever } } }
+    ],
+    ending: 'La estación ya no responde: quedó fuera de alcance. Un sistema distribuido son varios equipos que cooperan por red; si uno falla, los demás deben seguir funcionando. Siguiente procedimiento: revisión de la red de la nave.',
+    panel(v) {
+      const s = v.step;
+      return `<div class="w2-stack">
+        <div class="readout-pair">${readout('IP de la nave', s >= 1 ? '10.0.4.17' : '???', s >= 1 ? 'ok' : 'pending', s >= 1 ? 'eth0 · Red /24' : 'Pendiente')}${readout('Órbita', 'Root', 'ok', 'Distribuido')}</div>
+        ${linkRow('Root', '10.0.0.1', s >= 2 ? 'ok' : 'idle', s >= 2 ? '4 enviados · 4 recibidos · 0 % perdidos' : 'Sin probar')}
+        ${linkRow('Estación', '10.0.3.2', s >= 3 ? 'fail' : 'idle', s >= 3 ? '4 enviados · 0 recibidos · 100 % perdidos' : 'Sin probar')}
+      </div>`;
+    }
+  },
+  {
+    tag: 'Puertos abiertos',
+    setup: () => ({ pid: randomPid() }),
+    steps: [
+      { say: 'Al conectarnos a la red, la nave queda expuesta. Un puerto es una puerta por la que entran conexiones. Para ver cuáles están abiertos: ss -tuln.',
+        hint: 'Escriba ss -tuln.',
+        answers: { 'ss -tuln': `${ssHead}\ntcp    LISTEN  0.0.0.0:31337`, 'ss': { out: 'Netid  State  Local Address:Port   Peer Address:Port\ntcp    ESTAB  10.0.4.17:22         10.0.0.1:51022', note: ssOptions } },
+        errors: { 'netstat -tuln': 'Comando antiguo. En Ubuntu se usa ss -tuln.' },
+        check: killCheck },
+      { say: 'Los puertos 22 (conexión segura) y 443 (web cifrada) son de la nave. El 31337 no pertenece a ningún sistema. Busque qué proceso lo abrió: ps -e.',
+        hint: 'Escriba ps -e.',
+        answers: { 'ps -e': `${psStart} {pid} ?        00:00:04 actualizador\n${psEnd}`, 'ps -A': `${psStart} {pid} ?        00:00:04 actualizador\n${psEnd}` },
+        check: killCheck },
+      { say: 'actualizador dice ser una actualización, pero abrió una puerta trasera. Es un troyano: un programa malicioso disfrazado de uno útil. Deténgalo.',
+        hint: 'El PID de actualizador es {pid}. Escriba kill {pid}.',
+        answers: { 'kill {pid}': { out: '', note: 'Proceso {pid} terminado. Troyano detenido.' }, 'kill -9 {pid}': { out: '', note: 'Proceso {pid} terminado a la fuerza. Troyano detenido.' } },
+        check: killCheck },
+      { say: 'Verifique los puertos.',
+        hint: 'Escriba ss -tuln.',
+        answers: { 'ss -tuln': ssHead },
+        check: killCheck }
+    ],
+    ending: 'Puerta trasera cerrada. Un troyano engaña al usuario para que lo ejecute y luego abre el sistema a un intruso. La prevención empieza por no ejecutar programas de origen desconocido y revisar qué puertos están abiertos. Siguiente procedimiento: activar el firewall.',
+    panel(v) {
+      const s = v.step, killed = s >= 3;
+      const ports = s >= 1
+        ? procRow('Puerto 22 · ssh', 'Conexión segura', 'active') + procRow('Puerto 443 · https', 'Web cifrada', 'active') + procRow('Puerto 31337 · ???', s >= 4 ? 'Cerrado' : 'Desconocido', s >= 4 ? 'off' : 'fail')
+        : unknownProcs(3);
+      return `<div class="w2-stack">
+        <span class="readout-label">Puertos que esperan conexiones</span>
+        <div class="proc-list">${ports}</div>
+        <span class="readout-label">Proceso que abrió el 31337</span>
+        <div class="proc-list">${s >= 2 ? procRow('actualizador', killed ? 'Terminado' : `PID ${v.flags.pid} · Troyano`, killed ? 'off' : 'fail') : procRow('???', 'PID ???', 'idle')}</div>
+      </div>`;
+    }
+  },
+  {
+    tag: 'Firewall · ufw',
+    steps: [
+      { say: 'Detuve el troyano, pero esa puerta podría volver a abrirse. El firewall decide qué conexiones pueden entrar. Consulte su estado: ufw status.',
+        hint: 'Escriba ufw status.',
+        answers: { 'ufw status': { message: 'ERROR: necesita ser root para ejecutar este comando' } } },
+      { say: 'Hasta ahora usó autorización de piloto. Aquí no basta: el firewall solo lo controla el administrador del sistema, root. sudo ejecuta un comando como root y pide su contraseña. Escriba sudo antes del comando.',
+        hint: 'Escriba sudo ufw status.',
+        answers: { 'sudo ufw status': { out: `${sudoPass}Estado: inactivo`, note: 'En un sistema real usted escribiría su contraseña y no se vería al teclear. sudo da poder de root solo para ese comando: así se aplica el principio de menor privilegio.' } },
+        check: ufwCheck },
+      { say: 'Firewall inactivo. Bloquee el puerto de la puerta trasera: sudo ufw deny 31337.',
+        hint: 'Escriba sudo ufw deny 31337.',
+        answers: { 'sudo ufw deny 31337': { out: 'Regla añadida\nRegla añadida (v6)', note: 'sudo recuerda su contraseña durante unos minutos; por eso no la pidió de nuevo.' } },
+        errors: {
+          'sudo ufw allow 31337': 'Eso abriría la puerta trasera. Use deny para bloquearla.',
+          'sudo ufw deny 22': 'El puerto 22 es nuestra conexión segura. El de la puerta trasera es el 31337.',
+          'sudo ufw deny 443': 'El puerto 443 es la web cifrada de la nave. El de la puerta trasera es el 31337.',
+          'sudo ufw enable': 'Primero bloquee el puerto 31337; después active el firewall.'
+        },
+        check: ufwCheck },
+      { say: 'Regla guardada. Active el firewall: sudo ufw enable.',
+        hint: 'Escriba sudo ufw enable.',
+        answers: { 'sudo ufw enable': 'El firewall está activo y habilitado al arrancar el sistema' },
+        errors: { 'sudo ufw disable': 'Negativo. Eso dejaría la nave sin protección.' },
+        check: ufwCheck },
+      { say: 'Verifique las reglas.',
+        hint: 'Escriba sudo ufw status.',
+        answers: { 'sudo ufw status': 'Estado: activo\n\nHacia      Acción   Desde\n22         ALLOW    Cualquiera\n443        ALLOW    Cualquiera\n31337      DENY     Cualquiera' },
+        errors: { 'sudo ufw disable': 'Negativo. Eso dejaría la nave sin protección.' },
+        check: ufwCheck }
+    ],
+    ending: 'Firewall activo. Protege el nivel de red: solo entran las conexiones permitidas. Y solo root puede cambiarlo; ese control de acceso impide que cualquier programa, incluido un troyano, desactive las defensas. Siguiente procedimiento: transmisión de Root.',
+    panel(v) {
+      const s = v.step, on = s >= 4, known = s >= 2;
+      const port = (name, rule, blockedAt) => {
+        const blocked = blockedAt !== undefined && s >= blockedAt;
+        return procRow(name, !known ? '???' : blocked ? 'DENY' : on ? rule : 'Sin reglas', blocked ? 'fail' : on ? 'active' : 'idle');
+      };
+      return `<div class="door-grid">
+        <div class="wall${on ? ' on' : ''}"><span>${on ? 'Activo' : known ? 'Inactivo' : '???'}</span></div>
+        <div class="w2-stack">
+          <div class="proc-list">${port('22 · ssh', 'ALLOW')}${port('443 · https', 'ALLOW')}${port('31337 · trasera', 'ALLOW', 3)}</div>
+          ${readout('sudo', s >= 2 ? 'Acceso de root' : s >= 1 ? 'Requerido' : '—', s >= 2 ? 'ok' : s >= 1 ? 'fail' : 'pending', s >= 2 ? 'Solo para cada comando' : s >= 1 ? 'Necesita ser root' : 'Sin usar')}
+        </div>
+      </div>`;
+    }
+  },
+  {
+    tag: 'Transmisión de Root',
+    steps: [
+      { say: 'Root envió sus coordenadas de aterrizaje por dos rutas. Un intruso pudo modificar una en el camino. Vea los archivos: ls /transmision.',
+        hint: 'Escriba ls /transmision.',
+        answers: { 'ls /transmision': 'firma.txt  ruta_a.txt  ruta_b.txt' } },
+      { say: 'firma.txt contiene la huella que Root calculó antes de enviar. Léala.',
+        hint: 'Escriba cat /transmision/firma.txt.',
+        answers: { 'cat /transmision/firma.txt': `Huella SHA-256 oficial de las coordenadas:\n${hashA}` },
+        errors: { 'cat firma.txt': 'Ese archivo no está aquí. Use la ruta completa: cat /transmision/firma.txt.', 'cat /transmision/ruta_b.txt': fakeRoute } },
+      { say: 'sha256sum calcula la huella de un archivo. Si se cambia una sola letra, la huella cambia por completo. Calcule las dos: sha256sum /transmision/ruta_a.txt /transmision/ruta_b.txt.',
+        hint: 'Escriba sha256sum /transmision/ruta_a.txt /transmision/ruta_b.txt.',
+        answers: { 'sha256sum /transmision/ruta_a.txt /transmision/ruta_b.txt': `${hashA}  /transmision/ruta_a.txt\n${hashB}  /transmision/ruta_b.txt`, 'sha256sum /transmision/ruta_b.txt /transmision/ruta_a.txt': `${hashB}  /transmision/ruta_b.txt\n${hashA}  /transmision/ruta_a.txt` },
+        errors: {
+          'sha256sum /transmision/ruta_a.txt': { out: `${hashA}  /transmision/ruta_a.txt`, message: 'Calcule las dos huellas en un solo comando para compararlas: agregue /transmision/ruta_b.txt.' },
+          'sha256sum /transmision/ruta_b.txt': { out: `${hashB}  /transmision/ruta_b.txt`, message: 'Calcule las dos huellas en un solo comando para compararlas: agregue /transmision/ruta_a.txt.' },
+          'cat /transmision/ruta_b.txt': fakeRoute
+        } },
+      { say: 'La huella de ruta_a coincide con la firma; la de ruta_b no: fue modificada. Lea las coordenadas auténticas.',
+        hint: 'Escriba cat /transmision/ruta_a.txt.',
+        answers: { 'cat /transmision/ruta_a.txt': 'Aterrizaje: plataforma 0\nCoordenadas: 00:00:00 · Root' },
+        errors: { 'cat /transmision/ruta_b.txt': fakeRoute } }
+    ],
+    ending: 'Coordenadas auténticas confirmadas. Una amenaza de modificación altera la información en el camino. La huella permite comprobar la integridad: si no coincide con la firma, el archivo no es el original. Siguiente procedimiento: descenso a Root.',
+    panel(v) {
+      const s = v.step, checked = s >= 3;
+      const route = (name, hash, ok) => `<div class="module ${checked ? (ok ? 'active' : 'fail') : 'idle'}"><span class="module-head"><i class="led"></i>${name}</span><code>${checked ? hash : '???'}</code><span class="module-state">${checked ? (ok ? 'Coincide' : 'Alterada') : 'Sin verificar'}</span></div>`;
+      return `<div class="w2-stack">
+        ${readout('Huella oficial · firma.txt', s >= 2 ? hashA : '???', s >= 2 ? 'ok' : 'pending', s >= 2 ? 'SHA-256' : 'Sin leer')}
+        <div class="readout-pair">${route('ruta_a.txt', hashA, true)}${route('ruta_b.txt', hashB, false)}</div>
+        ${readout('Coordenadas', v.done ? 'Plataforma 0' : '???', v.done ? 'ok' : 'pending', v.done ? 'Auténticas' : 'Pendiente')}
+      </div>`;
+    }
+  },
+  {
+    tag: 'Descenso a Root',
+    boss: true,
+    setup: () => ({ pid: randomPid() }),
+    steps: [
+      { say: 'Descenso iniciado. Root bloqueó nuestra conexión: detectó tráfico sospechoso desde la nave. Revise los puertos.',
+        hint: 'Escriba ss -tuln.',
+        answers: { 'ss -tuln': `${ssHead}\ntcp    LISTEN  0.0.0.0:4444` },
+        check: rootCheck(0) },
+      { say: 'El puerto 4444 no es nuestro. Encuentre quién lo abrió.',
+        hint: 'Liste los procesos: ps -e.',
+        answers: { 'ps -e': `${psStart} {pid} ?        00:41:09 minero\n${psEnd}` },
+        check: rootCheck(1) },
+      { say: 'minero usa nuestro procesador para minar criptomonedas y envía el resultado por el puerto 4444. Se llama cryptojacking. Deténgalo.',
+        hint: 'Escriba kill {pid}.',
+        answers: { 'kill {pid}': { out: '', note: 'Proceso {pid} terminado.' }, 'kill -9 {pid}': { out: '', note: 'Proceso {pid} terminado.' } },
+        check: rootCheck(2) },
+      { say: 'Proceso detenido. Cierre esa puerta para siempre.',
+        hint: 'Bloquee el puerto con el firewall: sudo ufw deny 4444.',
+        answers: { 'sudo ufw deny 4444': 'Regla añadida\nRegla añadida (v6)' },
+        errors: { 'sudo ufw allow 4444': 'Eso dejaría la puerta abierta. Use deny.' },
+        check: rootCheck(3) },
+      { say: 'Tráfico sospechoso eliminado. Root nos envió la llave de acceso; antes de usarla, verifique que sea auténtica. Su huella oficial está en /transmision/firma_llave.txt.',
+        hint: 'Lea la firma: cat /transmision/firma_llave.txt.',
+        answers: { 'cat /transmision/firma_llave.txt': `Huella SHA-256 oficial de la llave:\n${hashKey}` },
+        check: rootCheck(4) },
+      { say: 'Calcule la huella de la llave: /transmision/llave_root.txt.',
+        hint: 'Escriba sha256sum /transmision/llave_root.txt.',
+        answers: { 'sha256sum /transmision/llave_root.txt': `${hashKey}  /transmision/llave_root.txt` },
+        check: rootCheck(5) },
+      { say: 'Las huellas coinciden: la llave es auténtica. Compruebe la conexión con Root.',
+        hint: 'Escriba ping -c 4 root.',
+        answers: { 'ping -c 4 root': pingRoot, 'ping root': { out: pingRoot, note: pingForever } },
+        check: rootCheck(6) },
+      { say: 'Conexión restablecida. Usted ha usado sudo comando por comando. El último paso es convertirse en root: sudo -i abre una sesión completa como administrador.',
+        hint: 'Escriba sudo -i.',
+        answers: { 'sudo -i': { anim: 'descent' } },
+        check: rootCheck(7) },
+      { say: 'Observe el símbolo de la terminal: ya no es $, ahora es #. Confirme su identidad.',
+        hint: 'Escriba whoami.',
+        answers: { 'whoami': 'root' },
+        check: rootCheck(8) }
+    ],
+    ending: 'Usted es root: el usuario con control total del sistema. Por eso se usa con cuidado y solo cuando hace falta. Llegó hasta aquí comando por comando: administró el procesador, la memoria, los archivos y la red, y protegió cada capa. Bienvenido a Root, {user}.',
+    panel(v) {
+      const s = v.step, f = v.flags, root = Boolean(f.root);
+      const item = (name, doneAt, seenAt, bad) => procRow(name, s >= doneAt ? 'Listo' : s >= seenAt ? bad : 'Pendiente', s >= doneAt ? 'active' : s >= seenAt ? 'fail' : 'idle');
+      return `<div class="root-grid">
+        <div class="root-view${s >= 7 ? ' open' : ''}${f.descent ? ' landing' : ''}" style="--descent:${f.descent || 0}"><i class="root-world"></i><i class="root-shield"></i><span>${s >= 7 ? 'Escudo abierto' : 'Escudo cerrado'}</span></div>
+        <div class="w2-stack">
+          <div class="proc-list">
+            ${item('Puerto 4444', 4, 1, 'Abierto')}
+            ${item('minero', 3, 2, `PID ${f.pid}`)}
+            ${item('Llave de Root', 6, 5, 'Sin verificar')}
+            ${item('Conexión', 7, 0, 'Bloqueada')}
+          </div>
+          ${readout('Prompt', root ? '#' : '$', root ? 'ok' : 'pending', root ? 'Sesión de root' : `Usuario ${safe(v.user)}`)}
+        </div>
+      </div>`;
+    }
+  }
+];
+
 // Bitácora: un comando se registra al completar el paso donde se enseña.
 const glossary = [
   { cmd: 'whoami', level: 1, step: 0, text: 'Dice quién eres en la computadora.', example: 'whoami' },
@@ -781,5 +1011,12 @@ const glossary = [
   { cmd: 'rm', level: 13, step: 2, text: 'Borra un archivo. No hay papelera: desaparece.', example: 'rm /estacion/registros/registro_2019.log' },
   { cmd: './', level: 14, step: 1, text: 'Ejecuta un programa que está en la carpeta actual.', example: './abrir-compuerta' },
   { cmd: 'ls -l', level: 14, step: 2, text: 'Muestra los permisos de los archivos: r leer, w escribir, x ejecutar.', example: 'ls -l' },
-  { cmd: 'chmod +x', level: 14, step: 3, text: 'Da permiso de ejecución a un archivo.', example: 'chmod +x abrir-compuerta' }
+  { cmd: 'chmod +x', level: 14, step: 3, text: 'Da permiso de ejecución a un archivo.', example: 'chmod +x abrir-compuerta' },
+  { cmd: 'ip a', level: 16, step: 0, text: 'Muestra la dirección IP del equipo en la red.', example: 'ip a' },
+  { cmd: 'ping -c', level: 16, step: 1, text: 'Comprueba si otro equipo responde. -c indica cuántos paquetes enviar.', example: 'ping -c 4 root' },
+  { cmd: 'ss -tuln', level: 17, step: 0, text: 'Muestra los puertos abiertos, las puertas por donde entran conexiones.', example: 'ss -tuln' },
+  { cmd: 'sudo', level: 18, step: 1, text: 'Ejecuta un comando como root, el administrador. Pide su contraseña.', example: 'sudo ufw status' },
+  { cmd: 'ufw', level: 18, step: 2, text: 'Controla el firewall: deny bloquea un puerto, enable lo activa.', example: 'sudo ufw deny 31337' },
+  { cmd: 'sha256sum', level: 19, step: 2, text: 'Calcula la huella de un archivo para comprobar que nadie lo modificó.', example: 'sha256sum /transmision/ruta_a.txt' },
+  { cmd: 'sudo -i', level: 20, step: 7, text: 'Abre una sesión completa como root. El prompt cambia de $ a #.', example: 'sudo -i' }
 ];
