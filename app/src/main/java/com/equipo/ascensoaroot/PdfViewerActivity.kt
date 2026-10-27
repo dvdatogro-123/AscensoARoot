@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.graphics.pdf.PdfRenderer
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
@@ -74,11 +75,27 @@ class PdfViewerActivity : ComponentActivity() {
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
             gravity = Gravity.END
         }
+        // Botón para cerrar el documento y volver a la lista de AFs.
+        val close = TextView(this).apply {
+            text = "✕"
+            setTextColor(bright)
+            typeface = condensed
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+            gravity = Gravity.CENTER
+            this.background = GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
+                setColor(Color.rgb(33, 28, 34))
+                setStroke(dp(2), orange)
+            }
+            contentDescription = "Cerrar documento"
+            setOnClickListener { finish() }
+        }
         val topRow = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             addView(back)
             addView(counter, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+            addView(close, LinearLayout.LayoutParams(dp(48), dp(48)).apply { leftMargin = dp(12) })
         }
         val heading = TextView(this).apply {
             text = (intent.getStringExtra(EXTRA_TITLE) ?: "Documento").uppercase()

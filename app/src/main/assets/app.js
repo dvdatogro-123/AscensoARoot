@@ -65,7 +65,12 @@ function checkCommand(m, command) {
   if (m.extras[command] !== undefined) return { ok: false, extra: true, ...asAnswer(m.extras[command]) };
   const error = step.errors?.[command];
   if (error !== undefined) return { ok: false, ...(typeof error === 'string' ? { message: error } : error) };
-  if (m.steps.slice(0, state.step).some(s => s.answers[command] !== undefined)) return { ok: false, message: `Ese comando ya se ejecutó. Siguiente: ${step.say}` };
+  // Como en una terminal real, un comando de un paso anterior se puede volver a ejecutar para consultar su salida.
+  const earlier = m.steps.slice(0, state.step).reverse().find(s => s.answers[command] !== undefined);
+  if (earlier) {
+    const previous = asAnswer(earlier.answers[command]);
+    return previous.anim ? { ok: false, extra: true, note: 'Ese procedimiento ya se completó.' } : { ok: false, extra: true, out: previous.out, note: previous.note };
+  }
   return { ok: false };
 }
 function levelXp(m) { return m.boss ? Math.max(50, 200 - 50 * state.hintsUsed) : 100; }
@@ -264,7 +269,7 @@ function settings() {
     <button class="setting-row danger" data-action="confirm-reset"><span class="left"><span class="symbol">↶</span>Restablecer progreso</span></button>
     <button class="setting-row" data-action="nav" data-screen="credits"><span class="left"><span class="symbol">★</span>Créditos / Conclusión</span><span class="row-arrow" aria-hidden="true">▶</span></button>
     <div class="setting-row"><span class="left"><span class="symbol">⚒</span>Acerca de Ascenso a Root</span></div>
-    <p class="about">Versión 1.7.0 · Aplicación educativa sobre Ubuntu. Los comandos se simulan dentro de la aplicación y no modifican el teléfono.</p>
+    <p class="about">Versión 1.9.1 · Aplicación educativa sobre Ubuntu. Los comandos se simulan dentro de la aplicación y no modifican el teléfono.</p>
   </main>${nav('settings')}`;
 }
 function credits() {

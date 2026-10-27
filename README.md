@@ -187,5 +187,5 @@ Las pruebas juegan los 5 niveles del Mundo 1 con sus comandos reales y revisan q
 
 ## Notas
 
-- La versión que se muestra en *Ajustes > Acerca de* (`1.7.0`) se escribe a mano en `app.js`. La versión del APK es `versionName` en `app/build.gradle.kts` (hoy `1.7.0`). Conviene mantener ambas iguales.
+- La versión que se muestra en *Ajustes > Acerca de* (`1.9.1`) se escribe a mano en `app.js`. La versión del APK es `versionName` en `app/build.gradle.kts` (hoy `1.9.1`). Conviene mantener ambas iguales.
 - No se versionan `app/build/`, `.gradle/`, `.idea/`, `.kotlin/`, `local.properties` ni los APK, porque están en `.gitignore`.

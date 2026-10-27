@@ -126,6 +126,19 @@ test('el jefe muestra el arranque, descuenta 50 XP por pista y despega', () => {
   assert.match(app.innerHTML, /\+150 XP/);
 });
 
+test('un comando de un paso anterior se vuelve a ejecutar, también después de clear', () => {
+  const { run } = appContext();
+  run('data.completed = [1, 2, 3, 4]; openMission(4)');
+  play(run, ['systemctl reboot', 'systemctl --failed', 'systemctl status escudo-termico', 'clear', 'systemctl status escudo-termico']);
+  assert.equal(run('state.step'), 3);
+  assert.match(run('state.lines.at(-1).text'), /Requiere: sensor-termico/);
+  play(run, ['systemctl --failed']);
+  assert.match(run('state.lines.at(-1).text'), /escudo-termico.service/);
+  play(run, ['systemctl reboot']);
+  assert.match(run('state.lines.at(-1).text'), /ya se completó/);
+  assert.equal(run('state.step'), 3, 'repetir comandos no avanza ni retrocede');
+});
+
 test('la bitácora solo muestra los comandos ya aprendidos', () => {
   const { app, run } = appContext();
   run('openMission(0); state.showLog = true; render()');
