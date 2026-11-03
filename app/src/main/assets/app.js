@@ -181,8 +181,7 @@ const activities = [
   { id: 'AF3', title: 'Almacenaje, memoria y archivos', date: '15 de septiembre de 2026', pages: 23, file: 'afs/AF3.pdf' },
   { id: 'AF4', title: 'Redes y seguridad en sistemas distribuidos', date: '13 de octubre de 2026', pages: 42, file: 'afs/AF4.pdf' },
   { id: 'DD', title: 'Diccionario de datos', date: '25 de octubre de 2026', pages: 15, file: 'afs/DiccionarioDatos.pdf' },
-  { id: 'MA', title: 'Ascenso a root', date: '2 de noviembre de 2026', pages: 103, file: 'afs/PIA.pdf' },
-  { id: 'MA', title: 'Ascenso a root', date: '2 de noviembre de 2026', pages: 103, file: 'afs/PIA.pdf' },
+  { id: 'MA', title: 'Ascenso a root', date: '2 de noviembre de 2026', pages: 105, file: 'afs/PIA_Ascenso_a_Root_Avance4.pdf' },
 ];
 function afs() {
   return `<main class="content">
