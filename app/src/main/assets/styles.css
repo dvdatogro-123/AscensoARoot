@@ -587,6 +587,7 @@ p { line-height: 1.48; }
 .team-info small { display: block; margin-top: 4px; color: var(--muted); font-size: .74rem; letter-spacing: .04em; }
 .team-leader { color: var(--bright); text-transform: uppercase; }
 .team-chip { padding: 4px 9px; border: 1px solid var(--orange); background: rgba(185,57,18,.16); color: var(--white); font-family: 'Arial Narrow', Arial, sans-serif; font-stretch: condensed; font-size: .78rem; font-weight: 800; letter-spacing: .1em; }
+.team-continue { margin-top: 14px; }
 
 /* ===== Introducción del PIA (Dashboard) ===== */
 .pia-intro, .report-card { position: relative; padding: 0 0 2px; margin: 0 0 20px; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); }

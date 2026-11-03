@@ -13,20 +13,21 @@ App educativa para Android, hecha como Producto Integrador de Aprendizaje (PIA) 
 ### Flujo de pantallas
 
 ```text
-Portada (Avance PIA) → Inicio (astronauta) → Registro de usuario (solo la primera vez) → Dashboard
+Portada (Avance PIA) → Integrantes → Inicio (astronauta) → Registro de usuario (solo la primera vez) → Dashboard
                                                                                           │
-          Barra inferior: Dashboard · AFs · [Mapa] · Equipo · Ajustes
+          Barra inferior: Dashboard · AFs · [Mapa] · Ubuntu · Ajustes
 ```
 
 | Pantalla | Qué contiene |
 |---|---|
 | **Portada** | Logos de la UANL y la FIME, materia, maestra y semestre. Botón *Continuar*. |
+| **Integrantes** | Integrantes en orden alfabético, con foto, matrícula y programa. Botón *Continuar*. |
 | **Inicio** | Astronauta y botón *Comenzar expedición*. |
 | **Registro de usuario** | Solo la primera vez. Ubuntu pide un nombre de usuario y lo ajusta al formato de Linux (minúsculas, sin espacios ni acentos). Si queda vacío, es `explorador`. Ese nombre aparece en `whoami` y en la terminal. |
 | **Dashboard** | Introducción del PIA, porcentaje de avance, misiones completadas, XP y acceso a la siguiente misión. |
 | **AFs** | Las 4 actividades fundamentales del semestre. Al tocar una, el PDF se abre en un visor dentro de la app. |
 | **Mapa** | Botón central de la barra. Un solo recorrido de la Tierra (abajo) a Root (arriba): 4 mundos de 5 niveles, separados por barreras con candado. |
-| **Equipo** | Integrantes en orden alfabético, con foto, matrícula y programa. |
+| **Ubuntu** | Comparación de las AFs con Ubuntu. |
 | **Ajustes** | Avisos, sonido, restablecer progreso, **Créditos / Conclusión** y *Acerca de*. |
 | **Créditos / Conclusión** | Conclusión del semestre y créditos del equipo. Se abre desde Ajustes o **sola al terminar la última misión**. |
 
