@@ -218,14 +218,24 @@ const comparaciones = [
     texto: 'Ubuntu se relaciona directamente con los temas de seguridad informática, ya que cuenta con mecanismos para proteger a los usuarios, archivos, programas y conexiones de red. Al estar basado en Linux, utiliza permisos de acceso, cuentas individuales y privilegios administrativos mediante el comando sudo. También incorpora herramientas como AppArmor, que permite establecer restricciones sobre las acciones y los recursos que pueden utilizar determinadas aplicaciones. Sin embargo, Ubuntu no es completamente inmune a las amenazas informáticas y puede verse afectado por virus, gusanos, troyanos, spyware, adware, ransomware, botnets y cryptojacking. Para reducir estos riesgos es necesario mantener actualizado el sistema, instalar programas de fuentes confiables, controlar los permisos y supervisar los procesos que se ejecutan.\n\nLas amenazas pueden ser internas o externas y afectar la confidencialidad, integridad y disponibilidad de la información mediante interrupciones, intercepciones, modificaciones o fabricación de datos. Ubuntu puede enfrentar intrusos como Black Hat, Grey Hat, Script Kiddies y usuarios internos que hacen un uso indebido de sus permisos. Para prevenir accesos no autorizados, utiliza cuentas individuales, contraseñas y mecanismos de autenticación. También permite implementar llaves criptográficas para conexiones SSH y autenticación multifactor mediante herramientas adicionales. En cuanto al control de acceso, utiliza permisos de lectura, escritura y ejecución, grupos de usuarios y herramientas como AppArmor, que se relaciona con el modelo de control obligatorio (MAC). Asimismo, puede integrarse con Kerberos y SSSD para administrar la autenticación centralizada en redes empresariales.\n\nEn los niveles de seguridad, Ubuntu permite proteger los equipos desde tres perspectivas. A nivel de usuario, utiliza contraseñas seguras, permisos limitados, actualizaciones y cifrado del almacenamiento mediante LUKS. A nivel de red, dispone de UFW como firewall para controlar las conexiones entrantes y salientes, además de permitir conexiones protegidas mediante VPN y SSH. A nivel empresarial, puede funcionar como servidor y utilizar herramientas de administración centralizada, registros de actividad y políticas de control de acceso. Estas medidas permiten aplicar el principio de defensa en profundidad, que consiste en utilizar varias capas de protección en lugar de depender de una sola.\n\nRespecto a la administración de riesgos y prevención de desastres, Ubuntu puede presentar problemas relacionados con infecciones de malware, robo de contraseñas, fallas eléctricas, accesos indebidos y vulnerabilidades de software. Para reducirlos se utilizan actualizaciones de seguridad, controles de acceso, mantenimiento y respaldos periódicos. El documento también presenta la estrategia 3-2-1-1-0, que consiste en conservar tres copias de los datos, utilizar dos medios diferentes, mantener una copia externa, otra fuera de línea o inmutable y verificar que los respaldos puedan restaurarse sin errores. Ubuntu permite administrar estas copias y recuperar información, aunque los planes de continuidad y recuperación deben configurarse de acuerdo con las necesidades de cada organización.\n\nEn cuanto a la seguridad del hardware, software, archivos e información, Ubuntu permite aprovechar tecnologías como Secure Boot y TPM para reforzar la protección del equipo, siempre que sean compatibles. Para el software utiliza actualizaciones automáticas de seguridad y AppArmor; para los archivos cuenta con permisos, listas de control de acceso y herramientas de cifrado; y para la información permite proteger las comunicaciones mediante protocolos como TLS y VPN. Además, como sistema operativo para servidores, Ubuntu puede participar en infraestructuras distribuidas donde se utilizan algoritmos de consenso como Paxos, Raft y PBFT, mediante aplicaciones que los implementan.'
   }
 ];
+// Menú hamburguesa (esquina superior derecha): cada opción lleva a la comparación de esa AF.
+function ubuntuMenu() {
+  const open = !!state.ubuntuMenu;
+  return `<button class="menu-btn ${open ? 'open' : ''}" data-action="toggle-ubuntu-menu" aria-label="${open ? 'Cerrar' : 'Abrir'} menú de AFs" aria-expanded="${open}" aria-controls="ubuntu-menu"><span></span><span></span><span></span></button>
+  ${open ? `<button class="menu-scrim" data-action="close-ubuntu-menu" aria-label="Cerrar menú" tabindex="-1"></button>
+  <div class="menu-panel" id="ubuntu-menu" role="menu">
+    <div class="tech-label menu-title">Actividades fundamentales</div>
+    ${comparaciones.map(c => `<button class="menu-item" role="menuitem" data-action="ubuntu-go" data-id="${c.id}"><b>${c.id}</b><span>${safe(c.title)}</span></button>`).join('')}
+  </div>` : ''}`;
+}
 function texto() {
   return `<main class="content">
     ${sectionHeader('Ubuntu','Comparación de las AFs con Ubuntu',`${comparaciones.length} actividades`)}
-    ${comparaciones.map(c => `<div class="hud-card report-card">
+    ${comparaciones.map(c => `<div class="hud-card report-card" id="cmp-${c.id}">
       <div class="bar">${c.id} · ${safe(c.title)}</div>
       <div class="inner">${c.texto.split(/\n+/).map(p => `<p>${safe(p)}</p>`).join('')}</div>
     </div>`).join('')}
-  </main>${nav('texto')}`;
+  </main>${ubuntuMenu()}${nav('texto')}`;
 }
 
 function home() {
@@ -566,7 +576,13 @@ app.addEventListener('click', event => {
   else if (action === 'close-log') { state.showLog = false; render(); focusCommand(); }
   else if (action === 'cover-continue') { state.screen = 'team'; playTone(); render(); }
   else if (action === 'team-continue') { state.screen = 'home'; playTone(); render(); }
-  else if (action === 'nav') { state.routeJustCompleted = false; state.screen = button.dataset.screen; playTone(); render(); }
+  else if (action === 'toggle-ubuntu-menu') { state.ubuntuMenu = !state.ubuntuMenu; playTone(); render(); }
+  else if (action === 'close-ubuntu-menu') { state.ubuntuMenu = false; render(); }
+  else if (action === 'ubuntu-go') {
+    state.ubuntuMenu = false; playTone(); render();
+    document.getElementById(`cmp-${button.dataset.id}`)?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+  }
+  else if (action === 'nav') { state.routeJustCompleted = false; state.ubuntuMenu = false; state.screen = button.dataset.screen; playTone(); render(); }
   else if (action === 'open-credits') { playTone(); openCredits(); }
   else if (action === 'open-mission') { openMission(Number(button.dataset.index)); playTone(); }
   else if (action === 'hint') { state.hint = true; if (missions[state.mission].boss) state.hintsUsed += 1; render(); }
@@ -595,6 +611,7 @@ function registerName(raw) {
 }
 window.goBackFromAndroid = function () {
   if (state.confirmReset) state.confirmReset = false;
+  else if (state.ubuntuMenu) state.ubuntuMenu = false;
   else if (state.showLog) state.showLog = false;
   else if (state.screen === 'callsign') state.screen = 'home';
   else if (state.screen === 'mission') state.screen = 'map';
