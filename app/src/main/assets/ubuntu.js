@@ -73,7 +73,54 @@ const fuentesUbuntu = {
   kEevdf: ['Kernel Linux · Planificador EEVDF', 'https://docs.kernel.org/scheduler/sched-eevdf.html'],
   kCgroup: ['Kernel Linux · Control Groups v2', 'https://docs.kernel.org/admin-guide/cgroup-v2.html'],
   kVfs: ['Kernel Linux · Virtual File System', 'https://docs.kernel.org/filesystems/vfs.html'],
-  kExt4: ['Kernel Linux · ext4', 'https://docs.kernel.org/filesystems/ext4/overview.html']
+  kExt4: ['Kernel Linux · ext4', 'https://docs.kernel.org/filesystems/ext4/overview.html'],
+  fork: ['Manual de Ubuntu · fork(2)', 'https://manpages.ubuntu.com/manpages/noble/man2/fork.2.html'],
+  pthreads: ['Manual de Ubuntu · pthreads(7)', 'https://manpages.ubuntu.com/manpages/noble/man7/pthreads.7.html'],
+  semOverview: [
+    'Manual de Ubuntu · sem_overview(7)',
+    'https://manpages.ubuntu.com/manpages/noble/man7/sem_overview.7.html'
+  ],
+  futex: ['Manual de Ubuntu · futex(7)', 'https://manpages.ubuntu.com/manpages/noble/man7/futex.7.html'],
+  mutexPosix: [
+    'Manual de Ubuntu · pthread_mutex_lock(3)',
+    'https://manpages.ubuntu.com/manpages/noble/man3/pthread_mutex_lock.3posix.html'
+  ],
+  rwlock: [
+    'Manual de Ubuntu · pthread_rwlock_rdlock(3)',
+    'https://manpages.ubuntu.com/manpages/noble/man3/pthread_rwlock_rdlock.3posix.html'
+  ],
+  condWait: [
+    'Manual de Ubuntu · pthread_cond_timedwait(3)',
+    'https://manpages.ubuntu.com/manpages/noble/man3/pthread_cond_timedwait.3posix.html'
+  ],
+  condSignal: [
+    'Manual de Ubuntu · pthread_cond_signal(3)',
+    'https://manpages.ubuntu.com/manpages/noble/man3/pthread_cond_signal.3posix.html'
+  ],
+  barrier: [
+    'Manual de Ubuntu · pthread_barrier_wait(3)',
+    'https://manpages.ubuntu.com/manpages/noble/man3/pthread_barrier_wait.3posix.html'
+  ],
+  mq: ['Manual de Ubuntu · mq_overview(7)', 'https://manpages.ubuntu.com/manpages/noble/man7/mq_overview.7.html'],
+  pipe: ['Manual de Ubuntu · pipe(7)', 'https://manpages.ubuntu.com/manpages/noble/man7/pipe.7.html'],
+  unixSock: ['Manual de Ubuntu · unix(7)', 'https://manpages.ubuntu.com/manpages/noble/man7/unix.7.html'],
+  dbus: ['Manual de Ubuntu · dbus-daemon(1)', 'https://manpages.ubuntu.com/manpages/noble/man1/dbus-daemon.1.html'],
+  nproc: ['Manual de Ubuntu · nproc(1)', 'https://manpages.ubuntu.com/manpages/noble/man1/nproc.1.html'],
+  taskset: ['Manual de Ubuntu · taskset(1)', 'https://manpages.ubuntu.com/manpages/noble/man1/taskset.1.html'],
+  make: ['Manual de Ubuntu · make(1)', 'https://manpages.ubuntu.com/manpages/noble/man1/make.1.html'],
+  gcc: ['Manual de Ubuntu · gcc(1)', 'https://manpages.ubuntu.com/manpages/noble/man1/gcc.1.html'],
+  bash: ['Manual de Ubuntu · bash(1)', 'https://manpages.ubuntu.com/manpages/noble/man1/bash.1.html'],
+  flock: ['Manual de Ubuntu · flock(1)', 'https://manpages.ubuntu.com/manpages/noble/man1/flock.1.html'],
+  fcntl: ['Manual de Ubuntu · fcntl(2)', 'https://manpages.ubuntu.com/manpages/noble/man2/fcntl.2.html'],
+  aptGet: ['Manual de Ubuntu · apt-get(8)', 'https://manpages.ubuntu.com/manpages/noble/man8/apt-get.8.html'],
+  dpkg: ['Manual de Ubuntu · dpkg(1)', 'https://manpages.ubuntu.com/manpages/noble/man1/dpkg.1.html'],
+  cupsServer: [
+    'Ubuntu Server · Servidor de impresión CUPS',
+    'https://ubuntu.com/server/docs/how-to/networking/cups-print-server/'
+  ],
+  cupsd: ['Manual de Ubuntu · cupsd(8)', 'https://manpages.ubuntu.com/manpages/noble/man8/cupsd.8.html'],
+  kMutex: ['Kernel Linux · Diseño de mutex', 'https://docs.kernel.org/locking/mutex-design.html'],
+  kLockdep: ['Kernel Linux · Validador de bloqueos (lockdep)', 'https://docs.kernel.org/locking/lockdep-design.html']
 };
 
 const ubuntuAFs = [
@@ -828,7 +875,466 @@ const ubuntuAFs = [
       }
     ]
   },
-  { id: 'AF2', title: 'La concurrencia en los sistemas operativos', temas: [] },
+  {
+    id: 'AF2',
+    title: 'La concurrencia en los sistemas operativos',
+    temas: [
+      {
+        titulo: 'Introducción',
+        veredicto: 'igual',
+        af: [
+          'En la actualidad, las computadoras, los teléfonos celulares y otros dispositivos electrónicos forman parte de nuestra vida diaria y nos permiten realizar muchas actividades al mismo tiempo. Para que estos dispositivos funcionen de manera eficiente, los sistemas operativos administran los recursos del equipo y organizan la ejecución de los procesos.',
+          'En este contexto, la concurrencia es un concepto fundamental, ya que permite ejecutar varias tareas de forma organizada y contribuye al buen funcionamiento del sistema. Comprender este concepto es importante para conocer cómo los sistemas operativos coordinan los procesos y mejoran el rendimiento de las aplicaciones que utilizamos todos los días.'
+        ],
+        ubuntu: [
+          'Ubuntu es un sistema **multitarea**: el núcleo Linux reparte el procesador entre todos los procesos y hilos. Desde Linux 6.6 el planificador por defecto es **EEVDF**, que sustituyó al anterior CFS.',
+          'Para coordinar procesos que comparten datos, Ubuntu ofrece a los programas las herramientas clásicas de la concurrencia: hilos POSIX, semáforos, mutex, variables de condición, colas de mensajes y tuberías. Todas se ven en los siguientes subtemas.'
+        ],
+        fuentes: ['kEevdf', 'pthreads', 'semOverview']
+      },
+      {
+        titulo: '¿Qué es la concurrencia?',
+        veredicto: 'igual',
+        af: [
+          'La concurrencia es la capacidad de un sistema operativo para ejecutar dos o más procesos o hilos al mismo tiempo. En un solo núcleo, la CPU cambia rápidamente entre procesos, mientras que en varios núcleos estos pueden ejecutarse de forma simultánea.'
+        ],
+        ubuntu: [
+          'Ubuntu hace las dos cosas que describe la AF:',
+          { def: [
+            [
+              'Un núcleo',
+              'el planificador alterna los procesos en el procesador, dando a cada uno porciones de tiempo.'
+            ],
+            [
+              'Varios núcleos',
+              'los procesos corren de verdad al mismo tiempo, uno por núcleo. El comando `nproc` muestra cuántas unidades de procesamiento hay disponibles.'
+            ]
+          ] },
+          'También se puede fijar en qué núcleos corre un proceso: la **afinidad de CPU** "une" un proceso a un conjunto de CPU, y el planificador de Linux la respeta (comando `taskset`).'
+        ],
+        fuentes: ['nproc', 'taskset', 'sched']
+      },
+      {
+        titulo: 'Objetivos de la concurrencia',
+        veredicto: 'igual',
+        af: [
+          { h: 'Maximizar el uso de recursos y el rendimiento' },
+          'El hardware (CPU, memoria, dispositivos de entrada/salida) es un recurso limitado y costoso. La concurrencia permite solapar el cómputo de la CPU con las operaciones de E/S. Mientras un proceso espera a que concluya una lectura/escritura en disco o red, la CPU se asigna a otro proceso activo, evitando tiempos muertos del procesador.',
+          { h: 'Aumentar la interactividad y la capacidad de respuesta' },
+          'La concurrencia asegura que el usuario pueda seguir interactuando con la interfaz gráfica o las aplicaciones en primer plano (por ejemplo, escribir en un editor de texto) mientras el sistema procesa tareas extensas en segundo plano (por ejemplo, descargar un archivo o compilar código).'
+        ],
+        ubuntu: [
+          { h: 'Solapar CPU y E/S' },
+          'En Ubuntu se ve en el estado de los procesos: el manual de `ps` llama **D** al proceso en "espera no interrumpible (normalmente E/S)". Mientras un proceso está en D, el planificador da la CPU a los procesos en estado R (listos).',
+          { h: 'Primer y segundo plano' },
+          'La terminal de Ubuntu (Bash) permite justo el ejemplo de la AF: si un comando termina con `&`, el shell lo ejecuta en segundo plano y no espera a que acabe, así que se puede seguir trabajando.',
+          { cmd: [['make -j4 &', 'compila en segundo plano con 4 trabajos a la vez']] }
+        ],
+        fuentes: ['ps', 'bash', 'make']
+      },
+      {
+        titulo: 'Fases de la concurrencia (estados)',
+        veredicto: 'distinto',
+        af: [
+          'Los procesos pueden cambiar de estado varias veces antes de terminar:',
+          { def: [
+            [
+              '1 · Nuevo',
+              'el proceso acaba de ser creado por el sistema operativo y está siendo preparado para ejecutarse. Ejemplo: al abrir un programa como Google Chrome, el sistema operativo crea el proceso y lo prepara.'
+            ],
+            [
+              '2 · Listo',
+              'el proceso ya está preparado para ejecutarse, pero está esperando que la CPU esté disponible. Ejemplo: tener abiertos Word, Excel y Spotify; ya están listos para ejecutarse, pero esperan su turno para usar la CPU.'
+            ],
+            [
+              '3 · Ejecución',
+              'el proceso está utilizando la CPU, que se encuentra ejecutando sus instrucciones. Ejemplo: estar escribiendo en Microsoft Word; la CPU está ejecutando las instrucciones para mostrar lo que escribes.'
+            ],
+            [
+              '4 · Bloqueado o en espera',
+              'el proceso no puede continuar temporalmente porque está esperando un recurso o que ocurra algún evento. Ejemplo: un navegador espera que cargue una página desde Internet; mientras tanto, queda en espera.'
+            ],
+            [
+              '5 · Terminado',
+              'el proceso ha terminado su ejecución y el sistema operativo libera los recursos que estaba utilizando. Ejemplo: cierras un programa o termina su tarea; el sistema operativo finaliza el proceso y libera la memoria.'
+            ]
+          ] },
+          { h: 'Estados de los procesos (diagrama)' },
+          { pasos: [
+            'Nuevo → Listo: proceso creado.',
+            'Listo → Ejecutando: asignando procesador.',
+            'Ejecutando → Listo: interrumpido.',
+            'Ejecutando → Bloqueado: pedidos a componentes de E/S.',
+            'Bloqueado → Listo: pedidos completados.',
+            'Ejecutando → Finalizado: salida.'
+          ] }
+        ],
+        ubuntu: [
+          'Linux usa los mismos estados, pero con otros nombres y algunas diferencias. El manual de `ps` los define así:',
+          { tabla: [
+            ['Código', 'Significado oficial', 'Estado de la AF'],
+            ['R', 'en ejecución o ejecutable (en la cola)', 'Ejecución y Listo juntos'],
+            ['S', 'espera interrumpible (esperando un evento)', 'Bloqueado'],
+            ['D', 'espera no interrumpible (normalmente E/S)', 'Bloqueado por E/S'],
+            ['T', 'detenido por una señal de control de trabajos', 'no aparece en la AF'],
+            ['Z', 'difunto ("zombi"): terminó pero su padre no lo ha recogido', 'Terminado']
+          ] },
+          { lista: [
+            'No hay estado "Nuevo": un proceso nace con `fork()`, que crea un proceso hijo duplicando al proceso que lo llama, y entra directo a la cola como R.',
+            'Listo y Ejecución comparten la letra **R**.',
+            'Al terminar, el proceso queda como **zombi** hasta que su padre recoge su estado; entonces se liberan sus últimos recursos.'
+          ] }
+        ],
+        fuentes: ['ps', 'fork']
+      },
+      {
+        titulo: 'Tipos de concurrencia: procesos e hilos',
+        veredicto: 'igual',
+        af: [
+          { h: 'Concurrencia entre procesos' },
+          'Ocurre cuando dos o más procesos se ejecutan durante el mismo periodo de tiempo. Cada proceso tiene su propio espacio de memoria; el sistema operativo debe administrar cuándo y cuánto tiempo utiliza cada uno.',
+          { h: 'Concurrencia entre hilos' },
+          'Se presenta cuando varios hilos pertenecientes a un mismo proceso se ejecutan de forma concurrente. Los hilos comparten una misma memoria, lo que permite que la comunicación entre ellos sea más rápida. Sin embargo, existe el riesgo de errores si no se coordinan correctamente.'
+        ],
+        ubuntu: [
+          'Los manuales de Ubuntu describen exactamente esta diferencia:',
+          { def: [
+            [
+              'Procesos',
+              '`fork()` crea un proceso nuevo duplicando al que lo llama. Padre e hijo corren en espacios de memoria separados.'
+            ],
+            [
+              'Hilos',
+              'según `pthreads(7)`, los hilos de un proceso comparten la misma memoria global (datos y *heap*), pero cada hilo tiene su propia pila.'
+            ]
+          ] },
+          'El riesgo que menciona la AF es real: como los hilos comparten memoria, hay que protegerla con mutex o semáforos. Con `ps -L` se ven los hilos de cada proceso.'
+        ],
+        fuentes: ['fork', 'pthreads', 'ps']
+      },
+      {
+        titulo: 'Concurrencia en uno o varios procesadores',
+        veredicto: 'igual',
+        af: [
+          { h: 'Concurrencia en un solo procesador' },
+          'La CPU cambia muy rápidamente de un proceso o hilo a otro. Realmente solo se ejecuta uno a la vez; la velocidad con la que ocurre este cambio da la impresión de que varios procesos se están ejecutando al mismo tiempo.',
+          { h: 'Concurrencia en varios procesadores' },
+          'Con varios procesadores o núcleos, cada uno puede ejecutar un proceso o hilo distinto al mismo tiempo.'
+        ],
+        ubuntu: [
+          'El planificador de Ubuntu trabaja igual en los dos casos: en un núcleo reparte el tiempo y en varios núcleos reparte además los procesos entre las CPU.',
+          'Las aplicaciones pueden pedir políticas especiales: `sched(7)` describe las de tiempo real (SCHED_FIFO y SCHED_RR, con prioridades del 1 al 99) y el valor *nice* (de −20 a +19) para las normales.'
+        ],
+        fuentes: ['sched', 'nproc', 'kEevdf']
+      },
+      {
+        titulo: 'Semáforos y sección crítica',
+        veredicto: 'igual',
+        af: [
+          'Los semáforos son mecanismos de sincronización que controlan el acceso a recursos compartidos mediante las operaciones **wait** y **signal**. Permiten coordinar la ejecución de procesos, evitar conflictos en la sección crítica y pueden ser binarios o contadores.',
+          { h: 'Sección crítica' },
+          { lista: [
+            'Controlan el acceso a recursos compartidos.',
+            'Evitan que varios procesos entren simultáneamente.',
+            'wait(): solicita acceso.',
+            'signal(): libera el recurso.',
+            'Semáforo inicializado en 1 → acceso exclusivo.'
+          ] },
+          { h: 'Problema lectores-escritores' },
+          { lista: [
+            'Existe un recurso compartido.',
+            'Varios lectores pueden acceder simultáneamente.',
+            'Un escritor necesita acceso exclusivo.',
+            'Se utilizan dos semáforos: sem_recurso y sem_lectores.'
+          ] }
+        ],
+        ubuntu: [
+          { h: 'Semáforos POSIX' },
+          'El manual `sem_overview(7)` define un semáforo como "un entero cuyo valor nunca puede bajar de cero" con dos operaciones: `sem_post` (sube uno, el *signal* de la AF) y `sem_wait` (baja uno, el *wait*). Si el valor es cero, `sem_wait` se bloquea hasta que sea mayor que cero. Hay semáforos **con nombre** (`/nombre`, para procesos distintos) y **sin nombre** (en memoria compartida).',
+          { h: 'Lectores-escritores' },
+          'Ubuntu ya trae este caso resuelto: el **bloqueo de lectura-escritura** (`pthread_rwlock`). Un hilo obtiene el bloqueo de lectura si ningún escritor lo tiene ni está esperando; el de escritura es exclusivo.',
+          { h: 'Debajo de todo' },
+          'Estas herramientas se construyen sobre los **futex** ("mutex rápidos en espacio de usuario") del núcleo Linux.'
+        ],
+        fuentes: ['semOverview', 'rwlock', 'futex']
+      },
+      {
+        titulo: 'Monitores',
+        veredicto: 'distinto',
+        af: [
+          'Los monitores son una herramienta para controlar el acceso de varios procesos a recursos compartidos.',
+          { lista: [
+            'Agrupan los datos y procedimientos relacionados con un recurso.',
+            'Los datos del monitor no pueden ser modificados directamente desde fuera.',
+            'Solo un proceso puede estar dentro del monitor a la vez, mientras los demás esperan.',
+            'Ayudan a mantener la exclusión mutua y a coordinar la ejecución de los procesos.',
+            'Utilizan variables de condición para que un proceso pueda esperar hasta que se cumpla determinada situación.',
+            'Sus operaciones principales son **cwait**, que pone a esperar un proceso, y **csignal**, que permite continuar a uno que estaba esperando.'
+          ] },
+          { h: 'Estructura de un monitor' },
+          'Una cola de entrada de procesos lleva al monitor, que contiene datos locales, variables de condición, los procedimientos 1 a k y el código de inicialización. En el área de espera hay una cola por cada condición (c1 … cn), donde esperan los procesos que hicieron cwait, y una cola urgente para los que hicieron csignal. Los procesos salen del monitor por la salida.'
+        ],
+        ubuntu: [
+          'El lenguaje C, en el que está escrito casi todo Ubuntu, **no tiene monitores** como tal. Ubuntu arma el mismo comportamiento con dos piezas:',
+          { def: [
+            [
+              'Mutex',
+              'hace que solo un hilo esté "dentro" a la vez: si el mutex ya está bloqueado por otro hilo, el que llama se bloquea hasta que se libere.'
+            ],
+            [
+              'Variables de condición',
+              'son el cwait y csignal de la AF. `pthread_cond_timedwait` bloquea al hilo en una condición y debe llamarse con el mutex tomado; `pthread_cond_signal` despierta a un hilo que esperaba.'
+            ]
+          ] },
+          'Mutex + variables de condición = un monitor hecho a mano.'
+        ],
+        fuentes: ['mutexPosix', 'condWait', 'condSignal']
+      },
+      {
+        titulo: 'Paso de mensajes',
+        veredicto: 'igual',
+        af: [
+          'El paso de mensajes permite que diferentes procesos se comuniquen e intercambien información, además de ayudar a coordinar su ejecución.',
+          { lista: [
+            '**Send:** permite enviar un mensaje a otro proceso.',
+            '**Receive:** permite recibir un mensaje de otro proceso.',
+            'Puede utilizarse para comunicación y sincronización.',
+            'Las operaciones pueden ser bloqueantes o no bloqueantes.',
+            'Puede utilizar buzones para almacenar y organizar los mensajes.',
+            'También puede utilizarse para controlar la exclusión mutua y resolver problemas como productor/consumidor.'
+          ] },
+          { h: 'Comunicación indirecta de procesos' },
+          { def: [
+            ['Uno a uno', 'un emisor envía por un puerto a un receptor.'],
+            ['Muchos a uno', 'varios emisores envían por un puerto a un receptor.'],
+            ['Uno a muchos', 'un emisor deja mensajes en un buzón para varios receptores.'],
+            ['Muchos a muchos', 'varios emisores y varios receptores comparten un buzón.']
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu tiene varias formas oficiales de pasar mensajes:',
+          { def: [
+            [
+              'Colas de mensajes POSIX',
+              'según `mq_overview(7)`, "permiten a los procesos intercambiar datos en forma de mensajes", con `mq_send` y `mq_receive`. Cada cola tiene un nombre (`/nombre`): es un **buzón** de comunicación indirecta. Pueden ser bloqueantes o no.'
+            ],
+            [
+              'Tuberías (pipes)',
+              'un canal de comunicación **unidireccional**: lo que se escribe en un extremo se lee en el otro.'
+            ],
+            ['Sockets UNIX', 'comunican procesos de la misma máquina de forma eficiente.'],
+            [
+              'D-Bus',
+              'el bus de mensajes de Ubuntu. Permite comunicación uno a uno y, a través del demonio `dbus-daemon`, que muchas aplicaciones se envíen mensajes entre sí: el caso "muchos a muchos".'
+            ]
+          ] }
+        ],
+        fuentes: ['mq', 'pipe', 'unixSock', 'dbus']
+      },
+      {
+        titulo: 'Ventajas de la ejecución concurrente',
+        veredicto: 'igual',
+        af: [
+          { def: [
+            [
+              '1 · Mayor rendimiento del sistema',
+              'permite que varios procesos o hilos avancen al mismo tiempo, logrando que el sistema operativo complete más tareas en menos tiempo. Esto mejora el rendimiento de la computadora, especialmente cuando se ejecutan varias aplicaciones de forma simultánea.'
+            ],
+            [
+              '2 · Mejor capacidad de respuesta',
+              'las aplicaciones pueden seguir respondiendo al usuario mientras realizan otras tareas en segundo plano, evitando bloqueos y ofreciendo una experiencia de uso más rápida y fluida.'
+            ],
+            [
+              '3 · Mayor escalabilidad',
+              'aprovecha mejor los procesadores con varios núcleos al distribuir las tareas entre ellos. Además, permite que el sistema maneje más procesos o usuarios sin disminuir significativamente su rendimiento.'
+            ],
+            [
+              '4 · Uso eficiente de los recursos',
+              'optimiza el uso del procesador, la memoria y los dispositivos de entrada y salida. Mientras un proceso espera una operación, el sistema puede ejecutar otro, evitando que los recursos permanezcan inactivos.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Un ejemplo oficial de cada ventaja en Ubuntu:',
+          { def: [
+            [
+              'Rendimiento',
+              '`make -j` indica cuántos trabajos ejecutar simultáneamente al compilar; sin número, no pone límite.'
+            ],
+            ['Respuesta', 'los comandos con `&` corren en segundo plano y la terminal sigue disponible.'],
+            [
+              'Escalabilidad',
+              'el planificador reparte los procesos entre todos los núcleos que reporta `nproc`.'
+            ],
+            [
+              'Uso de recursos',
+              'un proceso esperando E/S (estado D) no ocupa la CPU; otro proceso la usa mientras tanto.'
+            ]
+          ] }
+        ],
+        fuentes: ['make', 'bash', 'nproc', 'ps']
+      },
+      {
+        titulo: 'Tipos de procesos concurrentes',
+        veredicto: 'igual',
+        af: [
+          'En los sistemas operativos, los procesos que se ejecutan de forma concurrente se pueden clasificar principalmente en dos tipos según la naturaleza de su ejecución:',
+          { def: [
+            [
+              'Procesos independientes',
+              'se ejecutan sin requerir ayuda o cooperación de otros. Son totalmente autónomos; su avance no depende de las demás tareas. Ejemplo: varios intérpretes de mandatos (consolas) ejecutándose al mismo tiempo sin interactuar.'
+            ],
+            [
+              'Procesos cooperativos',
+              'están diseñados para trabajar en conjunto en una misma actividad. Necesitan comunicarse e interactuar entre sí durante su ejecución. Ejemplo: un compilador, donde procesos como el compilador y el ensamblador se sincronizan para crear código máquina.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Los dos ejemplos de la AF existen tal cual en Ubuntu:',
+          { def: [
+            [
+              'Independientes',
+              'varias terminales abiertas, cada una con su propio Bash, sin compartir nada.'
+            ],
+            [
+              'Cooperativos',
+              'el compilador **GCC** de Ubuntu. Su opción `-pipe` usa "tuberías en lugar de archivos temporales para comunicar las distintas etapas de la compilación": el compilador le pasa el código al ensamblador mientras lo va generando.'
+            ]
+          ] },
+          'En la terminal, una **tubería** (`comando1 | comando2`) une procesos cooperativos: la salida del primero es la entrada del segundo.'
+        ],
+        fuentes: ['gcc', 'bash']
+      },
+      {
+        titulo: 'Interacciones entre procesos',
+        veredicto: 'igual',
+        af: [
+          'En un sistema operativo se pueden ejecutar distintos procesos, a la misma vez o alternados. Durante su ejecución puede haber diferentes maneras de interacción; esto depende de si comparten información o recursos.',
+          { def: [
+            [
+              'Por independencia',
+              'sucede cuando dos o más procesos se pueden ejecutar de manera autónoma, ya que no necesitan información u otros tipos de datos para realizar sus tareas. Esto ocurre porque cada proceso mantiene su propio espacio de trabajo y no tiene necesidad de comunicarse con otros procesos.'
+            ],
+            [
+              'Para la transmisión',
+              'ocurre cuando dos o más procesos requieren pasarse información o datos entre sí para llegar a una meta en común. Los procesos interactúan enviando y recibiendo información, además de tener un espacio de memoria común al que todos los procesos involucrados tienen acceso directo.'
+            ],
+            [
+              'Por competencia',
+              'está presente cuando dos o más procesos compiten de manera simultánea por el mismo recurso finito del sistema. Es una situación problemática en la que los procesos involucrados leen o escriben los mismos datos compartidos. Existe el mecanismo de "exclusión mutua", que evita que otros procesos usen un recurso compartido si un proceso ya lo está utilizando.'
+            ],
+            [
+              'Para la sincronización y coordinación',
+              'ocurre cuando las acciones o el avance de un proceso dependen del progreso de otro proceso. Algunas maneras de evitar que un proceso esté estancado mucho rato son: dormir y despertar; semáforos y mutexes; barreras.'
+            ],
+            [
+              'Que generan conflicto',
+              'existen situaciones donde la interacción entre procesos ya no se puede llevar a cabo, porque dos o más procesos quedan bloqueados de manera permanente: cada uno sostiene un recurso que el otro necesita para seguir su ejecución. A esto se le conoce como **interbloqueo**.'
+            ],
+            [
+              'Por comunicación',
+              'ocurre cuando dos o más procesos que cooperan necesitan intercambiar información para poder trabajar de manera conjunta. Al ser procesos cooperativos, su ejecución depende de los datos proporcionados por los demás procesos, y tienen un mecanismo de comunicación que les permite enviar y recibir datos durante la ejecución.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Cada tipo de interacción tiene su herramienta en Ubuntu:',
+          { tabla: [
+            ['Interacción', 'En Ubuntu'],
+            ['Independencia', 'procesos separados creados con fork(), cada uno con su memoria'],
+            ['Transmisión', 'memoria compartida, tuberías y colas de mensajes'],
+            ['Competencia', 'bloqueos de archivos; `flock` los maneja incluso desde scripts'],
+            [
+              'Sincronización',
+              'futex (dormir y despertar), semáforos, mutex y barreras (`pthread_barrier_wait` bloquea hasta que llegan todos los hilos)'
+            ],
+            [
+              'Conflicto',
+              'el núcleo detecta interbloqueos en los bloqueos de archivos: fcntl devuelve el error EDEADLK'
+            ],
+            ['Comunicación', 'sockets UNIX y D-Bus']
+          ] },
+          'Dentro del propio núcleo, el validador **lockdep** analiza el orden en que se toman los bloqueos y puede demostrar que no hay combinación que cause un interbloqueo.'
+        ],
+        fuentes: ['fork', 'flock', 'futex', 'barrier', 'fcntl', 'kLockdep']
+      },
+      {
+        titulo: 'Paralelismo',
+        veredicto: 'igual',
+        af: [
+          'El paralelismo consiste en la ejecución simultánea de dos o más hilos/procesos utilizando múltiples núcleos de CPU. Se busca reducir el tiempo de ejecución de varios hilos/procesos utilizando núcleos de CPU, dependiendo de la cantidad de hilos/procesos que se encuentren.',
+          { h: 'Concurrencia vs. paralelismo' },
+          { tabla: [
+            ['Paralelismo', 'Concurrencia'],
+            ['Es un modelo de ejecución.', 'Es un modelo de organización.'],
+            [
+              'Se enfoca en realizar múltiples tareas simultáneamente.',
+              'Se enfoca en organizar diferentes tareas para poder lidiar con todas ellas a la vez.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'En Ubuntu el paralelismo depende de cuántos núcleos haya (`nproc`). La documentación muestra las dos caras de la tabla de la AF:',
+          { lista: [
+            '**Concurrencia:** el planificador organiza todos los procesos, aunque haya un solo núcleo.',
+            '**Paralelismo:** `make -j` lanza varios trabajos de compilación al mismo tiempo para aprovechar todos los núcleos, y `taskset` fija en qué núcleos corre cada proceso.'
+          ] },
+          { cmd: [['make -j$(nproc)', 'un trabajo de compilación por núcleo disponible']] }
+        ],
+        fuentes: ['nproc', 'make', 'taskset']
+      },
+      {
+        titulo: 'Exclusión mutua y ejemplos',
+        veredicto: 'igual',
+        af: [
+          'Es un mecanismo que se usa principalmente en los sistemas operativos y en la programación concurrente para controlar el acceso de varios procesos a un recurso compartido. Tiene como objetivo garantizar que solo un proceso pueda utilizar el recurso, mientras que los demás procesos deben esperar para poder usar ese mismo recurso.',
+          { h: 'Ejemplos en la vida diaria' },
+          { def: [
+            [
+              'Una impresora',
+              'cuando hay varias impresiones por delante, los documentos deben ser procesados de manera que uno termine de imprimirse para que siga el siguiente.'
+            ],
+            [
+              'Cajero automático',
+              'cuando una persona está realizando una operación en el cajero, la siguiente persona debe esperar su turno para usar ese mismo cajero.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu tiene ejemplos reales de exclusión mutua:',
+          { def: [
+            [
+              'La impresora',
+              'Ubuntu usa **CUPS**, que según su documentación administra los trabajos de impresión y sus **colas**. Su planificador, `cupsd`, manda los documentos a la impresora uno tras otro.'
+            ],
+            [
+              'Instalar programas',
+              'APT y dpkg usan **archivos de bloqueo** para que solo un gestor de paquetes modifique el sistema a la vez. Por eso, si hay una actualización en curso, otra instalación tiene que esperar.'
+            ],
+            [
+              'El núcleo',
+              'Linux tiene su propio **mutex**, una primitiva que obliga a acceder en orden (serializar) a la memoria compartida.'
+            ]
+          ] }
+        ],
+        fuentes: ['cupsServer', 'cupsd', 'aptGet', 'dpkg', 'kMutex']
+      },
+      {
+        titulo: 'Conclusión',
+        veredicto: 'igual',
+        af: [
+          'La concurrencia es una parte muy importante de los sistemas operativos, ya que permite realizar varias tareas y aprovechar mejor los recursos de la computadora. Se revisaron los diferentes tipos de concurrencia, los modelos de programación y la forma en que los procesos pueden comunicarse y trabajar juntos.',
+          'Aunque la concurrencia mejora el rendimiento y la respuesta del sistema, es necesario coordinar correctamente los procesos para evitar problemas como errores, condiciones de carrera o interbloqueos. Este tema ayuda a entender mejor cómo los sistemas operativos organizan las tareas que realizamos diariamente en nuestros dispositivos.'
+        ],
+        ubuntu: [
+          'Todo lo que plantea la AF2 está presente en Ubuntu: procesos e hilos, planificación en uno o varios núcleos, semáforos, mutex, variables de condición, paso de mensajes y detección de interbloqueos.',
+          'La diferencia principal está en los detalles: Linux junta "listo" y "ejecución" en un solo estado (R), agrega el estado zombi, y arma los monitores con mutex y variables de condición en lugar de tenerlos como herramienta propia.'
+        ],
+        fuentes: ['ps', 'pthreads', 'semOverview']
+      }
+    ]
+  },
   { id: 'AF3', title: 'Almacenaje, memoria y archivos', temas: [] },
   { id: 'AF4', title: 'Redes y seguridad en sistemas distribuidos', temas: [] }
 ];
