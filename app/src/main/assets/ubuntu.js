@@ -120,7 +120,139 @@ const fuentesUbuntu = {
   ],
   cupsd: ['Manual de Ubuntu · cupsd(8)', 'https://manpages.ubuntu.com/manpages/noble/man8/cupsd.8.html'],
   kMutex: ['Kernel Linux · Diseño de mutex', 'https://docs.kernel.org/locking/mutex-design.html'],
-  kLockdep: ['Kernel Linux · Validador de bloqueos (lockdep)', 'https://docs.kernel.org/locking/lockdep-design.html']
+  kLockdep: ['Kernel Linux · Validador de bloqueos (lockdep)', 'https://docs.kernel.org/locking/lockdep-design.html'],
+  kMmConceptos: ['Kernel Linux · Conceptos de gestión de memoria', 'https://docs.kernel.org/admin-guide/mm/concepts.html'],
+  kMglru: ['Kernel Linux · Multi-Gen LRU', 'https://docs.kernel.org/admin-guide/mm/multigen_lru.html'],
+  kZram: ['Kernel Linux · zram', 'https://docs.kernel.org/admin-guide/blockdev/zram.html'],
+  kF2fs: ['Kernel Linux · F2FS', 'https://docs.kernel.org/filesystems/f2fs.html'],
+  kNtfs3: ['Kernel Linux · NTFS3', 'https://docs.kernel.org/filesystems/ntfs3.html'],
+  kVmSysctl: [
+    'Kernel Linux · Parámetros de memoria (/proc/sys/vm)',
+    'https://docs.kernel.org/admin-guide/sysctl/vm.html'
+  ],
+  kExt4Grupos: ['Kernel Linux · ext4: grupos de bloques', 'https://docs.kernel.org/filesystems/ext4/blockgroup.html'],
+  kZonas: ['Kernel Linux · Memoria física y zonas', 'https://docs.kernel.org/mm/physical_memory.html'],
+  buddyinfo: [
+    'Manual de Ubuntu · proc_buddyinfo(5)',
+    'https://manpages.ubuntu.com/manpages/noble/man5/proc_buddyinfo.5.html'
+  ],
+  slabtop: ['Manual de Ubuntu · slabtop(1)', 'https://manpages.ubuntu.com/manpages/noble/man1/slabtop.1.html'],
+  mprotect: ['Manual de Ubuntu · mprotect(2)', 'https://manpages.ubuntu.com/manpages/noble/man2/mprotect.2.html'],
+  malloc: ['Manual de Ubuntu · malloc(3)', 'https://manpages.ubuntu.com/manpages/noble/man3/malloc.3.html'],
+  ldso: ['Manual de Ubuntu · ld.so(8)', 'https://manpages.ubuntu.com/manpages/noble/man8/ld.so.8.html'],
+  cp: ['Manual de Ubuntu · cp(1)', 'https://manpages.ubuntu.com/manpages/noble/man1/cp.1.html'],
+  link: ['Manual de Ubuntu · link(2)', 'https://manpages.ubuntu.com/manpages/noble/man2/link.2.html'],
+  e4defrag: ['Manual de Ubuntu · e4defrag(8)', 'https://manpages.ubuntu.com/manpages/noble/man8/e4defrag.8.html'],
+  cryptsetup: ['Manual de Ubuntu · cryptsetup(8)', 'https://manpages.ubuntu.com/manpages/noble/man8/cryptsetup.8.html'],
+  nfs: ['Ubuntu Server · NFS', 'https://ubuntu.com/server/docs/how-to/networking/install-nfs/'],
+  samba: ['Ubuntu Server · Introducción a Samba', 'https://ubuntu.com/server/docs/explanation/intro-to/samba/'],
+  lvm: ['Ubuntu Server · LVM', 'https://ubuntu.com/server/docs/explanation/storage/about-lvm/'],
+  notas2404: ['Ubuntu · Notas de la versión 24.04 LTS', 'https://documentation.ubuntu.com/release-notes/24.04/'],
+  tutorialInstalar: ['Ubuntu · Tutorial: instalar Ubuntu Desktop', 'https://ubuntu.com/tutorials/install-ubuntu-desktop'],
+  tcp: ['Manual de Ubuntu · tcp(7)', 'https://manpages.ubuntu.com/manpages/noble/man7/tcp.7.html'],
+  udp: ['Manual de Ubuntu · udp(7)', 'https://manpages.ubuntu.com/manpages/noble/man7/udp.7.html'],
+  ipv4: ['Manual de Ubuntu · ip(7)', 'https://manpages.ubuntu.com/manpages/noble/man7/ip.7.html'],
+  ipv6: ['Manual de Ubuntu · ipv6(7)', 'https://manpages.ubuntu.com/manpages/noble/man7/ipv6.7.html'],
+  socket: ['Manual de Ubuntu · socket(2)', 'https://manpages.ubuntu.com/manpages/noble/man2/socket.2.html'],
+  raw: ['Manual de Ubuntu · raw(7)', 'https://manpages.ubuntu.com/manpages/noble/man7/raw.7.html'],
+  services: ['Manual de Ubuntu · services(5)', 'https://manpages.ubuntu.com/manpages/noble/man5/services.5.html'],
+  ss: ['Manual de Ubuntu · ss(8)', 'https://manpages.ubuntu.com/manpages/noble/man8/ss.8.html'],
+  rpcbind: ['Manual de Ubuntu · rpcbind(8)', 'https://manpages.ubuntu.com/manpages/noble/man8/rpcbind.8.html'],
+  xdr: ['Manual de Ubuntu · xdr(3)', 'https://manpages.ubuntu.com/manpages/noble/man3/xdr.3.html'],
+  aptSecure: ['Manual de Ubuntu · apt-secure(8)', 'https://manpages.ubuntu.com/manpages/noble/man8/apt-secure.8.html'],
+  shadow: ['Manual de Ubuntu · shadow(5)', 'https://manpages.ubuntu.com/manpages/noble/man5/shadow.5.html'],
+  sha256sum: ['Manual de Ubuntu · sha256sum(1)', 'https://manpages.ubuntu.com/manpages/noble/man1/sha256sum.1.html'],
+  sshKeygen: ['Manual de Ubuntu · ssh-keygen(1)', 'https://manpages.ubuntu.com/manpages/noble/man1/ssh-keygen.1.html'],
+  gpg: ['Manual de Ubuntu · gpg(1)', 'https://manpages.ubuntu.com/manpages/noble/man1/gpg.1.html'],
+  auditd: ['Manual de Ubuntu · auditd(8)', 'https://manpages.ubuntu.com/manpages/noble/man8/auditd.8.html'],
+  credentials: ['Manual de Ubuntu · credentials(7)', 'https://manpages.ubuntu.com/manpages/noble/man7/credentials.7.html'],
+  ufw: ['Manual de Ubuntu · ufw(8)', 'https://manpages.ubuntu.com/manpages/noble/man8/ufw.8.html'],
+  faillock: ['Manual de Ubuntu · faillock(8)', 'https://manpages.ubuntu.com/manpages/noble/man8/faillock.8.html'],
+  pam: ['Manual de Ubuntu · pam(7)', 'https://manpages.ubuntu.com/manpages/noble/man7/pam.7.html'],
+  netplan: ['Ubuntu Server · Netplan', 'https://ubuntu.com/server/docs/explanation/networking/about-netplan/'],
+  firewall: ['Ubuntu Server · Firewall (ufw)', 'https://ubuntu.com/server/docs/how-to/security/firewalls/'],
+  sugerencias: [
+    'Ubuntu Server · Sugerencias de seguridad',
+    'https://ubuntu.com/server/docs/explanation/security/security_suggestions/'
+  ],
+  openssh: ['Ubuntu Server · Servidor OpenSSH', 'https://ubuntu.com/server/docs/how-to/security/openssh-server/'],
+  totp: [
+    'Ubuntu Server · Doble factor con TOTP/HOTP',
+    'https://ubuntu.com/server/docs/how-to/security/two-factor-authentication-with-totp-or-hotp/'
+  ],
+  fido: [
+    'Ubuntu Server · Doble factor con U2F/FIDO',
+    'https://ubuntu.com/server/docs/how-to/security/two-factor-authentication-with-u2f-or-fido/'
+  ],
+  smartcard: [
+    'Ubuntu Server · Autenticación con tarjeta inteligente',
+    'https://ubuntu.com/server/docs/how-to/security/smart-card-authentication/'
+  ],
+  ftp: ['Ubuntu Server · Servidor FTP', 'https://ubuntu.com/server/docs/how-to/networking/ftp/'],
+  postfix: [
+    'Ubuntu Server · Postfix (correo)',
+    'https://ubuntu.com/server/docs/how-to/mail-services/install-postfix/'
+  ],
+  ha: [
+    'Ubuntu Server · Alta disponibilidad',
+    'https://ubuntu.com/server/docs/explanation/intro-to/high-availability/'
+  ],
+  squid: [
+    'Ubuntu Server · Proxy Squid',
+    'https://ubuntu.com/server/docs/explanation/web-services/about-squid-proxy-servers/'
+  ],
+  cryptoLibs: [
+    'Ubuntu Server · Bibliotecas criptográficas',
+    'https://ubuntu.com/server/docs/explanation/intro-to/crypto-libraries/'
+  ],
+  sids: [
+    'Ubuntu Server · Identificadores de seguridad (SID)',
+    'https://ubuntu.com/server/docs/explanation/active-directory/security-identifiers-sids/'
+  ],
+  sssd: ['Ubuntu Server · SSSD', 'https://ubuntu.com/server/docs/explanation/intro-to/sssd/'],
+  kerberos: ['Ubuntu Server · Kerberos', 'https://ubuntu.com/server/docs/explanation/intro-to/kerberos/'],
+  clevis: [
+    'Ubuntu Server · Descifrado LUKS con TPM',
+    'https://ubuntu.com/server/docs/how-to/security/tpm-backed-luks-decryption-with-clevis/'
+  ],
+  actualizaciones: [
+    'Ubuntu Server · Actualizaciones automáticas',
+    'https://ubuntu.com/server/docs/how-to/software/automatic-updates/'
+  ],
+  aslr: [
+    'Seguridad de Ubuntu · ASLR',
+    'https://documentation.ubuntu.com/security/security-features/process-memory/aslr/'
+  ],
+  banderas: [
+    'Seguridad de Ubuntu · Banderas del compilador',
+    'https://documentation.ubuntu.com/security/security-features/process-memory/compiler-flags/'
+  ],
+  puertos: [
+    'Seguridad de Ubuntu · Sin puertos abiertos',
+    'https://documentation.ubuntu.com/security/security-features/network/open-ports/'
+  ],
+  hashing: [
+    'Seguridad de Ubuntu · Hash de contraseñas',
+    'https://documentation.ubuntu.com/security/security-features/cryptography/password-hashing/'
+  ],
+  secureBoot: [
+    'Seguridad de Ubuntu · UEFI Secure Boot',
+    'https://documentation.ubuntu.com/security/security-features/platform-protections/secure-boot/'
+  ],
+  tpm: [
+    'Seguridad de Ubuntu · Trusted Platform Module',
+    'https://documentation.ubuntu.com/security/security-features/platform-protections/trusted-platform-module/'
+  ],
+  synCookies: [
+    'Seguridad de Ubuntu · SYN cookies',
+    'https://documentation.ubuntu.com/security/security-features/network/syn-cookies/'
+  ],
+  livepatch: ['Ubuntu · Livepatch', 'https://ubuntu.com/security/livepatch'],
+  verificarIso: ['Ubuntu · Tutorial: verificar la imagen de Ubuntu', 'https://ubuntu.com/tutorials/how-to-verify-ubuntu'],
+  kLsm: ['Kernel Linux · Módulos de seguridad (LSM)', 'https://docs.kernel.org/admin-guide/LSM/index.html'],
+  kApparmor: ['Kernel Linux · AppArmor', 'https://docs.kernel.org/admin-guide/LSM/apparmor.html'],
+  respaldos: ['Ubuntu Server · Respaldos', 'https://ubuntu.com/server/docs/how-to/backups/'],
+  kSkbuff: ['Kernel Linux · struct sk_buff', 'https://docs.kernel.org/networking/skbuff.html']
 };
 
 const ubuntuAFs = [
@@ -1335,6 +1467,1560 @@ const ubuntuAFs = [
       }
     ]
   },
-  { id: 'AF3', title: 'Almacenaje, memoria y archivos', temas: [] },
-  { id: 'AF4', title: 'Redes y seguridad en sistemas distribuidos', temas: [] }
+  {
+    id: 'AF3',
+    title: 'Almacenaje, memoria y archivos',
+    temas: [
+      {
+        titulo: 'Almacenaje, memoria y archivos',
+        veredicto: 'igual',
+        af: [
+          { def: [
+            [
+              'Almacenamiento',
+              'cualquier medio físico capaz de retener datos, ya sea temporal o permanentemente. Se organiza en una jerarquía según velocidad, costo y volatilidad: desde los registros del CPU y la caché, pasando por la memoria principal, hasta el almacenamiento secundario (discos, SSD) y terciario (respaldos).'
+            ],
+            [
+              'Memoria',
+              'nos referimos a la memoria principal o RAM: el dispositivo de acceso directo y volátil donde residen las instrucciones y datos que la CPU está ejecutando activamente en un momento dado. Se distingue del almacenamiento secundario porque es mucho más rápida, pero pierde su contenido al apagar el equipo.'
+            ],
+            [
+              'Archivo',
+              'la unidad lógica de almacenamiento persistente que define el sistema operativo: una colección de datos con nombre que permanece guardada incluso después de que el proceso que la creó termina. El conjunto de archivos, junto con la estructura (directorios) que los organiza, forma el sistema de archivos.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu maneja los tres niveles de la AF:',
+          { def: [
+            [
+              'Memoria',
+              'la documentación del kernel recuerda que la memoria física es un recurso limitado; Linux la administra con memoria virtual y usa la RAM libre como **caché de páginas** de los archivos.'
+            ],
+            [
+              'Almacenamiento',
+              'discos y particiones, que Ubuntu puede organizar con **LVM**, un método más flexible que las particiones tradicionales.'
+            ],
+            [
+              'Archivos',
+              'un solo árbol que empieza en `/`, descrito en el manual `hier(7)`, guardado normalmente en ext4.'
+            ]
+          ] }
+        ],
+        fuentes: ['kMmConceptos', 'lvm', 'hier']
+      },
+      {
+        titulo: 'Memoria física, memoria virtual y paginación',
+        veredicto: 'igual',
+        af: [
+          { def: [
+            [
+              'Memoria física',
+              'en cualquier sistema informático es fundamental distinguir entre la memoria física y la memoria virtual. La memoria física, o RAM, es el recurso de hardware real y tangible donde se ejecutan los procesos, pero su capacidad es estrictamente limitada.'
+            ],
+            [
+              'Memoria virtual',
+              'para romper esta limitación, los sistemas operativos modernos implementan la memoria virtual, una abstracción lógica que le hace creer a cada proceso que tiene a su disposición un espacio de direcciones inmenso e independiente.'
+            ],
+            [
+              'Conexión entre ambos',
+              'se logra mediante la paginación bajo demanda: el sistema mantiene en la memoria física solo las páginas exactas que se están utilizando en ese instante, dejando el resto de la información en el almacenamiento y trayéndola a la RAM únicamente cuando es necesaria.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'La documentación del núcleo Linux que usa Ubuntu explica lo mismo: la memoria física es limitada, y la **memoria virtual** traduce las direcciones virtuales de cada proceso a direcciones físicas, página por página.',
+          'Cuando falta RAM, las páginas poco usadas se llevan al **archivo de intercambio**. El instalador de Ubuntu lo crea por defecto como `/swap.img`, con un tamaño calculado automáticamente (hasta 8 GB).'
+        ],
+        fuentes: ['kMmConceptos', 'curtinSwap']
+      },
+      {
+        titulo: 'Memoria en sistemas de escritorio y móviles',
+        veredicto: 'distinto',
+        af: [
+          { h: 'Escritorio' },
+          'En los sistemas operativos de escritorio, la necesidad de liberar espacio se resuelve casi siempre utilizando una variante del **algoritmo del reloj**. Esta estrategia es la favorita en estos entornos porque ofrece un excelente equilibrio técnico, logrando aproximarse al alto rendimiento del modelo ideal LRU (*Least Recently Used*) mientras mantiene una sobrecarga de cómputo bastante baja, evitando así saturar los recursos del procesador.',
+          { h: 'Móviles' },
+          'En los ecosistemas móviles el reto cambia de naturaleza debido a que la memoria flash se desgasta físicamente con cada ciclo de escritura. Para alargar la vida útil del hardware, ninguno de los sistemas móviles principales recurre a una partición de intercambio tradicional en disco. En su lugar, el problema se aborda primero comprimiendo las páginas inactivas dentro de la propia memoria RAM y, si esta medida no basta para liberar espacio, el sistema toma la decisión agresiva de terminar procesos completos.'
+        ],
+        ubuntu: [
+          'Ubuntu es un sistema de escritorio y servidor, pero no usa exactamente el algoritmo del reloj:',
+          { lista: [
+            'El núcleo Linux mantiene **listas LRU** de páginas y ofrece **Multi-Gen LRU**, una implementación alternativa que mejora el rendimiento cuando hay presión de memoria.',
+            'A diferencia de los móviles, Ubuntu sí usa intercambio en disco (`/swap.img`).',
+            'La compresión en RAM existe en el núcleo como **zram**: crea discos en memoria donde las páginas se guardan comprimidas. Se puede activar, pero no es lo que trae el instalador por defecto.',
+            'Para terminar procesos cuando falta memoria, Ubuntu Desktop usa **systemd-oomd** desde la 22.04.'
+          ] }
+        ],
+        fuentes: ['kMglru', 'curtinSwap', 'kZram', 'oomd', 'notas2204']
+      },
+      {
+        titulo: 'Windows: memoria y NTFS',
+        veredicto: 'distinto',
+        af: [
+          { h: 'Gestión de memoria en Windows' },
+          'En los sistemas Windows, la memoria se gestiona mediante paginación bajo demanda con *clustering*: ante un fallo de página, el sistema no carga solo una, sino varias páginas sucesivas anticipando su uso futuro.',
+          'Cada proceso recibe un conjunto de trabajo con un límite mínimo y máximo de páginas, el cual se ajusta dinámicamente si la memoria escasea. Para liberar espacio de forma eficiente, el sistema emplea una variante del algoritmo del reloj en monoprocesadores, o el algoritmo FIFO en entornos multiprocesador.',
+          { h: 'Sistemas de archivos en Windows' },
+          'Para el almacenamiento local, Windows utiliza **NTFS**, un sistema que trata absolutamente todo como un objeto estructurado con atributos. La información de los archivos se organiza en la Tabla Maestra de Archivos (MFT), utilizando números lógicos de clúster (LCN) para ubicar los datos físicos en el disco. Además, los directorios se indexan mediante árboles B+, una estructura que garantiza búsquedas muy rápidas sin requerir reorganizaciones constantes.'
+        ],
+        ubuntu: [
+          { def: [
+            [
+              'Memoria',
+              'Ubuntu también pagina bajo demanda, pero en lugar de conjuntos de trabajo limita la memoria por grupos de procesos con los **cgroups** del núcleo.'
+            ],
+            [
+              'Archivos',
+              'Ubuntu no usa NTFS como sistema propio (usa ext4), pero el núcleo Linux trae el controlador **NTFS3**, que lee y escribe NTFS hasta la versión 3.1. Por eso Ubuntu abre sin problema un disco o una USB de Windows.'
+            ]
+          ] }
+        ],
+        fuentes: ['kCgroup', 'kNtfs3', 'instaladorGuiado']
+      },
+      {
+        titulo: 'Solaris: memoria y archivos',
+        veredicto: 'igual',
+        af: [
+          { h: 'Gestión de memoria en Solaris' },
+          'Solaris gestiona la memoria a través del proceso **pageout**, el cual opera mediante un algoritmo de reloj de dos manecillas: la manecilla frontal desactiva el bit de referencia de las páginas y la posterior evalúa si deben liberarse. Este mecanismo se activa automáticamente cuando la memoria disponible cae por debajo del umbral *lotsfree*, adaptando la velocidad de exploración según la urgencia. Si el nivel crítico de memoria se mantiene durante varios segundos, el sistema adopta una medida más drástica y comienza a descargar procesos completos.',
+          { h: 'Sistemas de archivos en Solaris' },
+          'Fiel a su herencia de UNIX, Solaris organiza los archivos utilizando **nodos-i (inodes)**, una estructura de control que mantiene los metadatos completamente separados del nombre del archivo, lo que facilita la creación de múltiples enlaces hacia los mismos datos. Para optimizar el rendimiento en discos magnéticos, arquitecturas clásicas como el Fast File System dividen las particiones en **grupos de cilindros**, reduciendo significativamente el desplazamiento físico de los cabezales de lectura.'
+        ],
+        ubuntu: [
+          'Ubuntu comparte la herencia UNIX de Solaris:',
+          { lista: [
+            'ext4 también usa **inodos**, separados del nombre. Por eso existen los **enlaces duros**: `link()` crea un nombre nuevo para un archivo que ya existe, y ese nombre funciona igual que el original.',
+            'En lugar de grupos de cilindros, ext4 divide el disco en **grupos de bloques**, cada uno con sus mapas de bits, su tabla de inodos y sus datos.',
+            'El ajuste de cuánto intercambiar se controla con el parámetro `swappiness` del núcleo, que va de 0 a 200.'
+          ] }
+        ],
+        fuentes: ['link', 'kExt4', 'kExt4Grupos', 'kVmSysctl']
+      },
+      {
+        titulo: 'Linux: memoria y archivos',
+        veredicto: 'igual',
+        af: [
+          { h: 'Gestión de memoria en Linux' },
+          'En Linux, la memoria física se organiza en **zonas** específicas para adaptarse a las limitaciones de acceso directo a memoria (DMA) del hardware. Para administrar bloques de páginas contiguas, el núcleo utiliza el algoritmo de descomposición binaria denominado **buddy system**. Adicionalmente, para gestionar la memoria dinámica de vida corta, el sistema emplea una **asignación por franjas** (*slab*) que recicla constantemente las estructuras y descriptores previamente liberados, optimizando la reutilización de recursos.',
+          { h: 'Sistemas de archivos en Linux' },
+          'En cuanto al almacenamiento, Linux destaca por incorporar el **Sistema de Archivos Virtual (VFS)**, una capa de abstracción orientada a objetos. Esta arquitectura le permite interactuar con diversos formatos de disco y red de manera transparente para el usuario. Gracias a esto, el sistema puede almacenar en caché los nodos-i de forma unificada en la memoria, acelerando las lecturas futuras independientemente de si el archivo utiliza el formato nativo EXT2 o un sistema de archivos moderno estructurado en bitácora.'
+        ],
+        ubuntu: [
+          'Esta parte de la AF describe directamente el núcleo de Ubuntu, y todo se puede comprobar:',
+          { def: [
+            [
+              'Zonas',
+              'la documentación del kernel explica que la memoria física se divide en zonas, determinadas por las limitaciones de la arquitectura para acceder a ella.'
+            ],
+            [
+              'Buddy system',
+              'el archivo `/proc/buddyinfo` muestra, por zona, los bloques libres de cada tamaño, y sirve para diagnosticar la fragmentación.'
+            ],
+            ['Slab', '`slabtop` muestra en tiempo real las cachés *slab* del núcleo.'],
+            ['VFS', 'la abstracción que permite que distintos sistemas de archivos convivan.'],
+            [
+              'Bitácora',
+              'el sistema moderno con bitácora que usa Ubuntu es **ext4**, con su diario (*journal*).'
+            ]
+          ] }
+        ],
+        fuentes: ['kZonas', 'buddyinfo', 'slabtop', 'kVfs', 'kExt4']
+      },
+      {
+        titulo: 'Android: memoria y archivos',
+        veredicto: 'distinto',
+        af: [
+          { h: 'Gestión de memoria en Android' },
+          'En el ecosistema móvil, Android hereda la paginación de Linux, pero evita la partición de intercambio tradicional para no acortar la vida útil de la memoria flash. En su lugar, utiliza **zRAM** para comprimir las páginas inactivas directamente en la memoria RAM. Además, su entorno de ejecución ART gestiona la memoria activa mediante un recolector de basura, y cuenta con mecanismos escalonados como el **Low Memory Killer (LMK)** para cerrar procesos en segundo plano cuando los recursos realmente escasean.',
+          { h: 'Sistemas de archivos en Android' },
+          'Para el almacenamiento, Android soporta múltiples formatos, siendo ext4 el estándar tradicional. Sin embargo, destaca la adopción progresiva de **F2FS**, un sistema de archivos diseñado desde cero para convivir con la naturaleza de las memorias flash. Este sistema opera escribiendo los datos de forma secuencial al final de una cola, lo que reduce significativamente la sobrecarga de escritura y mejora el rendimiento general del dispositivo.'
+        ],
+        ubuntu: [
+          'Ubuntu y Android usan el mismo núcleo, así que las piezas existen en ambos, pero Ubuntu las usa distinto:',
+          { tabla: [
+            ['Android', 'Ubuntu'],
+            [
+              'zRAM en lugar de swap',
+              'archivo de intercambio en disco por defecto; zram disponible en el núcleo'
+            ],
+            [
+              'Low Memory Killer',
+              'systemd-oomd, que actúa según la presión de memoria de cada grupo de procesos'
+            ],
+            ['ext4', 'ext4, también su formato habitual'],
+            ['F2FS', 'el núcleo lo soporta; está pensado para SSD, eMMC y tarjetas SD']
+          ] }
+        ],
+        fuentes: ['kZram', 'curtinSwap', 'oomd', 'kF2fs', 'instaladorGuiado']
+      },
+      {
+        titulo: 'iOS: memoria y archivos',
+        veredicto: 'distinto',
+        af: [
+          { h: 'Gestión de memoria en iOS' },
+          'A diferencia de otros sistemas móviles, iOS administra la memoria mediante el **recuento automático de referencias (ARC)**, destruyendo y liberando objetos de manera inmediata en cuanto dejan de utilizarse, sin depender de un recolector de basura en segundo plano. Cuando se presenta una escasez crítica de RAM, el sistema recurre a la compresión de páginas y activa el proceso **Jetsam**, un mecanismo del núcleo que cierra aplicaciones completas al instante para liberar espacio, evitando por completo el uso de particiones de intercambio en disco.',
+          { h: 'Sistemas de archivos en iOS' },
+          'Para el almacenamiento local, el ecosistema de Apple utiliza **APFS**, un sistema de archivos diseñado específicamente para optimizar el rendimiento de las unidades de estado sólido. Entre sus características destacan los **clones**, que permiten duplicar archivos sin ocupar espacio adicional hasta que sufren modificaciones reales, y las **instantáneas**, que toman registros de solo lectura de todo el sistema para garantizar restauraciones seguras y automáticas durante las actualizaciones.'
+        ],
+        ubuntu: [
+          'Ubuntu no tiene ARC ni Jetsam ni APFS, pero tiene equivalentes:',
+          { def: [
+            [
+              'Memoria',
+              'los programas en C piden y liberan memoria a mano (`malloc` y `free`); cuando falta RAM actúa systemd-oomd.'
+            ],
+            [
+              'Clones',
+              '`cp --reflink` hace copias tipo *copy-on-write* en los sistemas de archivos que lo permiten: la copia no ocupa espacio nuevo hasta que se modifica.'
+            ],
+            [
+              'Instantáneas',
+              'LVM permite crear *snapshots*, y el instalador de Ubuntu ofrece instalaciones guiadas con **ZFS**, que también las tiene.'
+            ]
+          ] }
+        ],
+        fuentes: ['malloc', 'oomd', 'cp', 'lvm', 'notas2404']
+      },
+      {
+        titulo: 'HarmonyOS: memoria y archivos',
+        veredicto: 'distinto',
+        af: [
+          { h: 'Gestión de memoria en HarmonyOS' },
+          'En su versión NEXT, basada en el microkernel HongMeng, HarmonyOS aborda la gestión de memoria aislando los espacios de trabajo de cada servicio dentro del espacio de usuario. Para garantizar máxima fluidez, emplea un motor de latencia determinista que asigna y prioriza la memoria en tiempo real, evitando que los procesos compitan de forma desordenada por los recursos y asegurando que un fallo de memoria en un módulo no colapse al resto del sistema.',
+          { h: 'Sistemas de archivos en HarmonyOS' },
+          'El sistema de archivos de HarmonyOS incorpora cifrado nativo por hardware mediante la tecnología TrustZone. Al ejecutarse de forma completamente aislada dentro del espacio de usuario, se asegura de que cualquier fallo o corrupción dentro de la capa de archivos quede contenido sin poner en riesgo la estabilidad del sistema operativo.'
+        ],
+        ubuntu: [
+          'Aquí Ubuntu es casi lo contrario:',
+          { lista: [
+            'Su núcleo **no es un microkernel**: es monolítico con módulos, así que el sistema de archivos corre dentro del núcleo, no aislado en espacio de usuario.',
+            'El aislamiento lo da por proceso: cada uno tiene su memoria, y `mprotect` permite cambiar los permisos de acceso de sus páginas.',
+            'El cifrado de disco se hace con **LUKS** (`cryptsetup`), y el instalador de Ubuntu Desktop ofrece cifrar el disco con LVM o ZFS.'
+          ] }
+        ],
+        fuentes: ['modprobe', 'mprotect', 'cryptsetup', 'tutorialInstalar']
+      },
+      {
+        titulo: 'Sistemas operativos de red y middleware',
+        veredicto: 'igual',
+        af: [
+          'Los sistemas operativos de red operan bajo un paradigma diferente al no gestionar la memoria o los archivos físicos locales, sino funcionando como una capa de software superpuesta a los sistemas tradicionales para conectar computadoras independientes y compartir recursos.',
+          'Su característica fundamental es la **transparencia limitada**: cada nodo conserva su propia identidad y el usuario está consciente de que interactúa con múltiples máquinas. Este modelo contrasta con el de los sistemas operativos distribuidos, cuyo objetivo clásico era ocultar por completo la complejidad de la red para simular un único equipo centralizado.',
+          'Con el tiempo, la idea de un sistema distribuido puro perdió protagonismo en la industria frente al uso del **middleware**, una solución mucho más pragmática y flexible. Tecnologías como CORBA o DCOM de Microsoft demostraron que resultaba mucho más eficiente instalar una capa de integración sobre los sistemas operativos ya existentes para conectar los equipos de manera robusta, evitando la necesidad de reescribir desde cero toda la arquitectura del sistema.'
+        ],
+        ubuntu: [
+          'Ubuntu funciona como el modelo de **sistema operativo de red**: cada equipo conserva su propio Ubuntu y comparte recursos con servicios encima.',
+          { def: [
+            [
+              'NFS',
+              'permite compartir directorios y archivos por la red, de modo que se usan "casi como si fueran archivos locales".'
+            ],
+            ['Samba', 'comparte archivos e impresoras con equipos Windows.']
+          ] },
+          'Es la "transparencia limitada" de la AF: el usuario sabe que el archivo está en otra máquina, aunque lo use casi como propio.'
+        ],
+        fuentes: ['nfs', 'samba']
+      },
+      {
+        titulo: 'Importancia de la administración de memoria',
+        veredicto: 'igual',
+        af: [
+          'La administración de memoria es fundamental para que el sistema operativo mantenga un control ordenado y eficiente en la asignación de recursos. Su objetivo principal es responder a las exigencias de los entornos informáticos actuales, permitiendo un manejo flexible de los datos y dando soporte a la programación modular. Para lograrlo, el sistema operativo asume cinco responsabilidades fundamentales:',
+          { def: [
+            [
+              'Aislamiento de procesos',
+              'el sistema operativo debe garantizar que cada programa se ejecute en su propio espacio sin interferencias externas. Esto evita que un proceso independiente invada o altere la memoria reservada para otro, resguardando tanto las instrucciones del programa como sus datos.'
+            ],
+            [
+              'Asignación y gestión automática',
+              'para elevar la eficiencia del equipo, la memoria se asigna a las tareas únicamente en el instante preciso en que la necesitan. Todo ocurre de manera transparente para el programador, liberándolo de gestionar la memoria de forma manual.'
+            ],
+            [
+              'Soporte a la programación modular',
+              'el sistema operativo debe ofrecer la flexibilidad necesaria para trabajar con estructuras de código independientes, permitiendo crear, destruir o cambiar el tamaño de módulos de forma dinámica durante la ejecución.'
+            ],
+            [
+              'Protección y control de accesos',
+              'regula la forma en que múltiples usuarios o programas interactúan con la memoria, aplicando controles de acceso y protegiendo al equipo contra amenazas que pongan en riesgo la integridad de las aplicaciones o del propio sistema.'
+            ],
+            [
+              'Almacenamiento a largo plazo',
+              'a diferencia de la memoria volátil, asegura que la información se conserve de manera persistente, incluso después de apagar el equipo, combinando la memoria virtual con estructuras permanentes como los archivos o ficheros.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Las cinco responsabilidades, en Ubuntu:',
+          { def: [
+            [
+              'Aislamiento',
+              'cada proceso tiene su propio espacio de direcciones; `fork()` crea el hijo en un espacio separado.'
+            ],
+            [
+              'Asignación automática',
+              'un programa pide memoria con `malloc`, y el núcleo solo le da páginas físicas cuando de verdad las usa (paginación bajo demanda).'
+            ],
+            [
+              'Programación modular',
+              'las **bibliotecas compartidas**: `ld.so` busca y carga las que necesita cada programa al momento de ejecutarlo.'
+            ],
+            [
+              'Protección',
+              '`mprotect` cambia los permisos (lectura, escritura, ejecución) de las páginas de un proceso.'
+            ],
+            ['Largo plazo', 'los archivos en ext4.']
+          ] }
+        ],
+        fuentes: ['fork', 'malloc', 'ldso', 'mprotect', 'kExt4']
+      },
+      {
+        titulo: 'Importancia de la memoria virtual',
+        veredicto: 'igual',
+        af: [
+          'La memoria virtual es crucial porque permite que múltiples trabajos de usuario residan en la memoria principal de forma concurrente, eliminando los tiempos de espera entre la ejecución de procesos sucesivos.',
+          'Gracias al sistema de paginación y al hardware de proyección dinámica, el sistema operativo traduce de manera transparente las direcciones virtuales a direcciones físicas reales en la RAM, logrando un mecanismo con muy baja sobrecarga computacional que optimiza al máximo el tráfico de datos en la jerarquía de memoria.'
+        ],
+        ubuntu: [
+          'La documentación del kernel describe el mismo mecanismo: cada acceso a memoria usa una dirección virtual que el procesador traduce a una física con ayuda de las **tablas de páginas** que mantiene el núcleo.',
+          'Para que la traducción sea rápida en equipos con mucha memoria, Linux también ofrece **páginas enormes** (*huge pages*).'
+        ],
+        fuentes: ['kMmConceptos']
+      },
+      {
+        titulo: 'Registro de memoria: mapa de bits y listas ligadas',
+        veredicto: 'igual',
+        af: [
+          'Para llevar un control ordenado de la memoria asignada y disponible, los sistemas operativos recurren principalmente a dos técnicas: el mapa de bits y las listas libres o ligadas. Ambas permiten que el administrador de memoria reconozca en todo momento qué bloques están en uso por algún proceso y cuáles permanecen vacíos.',
+          { def: [
+            [
+              'Mapa de bits',
+              'la memoria se divide en unidades de asignación fijas y a cada una se le asigna un bit: un cero indica que el bloque está libre y un uno que está ocupado. Su tamaño depende de la memoria y del tamaño de la unidad elegida; por ello, definir el tamaño de la unidad es vital, ya que unidades más pequeñas generan mapas de bits considerablemente más grandes.'
+            ],
+            [
+              'Listas ligadas',
+              'se mantiene una lista ligada de segmentos que registra tanto los procesos activos como los huecos vacíos entre ellos. Se recomienda mantenerla ordenada por dirección de memoria, ya que esto simplifica la actualización al terminar o intercambiar un proceso y permite aplicar diversos algoritmos de asignación.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu usa las dos técnicas, en lugares distintos:',
+          { def: [
+            [
+              'Mapas de bits en el disco',
+              'cada grupo de bloques de ext4 tiene un **mapa de bits de bloques** y un **mapa de bits de inodos** para saber qué está libre y qué está ocupado.'
+            ],
+            [
+              'Listas en la RAM',
+              'el *buddy system* del núcleo guarda listas de bloques libres por tamaño; `/proc/buddyinfo` muestra cuántos hay de cada uno.'
+            ]
+          ] }
+        ],
+        fuentes: ['kExt4Grupos', 'buddyinfo']
+      },
+      {
+        titulo: 'Algoritmos de asignación',
+        veredicto: 'distinto',
+        af: [
+          { def: [
+            [
+              'Primer ajuste',
+              'recorre la lista y selecciona el primer hueco lo suficientemente grande; es rápido porque busca lo menos posible.'
+            ],
+            [
+              'Siguiente ajuste',
+              'funciona con la misma lógica, pero guarda su última ubicación para iniciar las búsquedas posteriores desde ese punto en lugar de empezar siempre desde el principio.'
+            ],
+            [
+              'Mejor ajuste',
+              'examina toda la lista para tomar el hueco más pequeño donde quepa el proceso, conservando los espacios grandes para futuras necesidades, a costa de ser más lento.'
+            ],
+            [
+              'Peor ajuste',
+              'selecciona siempre el hueco más grande disponible para dejar un residuo que siga siendo útil, aunque en la práctica suele ser la opción menos óptima.'
+            ]
+          ] },
+          { h: 'Optimización de la asignación' },
+          'Para acelerar cualquiera de estos cuatro algoritmos, el administrador de memoria puede separar la estructura en dos listas independientes, una para los procesos y otra para los huecos. Al enfocar la búsqueda exclusivamente en la lista de espacios libres, se evita perder tiempo inspeccionando los segmentos que ya están ocupados.'
+        ],
+        ubuntu: [
+          'El núcleo de Ubuntu no usa ninguno de los cuatro tal cual para la RAM física:',
+          { lista: [
+            'Usa el **buddy system**: los bloques libres se agrupan por tamaños en potencias de dos, y un bloque grande se parte en dos "compañeros" cuando hace falta uno más chico.',
+            'Sí aplica la optimización de la AF: solo guarda listas de **bloques libres** (por zona y tamaño), así que nunca recorre la memoria ocupada.',
+            'Los objetos pequeños del núcleo se reparten con el asignador *slab*.'
+          ] }
+        ],
+        fuentes: ['buddyinfo', 'kZonas', 'slabtop']
+      },
+      {
+        titulo: 'Fragmentación interna y externa',
+        veredicto: 'igual',
+        af: [
+          'La administración de memoria es esencial para mantener múltiples procesos funcionando simultáneamente. Según Stallings, debe cumplir con necesidades clave como la reubicación, la protección y el uso compartido de la información, llevando un control exacto de los espacios ocupados y disponibles, aunque optimizar estos recursos siempre conlleva desafíos técnicos.',
+          { def: [
+            [
+              'Fragmentación interna',
+              'es común en las particiones fijas. Ocurre cuando un proceso requiere menos espacio del que se le asignó, dejando una parte del bloque sin utilizar de forma permanente. Aunque la pérdida parezca mínima individualmente, la suma de estos espacios reduce significativamente la capacidad de la memoria.'
+            ],
+            [
+              'Fragmentación externa',
+              'la suele generar el particionamiento dinámico. A medida que los programas entran y salen de la memoria, se crean pequeños huecos libres dispersos. Aunque la suma de estos huecos sea suficiente para una nueva tarea, al no existir un bloque continuo grande, el nuevo proceso no puede ejecutarse.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Las dos fragmentaciones existen en Ubuntu:',
+          { def: [
+            [
+              'Externa',
+              'el manual de `/proc/buddyinfo` dice que ese archivo sirve justamente para **diagnosticar la fragmentación** de la memoria: si quedan muchos bloques chicos y pocos grandes, la memoria está fragmentada.'
+            ],
+            [
+              'Interna',
+              'el núcleo entrega memoria en páginas completas (normalmente 4 KiB), así que lo que un proceso no usa de su última página se desperdicia. El asignador *slab* reduce ese desperdicio para los objetos pequeños.'
+            ]
+          ] }
+        ],
+        fuentes: ['buddyinfo', 'slabtop', 'kMmConceptos']
+      },
+      {
+        titulo: 'Estrategias de ubicación y compactación',
+        veredicto: 'igual',
+        af: [
+          'Para decidir en qué espacio libre colocar cada tarea, el sistema utiliza algoritmos como *First-fit*, *Next-fit* o *Best-fit*. Cada estrategia tiene sus ventajas y complicaciones; por ejemplo, Best-fit intenta optimizar la memoria ocupando el hueco más pequeño donde quepa el proceso, pero a la larga deja cientos de espacios diminutos que resultan inservibles.',
+          { h: 'Compactación como solución' },
+          'Una alternativa para resolver la fragmentación externa es la **compactación**: mover físicamente los procesos activos para agrupar todos los huecos dispersos y formar un único bloque de gran tamaño. Sin embargo, esta operación resulta costosa, ya que reorganizar toda la información interrumpe las tareas y consume tiempo de procesamiento.'
+        ],
+        ubuntu: [
+          'Linux sí hace **compactación de memoria**: la documentación del parámetro `compact_memory` explica que, al activarlo, todas las zonas se compactan para que la memoria libre quede en bloques contiguos. El núcleo también puede compactar de forma automática y gradual (`compaction_proactiveness`).',
+          'En el disco pasa algo parecido: `e4defrag` reduce la fragmentación de los archivos en ext4.'
+        ],
+        fuentes: ['kVmSysctl', 'e4defrag']
+      },
+      {
+        titulo: 'Fallos de página y thrashing',
+        veredicto: 'igual',
+        af: [
+          { h: 'Problemas en la memoria virtual' },
+          'La memoria virtual trae su propio grupo de problemas al permitir que los procesos usen un espacio mayor a la RAM física. El sistema debe alternar páginas entre la memoria principal y el almacenamiento secundario, provocando un **fallo de página** cada vez que un proceso necesita un dato que no está cargado, obligando al sistema a ir a buscarlo.',
+          { h: 'Riesgo de thrashing' },
+          'Si los fallos de página ocurren con demasiada frecuencia, el equipo sufre un colapso conocido como **thrashing** o trasiego. En este estado, el sistema pasa casi todo su tiempo intercambiando páginas entre el disco y la memoria principal, perdiendo la capacidad de ejecutar los procesos reales y provocando que el rendimiento disminuya drásticamente.'
+        ],
+        ubuntu: [
+          'Ubuntu tiene herramientas contra el thrashing:',
+          { def: [
+            [
+              'swappiness',
+              'parámetro del núcleo (0 a 200) que define qué tan costoso se considera intercambiar frente a leer archivos; con él se decide qué tan pronto se usa el swap.'
+            ],
+            [
+              'systemd-oomd',
+              'vigila la **presión de memoria** (PSI) de cada grupo de procesos y actúa antes de que el sistema quede atrapado intercambiando páginas.'
+            ]
+          ] },
+          'Los fallos de página de cada proceso se pueden consultar en `/proc`.'
+        ],
+        fuentes: ['kVmSysctl', 'oomd', 'proc']
+      }
+    ]
+  },
+  {
+    id: 'AF4',
+    title: 'Redes y seguridad en sistemas distribuidos',
+    temas: [
+      {
+        titulo: 'Introducción',
+        veredicto: 'igual',
+        af: [
+          'Este tema va desde cómo se comunican las computadoras en red hasta cómo protegerlas y recuperarlas ante fallos o ataques. Comienza con los protocolos de red como TCP/IP, el uso de sockets y cómo el sistema operativo maneja la comunicación.',
+          'Luego pasa a los sistemas distribuidos, donde varias computadoras trabajan juntas como clientes y servidores o forman clusters, y a los problemas que surgen al coordinar procesos en diferentes máquinas, como la exclusión mutua y el interbloqueo.',
+          'Después se enfoca en la seguridad: se clasifican las amenazas y el malware (virus, gusanos, troyanos, ransomware), se estudian los tipos de intrusos y las técnicas de ataque, y se explican los métodos de autenticación y los niveles de protección.'
+        ],
+        ubuntu: [
+          'Ubuntu cubre los tres bloques de la AF con herramientas oficiales: la red se configura con **Netplan**; los servicios distribuidos se apoyan en NFS, Samba y clústeres de alta disponibilidad; y la seguridad combina actualizaciones, firewall (`ufw`), SSH, AppArmor y cifrado.',
+          'La guía oficial de seguridad de Ubuntu Server dice que una instalación nueva "es relativamente segura para usarse de inmediato en Internet", y agrega pasos para reforzarla.'
+        ],
+        fuentes: ['netplan', 'sugerencias', 'firewall']
+      },
+      {
+        titulo: 'Procesamiento distribuido (DDP)',
+        veredicto: 'igual',
+        af: [
+          'Evolución de las tecnologías en red:',
+          { pasos: [
+            'El **DDP** (*Distributed Data Processing*) divide funciones de cómputo y organiza bases de datos y control de dispositivos en múltiples nodos.',
+            '**Sistemas operativos de red (NOS):** cada equipo conserva su SO local y añade soporte para clientes/servidores explícitamente.',
+            '**Sistemas operativos distribuidos (DOS):** un único SO lógico compartido que ofrece transparencia total de recursos al usuario.'
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu encaja en el segundo paso, **sistema operativo de red**: cada equipo tiene su propio Ubuntu y agrega servicios de cliente y servidor, como NFS para compartir archivos, Samba para compartir con Windows u OpenSSH para trabajar en otra máquina.',
+          'Ubuntu no es un sistema operativo distribuido (un solo sistema repartido en varias máquinas), aunque con Kubernetes (MicroK8s) puede coordinar muchas máquinas como un clúster.'
+        ],
+        fuentes: ['nfs', 'samba', 'openssh', 'kubernetes']
+      },
+      {
+        titulo: 'Arquitectura y elementos de un protocolo',
+        veredicto: 'igual',
+        af: [
+          { h: 'Arquitectura de protocolos' },
+          { def: [
+            [
+              'Descomposición en subtareas',
+              'las tareas complejas de comunicación se dividen en módulos independientes (acceso a red, servicios de comunicación y aplicación).'
+            ],
+            [
+              'Módulo de servicios de comunicación',
+              'garantiza que los datos se intercambien de forma fiable entre ambos sistemas sin importar la red física.'
+            ],
+            [
+              'Módulo de acceso a red',
+              'aísla la lógica específica del medio de transmisión (Ethernet, Wi-Fi, etc.) respecto a las aplicaciones superiores.'
+            ],
+            [
+              'Independencia operativa',
+              'modificar la infraestructura de red subyacente no altera el funcionamiento de las aplicaciones de usuario.'
+            ]
+          ] },
+          { h: 'Elementos de un protocolo' },
+          { def: [
+            [
+              'Sintaxis',
+              'estructura y formato de los datos transmitidos, incluyendo los niveles de señal de voltaje y la codificación de los patrones de bits.'
+            ],
+            [
+              'Semántica',
+              'información de control para la coordinación entre entidades y las acciones a seguir para la gestión y recuperación de errores.'
+            ],
+            [
+              'Temporización',
+              'coordinación de velocidades de transmisión, secuenciamiento de paquetes y regulación del flujo de datos para evitar colapsos.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'En Ubuntu se nota la **independencia operativa**: una aplicación abre un socket TCP igual si el equipo está conectado por cable o por Wi-Fi. El núcleo se encarga del protocolo y los controladores se encargan del medio.',
+          'La configuración del medio está separada en **Netplan**, que define la red en un archivo YAML sin tocar las aplicaciones.'
+        ],
+        fuentes: ['tcp', 'netplan']
+      },
+      {
+        titulo: 'Modelo TCP/IP de 5 capas',
+        veredicto: 'igual',
+        af: [
+          { tabla: [
+            ['Capa', 'Función'],
+            ['Aplicación', 'soporta aplicaciones distribuidas (FTP, SMTP, HTTP)'],
+            ['Transporte (origen a destino)', 'asegura la entrega fiable y en orden de datos (TCP/UDP)'],
+            ['Internet', 'enrutamiento de paquetes entre redes distintas mediante IP'],
+            ['Acceso a red', 'interfaz e intercambio de datos entre el host y la red local'],
+            ['Física', 'especificaciones mecánicas y eléctricas del medio']
+          ] }
+        ],
+        ubuntu: [
+          'Las capas en Ubuntu:',
+          { tabla: [
+            ['Capa', 'En Ubuntu'],
+            ['Aplicación', 'servicios como OpenSSH, Postfix (correo) o vsftpd (FTP)'],
+            ['Transporte', 'TCP y UDP, implementados en el núcleo'],
+            ['Internet', 'IPv4 e IPv6 en el núcleo'],
+            ['Acceso a red', 'interfaces configuradas con Netplan'],
+            ['Física', 'tarjetas de red manejadas por sus controladores']
+          ] }
+        ],
+        fuentes: ['tcp', 'udp', 'ipv4', 'ipv6', 'netplan']
+      },
+      {
+        titulo: 'TCP vs. UDP',
+        veredicto: 'igual',
+        af: [
+          { tabla: [
+            ['Característica', 'TCP', 'UDP'],
+            ['Orientado a conexión', 'Sí (establece sesión previa)', 'No (envío directo de datagramas)'],
+            ['Fiabilidad', 'Garantizada (revisión de errores y reenvío)', 'No garantizada (*best effort*)'],
+            ['Control de flujo', 'Sí (mediante campo de ventana)', 'No posee control de flujo'],
+            ['Sobrecarga de cabecera', 'Mínimo 20 octetos (160 bits)', '8 octetos (64 bits)'],
+            [
+              'Uso típico',
+              'Navegación web, email, transferencia de ficheros',
+              'Streaming en vivo, DNS, SNMP, juegos'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Los manuales de Ubuntu describen los dos protocolos igual que la tabla:',
+          { def: [
+            [
+              'TCP',
+              'proporciona una conexión "fiable, orientada a flujo y bidireccional entre dos sockets", para IPv4 e IPv6.'
+            ],
+            [
+              'UDP',
+              'implementa un servicio de datagramas "sin conexión y no fiable": los paquetes pueden llegar desordenados o duplicados.'
+            ]
+          ] },
+          'Ubuntu además protege TCP contra inundaciones de SYN (un ataque de denegación de servicio) con **SYN cookies**.'
+        ],
+        fuentes: ['tcp', 'udp', 'synCookies']
+      },
+      {
+        titulo: 'IPv4 vs. IPv6',
+        veredicto: 'igual',
+        af: [
+          { tabla: [
+            ['IPv4 (protocolo actual)', 'IPv6 (siguiente generación)'],
+            [
+              'Direcciones de 32 bits (aprox. 4.3 mil millones)',
+              'Direcciones de 128 bits (espacio prácticamente inagotable)'
+            ],
+            [
+              'Cabecera de tamaño variable (mínimo 20 octetos)',
+              'Cabecera fija de 40 octetos optimizada para routers de alta velocidad'
+            ],
+            [
+              'Agotamiento de direcciones por la expansión masiva de dispositivos conectados',
+              'Soporte nativo para tráfico de tiempo real (etiqueta de flujo) y mayor seguridad'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'El núcleo de Ubuntu implementa los dos protocolos (`ip(7)` para IPv4 e `ipv6(7)` para IPv6). Según el manual, una dirección IPv6 son 8 grupos de 4 dígitos hexadecimales separados por `:`, y `::1` es la dirección de *loopback*.',
+          'Netplan configura ambas versiones en el mismo archivo, y el firewall `ufw` crea reglas para IPv4 e IPv6.'
+        ],
+        fuentes: ['ipv4', 'ipv6', 'netplan', 'firewall']
+      },
+      {
+        titulo: 'Encapsulación y direccionamiento',
+        veredicto: 'igual',
+        af: [
+          { h: 'Proceso de encapsulación (PDU)' },
+          { pasos: [
+            '**Datos de usuario:** la aplicación genera la carga útil original.',
+            '**Segmento TCP:** TCP añade una cabecera con puertos de origen/destino y secuencia.',
+            '**Datagrama IP:** IP agrega las direcciones IP globales de origen y destino.',
+            '**Trama de red:** la capa física/enlace añade control de red y suma de comprobación.'
+          ] },
+          { h: 'Direccionamiento en TCP/IP' },
+          { def: [
+            [
+              'Dirección IP global',
+              'identifica de manera única a la máquina en Internet. La usa el protocolo IP para encaminar el datagrama.'
+            ],
+            [
+              'Número de puerto',
+              'identifica a la aplicación o proceso específico dentro de la máquina. Lo usan TCP/UDP para entregar los datos al proceso correcto.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'En Ubuntu cada servicio escucha en un **puerto**. El archivo `/etc/services` relaciona los nombres de los servicios con sus números de puerto y protocolo, y `ss` muestra qué sockets están abiertos.',
+          'Ubuntu sigue una política de **"ningún puerto abierto"** desde la versión 6.06: una instalación nueva no debe tener servicios de red escuchando, salvo raras excepciones.'
+        ],
+        fuentes: ['services', 'ss', 'puertos']
+      },
+      {
+        titulo: 'Aplicaciones TCP/IP clave',
+        veredicto: 'distinto',
+        af: [
+          { def: [
+            [
+              'SMTP (correo electrónico)',
+              'transmite mensajes entre sistemas de forma fiable utilizando conexiones TCP directas.'
+            ],
+            [
+              'FTP (transferencia de ficheros)',
+              'usa dos conexiones TCP paralelas: una para control y otra para envío de datos.'
+            ],
+            [
+              'TELNET (terminal remoto)',
+              'permite iniciar sesión interactiva en un computador remoto como si fuese un terminal local.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu documenta las tres, pero con advertencias:',
+          { def: [
+            ['SMTP', 'el servidor de correo documentado es **Postfix**.'],
+            [
+              'FTP',
+              'se ofrece con **vsftpd**, pero la documentación aclara que FTP no cifra: las credenciales y los datos viajan en claro y se interceptan con facilidad.'
+            ],
+            [
+              'Telnet',
+              'Ubuntu lo reemplaza por **OpenSSH**. Su documentación explica que herramientas como telnet "transmiten la contraseña del usuario en texto claro", y SSH cifra toda la sesión.'
+            ]
+          ] }
+        ],
+        fuentes: ['postfix', 'ftp', 'openssh']
+      },
+      {
+        titulo: 'Sockets',
+        veredicto: 'igual',
+        af: [
+          { h: '¿Qué es un socket?' },
+          'Un socket es un punto final de comunicación entre dos procesos a través de la red. Creado en la *Berkeley Sockets Interface* (UNIX), se convirtió en la API estándar para programación de red.',
+          { h: 'Estructura del socket' },
+          'Se define mediante la concatenación de una dirección IP y un número de puerto. Fórmula: **Socket = {Dirección IP, Puerto}**. Garantiza la unicidad global de la conexión.',
+          { h: 'Tipos de sockets' },
+          { tabla: [
+            ['Tipo', 'Protocolo', 'Características'],
+            [
+              'Stream (SOCK_STREAM)',
+              'TCP',
+              'orientado a conexión, transmisión fiable en flujo continuo de bytes'
+            ],
+            [
+              'Datagram (SOCK_DGRAM)',
+              'UDP',
+              'sin conexión, paquetes independientes sin garantía de orden o entrega'
+            ],
+            [
+              'Raw (SOCK_RAW)',
+              'IP directo / ICMP',
+              'acceso directo a protocolos de nivel inferior, usado para inspección y herramientas de red'
+            ]
+          ] },
+          { h: 'API y flujo de sockets' },
+          { def: [
+            ['socket()', 'crea un nuevo punto final de comunicación.'],
+            ['bind()', 'asocia el socket a una IP y puerto local.'],
+            ['listen() / accept()', 'el servidor espera y acepta conexiones.'],
+            ['connect()', 'el cliente inicia el apretón de manos con el servidor.']
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu usa exactamente esta API. El manual de `socket()` dice que "crea un punto final de comunicación y devuelve un descriptor de archivo" que lo representa, y lista los tipos SOCK_STREAM, SOCK_DGRAM y **SOCK_RAW** ("acceso directo al protocolo de red").',
+          'Según `raw(7)`, los sockets *raw* permiten implementar protocolos IPv4 nuevos desde el espacio de usuario, como dice la AF de las herramientas de red.'
+        ],
+        fuentes: ['socket', 'raw', 'tcp']
+      },
+      {
+        titulo: 'Redes en el kernel de Linux',
+        veredicto: 'igual',
+        af: [
+          { def: [
+            ['Interfaz VFS y sockets', 'trata a los sockets como descriptores de archivo genéricos.'],
+            ['Estructura sk_buff', 'mantiene los paquetes en memoria sin copiar datos entre capas.'],
+            ['Protocol swapping', 'tablas de funciones estandarizadas para TCP, UDP e IP.'],
+            ['Controladores de red', 'abstracción de controladores de dispositivo para el hardware físico.']
+          ] }
+        ],
+        ubuntu: [
+          'Esta parte describe el núcleo que usa Ubuntu, y se confirma en su documentación:',
+          { lista: [
+            '`socket()` devuelve un **descriptor de archivo**, así que un socket se lee y escribe como un archivo.',
+            'La documentación del kernel describe **sk_buff**: un búfer de datos con las cabeceras y la carga útil, más información compartida, que las capas manipulan sin copiar los datos.',
+            'El filtrado de paquetes también vive en el núcleo: el subsistema **netfilter**, en el que se basan todos los firewalls modernos de Linux.'
+          ] }
+        ],
+        fuentes: ['socket', 'kSkbuff', 'firewall']
+      },
+      {
+        titulo: 'Computación cliente/servidor',
+        veredicto: 'igual',
+        af: [
+          '**Concepto:** modelo donde las tareas se dividen entre servidores (proveedores de servicios) y clientes (demandantes).',
+          '**Ventajas:** escalabilidad modular, mantenimiento independiente y optimización del tráfico de red.',
+          { h: 'Arquitectura de N capas (N-tier)' },
+          { def: [
+            ['Capa 1 · Presentación', 'interfaz gráfica de usuario (GUI).'],
+            ['Capa 2 · Lógica de negocio', 'procesamiento y reglas de negocio (middleware).'],
+            ['Capa 3 · Datos', 'base de datos y almacenamiento.']
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu Server está pensado para el lado **servidor** del modelo. Su documentación describe varios servicios con la misma estructura cliente/servidor; por ejemplo, FTP: el servidor (*daemon*) escucha continuamente peticiones de clientes remotos, las autentica y abre la conexión.',
+          'Lo mismo pasa con SSH (`sshd` espera conexiones de los clientes), el correo (Postfix) y el intercambio de archivos (NFS y Samba).'
+        ],
+        fuentes: ['ftp', 'openssh', 'postfix', 'nfs']
+      },
+      {
+        titulo: 'Paso de mensajes distribuido y RPC',
+        veredicto: 'igual',
+        af: [
+          { h: 'Paso de mensajes distribuido' },
+          { def: [
+            [
+              'Sincronización',
+              'bloqueante (sincrónico): el emisor/receptor se frena hasta completar la transferencia. No bloqueante (asincrónico): el proceso continúa sin esperar confirmación.'
+            ],
+            [
+              'Direccionamiento',
+              'directo: envío explícito al proceso identificador, send(P, mensaje). Indirecto: mensajes dirigidos a buzones o puertos intermedios, send(mailbox, mensaje).'
+            ],
+            [
+              'Gestión de búferes (colas)',
+              'capacidad cero (*rendezvous*), capacidad limitada o capacidad ilimitada.'
+            ]
+          ] },
+          { h: 'Llamadas a procedimiento remoto (RPC)' },
+          { lista: [
+            '**Mecanismo de abstracción:** permite invocar funciones en un equipo remoto con la misma sintaxis de una función local.',
+            '**Componentes clave:** *stubs* (talones) en cliente y servidor.',
+            '**Marshalling / unmarshalling:** convertir tipos de datos locales a un formato neutro de red (ej. XDR), resolviendo el problema del orden de bytes (*big-endian* vs. *little-endian*).',
+            '**Transparencia:** oculta la complejidad física de la red al programador.'
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu usa RPC de verdad, y con el mismo formato que menciona la AF:',
+          { def: [
+            [
+              'rpcbind',
+              'servidor que convierte números de programa RPC en direcciones; debe estar corriendo para hacer llamadas RPC a esa máquina.'
+            ],
+            [
+              'XDR',
+              'Ubuntu incluye las rutinas de **representación externa de datos** (*external data representation*), el formato neutro de la AF.'
+            ],
+            ['NFS', 'el sistema de archivos en red de Ubuntu funciona sobre RPC.']
+          ] }
+        ],
+        fuentes: ['rpcbind', 'xdr', 'nfs']
+      },
+      {
+        titulo: 'Arquitecturas de clusters',
+        veredicto: 'igual',
+        af: [
+          '**Concepto:** conjunto de computadoras independientes (nodos) interconectadas que trabajan como un único recurso integrado.',
+          { def: [
+            [
+              'Alto rendimiento (HPC)',
+              'cómputo masivo e intensivo en paralelo (ej. uso de la biblioteca MPI).'
+            ],
+            ['Alta disponibilidad (HA)', 'tolerancia a fallos para mantener servicios continuos (24/7).'],
+            [
+              'HA asimétrico (activo/pasivo)',
+              'un nodo primario trabaja y el secundario está en reserva (*standby*).'
+            ],
+            ['HA simétrico (activo/activo)', 'todos los nodos procesan y se monitorean mutuamente.'],
+            [
+              'Interconexión y redes',
+              'almacenamiento compartido (SAN/NAS) y señales de control (*heartbeat*).'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu Server documenta los clústeres de **alta disponibilidad** con las herramientas `corosync` (comunicación entre los nodos), `pacemaker` (administra los servicios del clúster) y `fence-agents` (aísla al nodo que falla).',
+          'Su documentación explica además el **quórum**: un testigo que evita que las dos mitades de un clúster dividido crean ser el nodo principal al mismo tiempo.'
+        ],
+        fuentes: ['ha']
+      },
+      {
+        titulo: 'Migración de procesos',
+        veredicto: 'na',
+        af: [
+          { def: [
+            [
+              'Balanceo de carga',
+              'distribución equitativa de procesos entre nodos para mejorar el rendimiento global.'
+            ],
+            [
+              'Rendimiento de comunicación',
+              'traslado de procesos cerca de los datos o de otros procesos interdependientes.'
+            ],
+            [
+              'Disponibilidad y tolerancia',
+              'salvar la ejecución ante fallos previstos o mantenimientos programados.'
+            ],
+            ['Estrategias de memoria', 'copia ambiciosa (total o sucia), precopia y copiar-al-referenciar.']
+          ] }
+        ],
+        ubuntu: [
+          'La documentación oficial de Ubuntu no describe la migración de procesos individuales entre máquinas.',
+          'Lo que sí documenta es la **alta disponibilidad**: si un nodo falla, Pacemaker arranca el **servicio completo** en otro nodo. El objetivo es el mismo (disponibilidad y tolerancia a fallos), pero lo que se mueve es el servicio, no el proceso con su memoria.'
+        ],
+        fuentes: ['ha']
+      },
+      {
+        titulo: 'Estados globales distribuidos',
+        veredicto: 'na',
+        af: [
+          { def: [
+            [
+              'Cortes consistentes',
+              'un corte en el historial de un sistema distribuido es consistente si no contiene ningún evento de recepción de mensaje sin contener también el evento de envío correspondiente. Garantiza la preservación de la relación de orden causal de Lamport a través de todos los nodos.'
+            ],
+            [
+              'Algoritmo Chandy-Lamport',
+              'permite registrar un estado global consistente (instantánea o *snapshot*) sin congelar el funcionamiento del sistema. Utiliza mensajes de control especiales llamados marcadores (*markers*) que circulan a través de canales con ordenamiento FIFO.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Es un tema de algoritmos distribuidos que no forma parte del sistema operativo Ubuntu: la documentación oficial no lo trata.',
+          'Lo más cercano en Ubuntu son las **instantáneas** de almacenamiento (LVM), pero son de una sola máquina, no un estado global de varios nodos.'
+        ],
+        fuentes: ['lvm']
+      },
+      {
+        titulo: 'Exclusión mutua e interbloqueo distribuidos',
+        veredicto: 'na',
+        af: [
+          { h: 'Exclusión mutua distribuida' },
+          { def: [
+            [
+              'Centralizado',
+              'un nodo coordinador gestiona las peticiones. Simple de implementar, pero constituye un punto único de fallo y cuello de botella.'
+            ],
+            [
+              'Basado en token',
+              'un token único circula lógicamente por los nodos (*token ring*). Solo el nodo que posee el token tiene autorización para acceder al recurso.'
+            ],
+            [
+              'Ricart-Agrawala',
+              'basado en marcas de tiempo distribuidas. Un proceso envía peticiones a todos los nodos y entra a la sección crítica tras recibir confirmación de todos.'
+            ]
+          ] },
+          { h: 'Interbloqueo distribuido' },
+          { def: [
+            [
+              'Grafos de espera',
+              'grafo de asignación de recursos distribuido donde los nodos representan procesos y las aristas dirigidas representan solicitudes pendientes de recursos. La presencia de un ciclo dirigido en el grafo global indica la existencia formal de un interbloqueo.'
+            ],
+            ['Algoritmos de sondas', 'otra técnica de detección de interbloqueos distribuidos.']
+          ] }
+        ],
+        ubuntu: [
+          'Estos algoritmos no vienen en Ubuntu como parte del sistema. Dentro de **una sola máquina**, Ubuntu sí resuelve los mismos problemas:',
+          { lista: [
+            'Exclusión mutua con mutex, semáforos y bloqueos de archivos (ver AF2).',
+            'Detección de interbloqueo: `fcntl` devuelve EDEADLK cuando un bloqueo causaría un ciclo, y el validador lockdep revisa el orden de los bloqueos del núcleo.'
+          ] },
+          'En un clúster de alta disponibilidad, el **quórum** cumple un papel parecido al del coordinador: decide qué parte del clúster puede seguir usando los recursos.'
+        ],
+        fuentes: ['fcntl', 'kLockdep', 'ha']
+      },
+      {
+        titulo: 'Requisitos de la seguridad informática',
+        veredicto: 'igual',
+        af: [
+          'Los 4 pilares de la seguridad:',
+          { def: [
+            ['Confidencialidad', 'la información solo es accesible para lectura por partes autorizadas.'],
+            ['Integridad', 'la información solo puede ser modificada por partes autorizadas.'],
+            [
+              'Disponibilidad',
+              'los recursos están accesibles para los usuarios autorizados cuando los requieran.'
+            ],
+            [
+              'Autenticación',
+              'capacidad del sistema para verificar la identidad real del usuario o proceso.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Cada pilar tiene su mecanismo en Ubuntu:',
+          { tabla: [
+            ['Pilar', 'En Ubuntu'],
+            ['Confidencialidad', 'permisos de archivos, cifrado de disco LUKS y conexiones cifradas con SSH'],
+            [
+              'Integridad',
+              'APT verifica la firma de los repositorios para que nadie sin la clave de firma altere los paquetes'
+            ],
+            [
+              'Disponibilidad',
+              'actualizaciones automáticas de seguridad y Livepatch, que parcha el núcleo sin reiniciar'
+            ],
+            ['Autenticación', 'contraseñas guardadas como hash (yescrypt), llaves SSH y doble factor']
+          ] }
+        ],
+        fuentes: ['cryptsetup', 'aptSecure', 'actualizaciones', 'livepatch', 'hashing']
+      },
+      {
+        titulo: 'Clasificación de ataques en el flujo de datos',
+        veredicto: 'igual',
+        af: [
+          { def: [
+            [
+              'Interrupción (disponibilidad)',
+              'ocurre cuando se destruye o inhabilita un componente del sistema, impidiendo su uso normal, como al romper un disco duro o deshabilitar un servicio.'
+            ],
+            [
+              'Intercepción (confidencialidad)',
+              'sucede cuando un tercero no autorizado accede a la información, por ejemplo al espiar el tráfico de red o copiar archivos o programas.'
+            ],
+            [
+              'Modificación (integridad)',
+              'un elemento no autorizado accede a los datos y altera su contenido o comportamiento, como cambiar cifras en una base de datos, alterar un programa o modificar mensajes que viajan por la red.'
+            ],
+            [
+              'Fabricación (autenticación)',
+              'consiste en insertar datos o mensajes falsos en el sistema para suplantar una identidad o crear registros ficticios.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu tiene una defensa oficial para cada tipo:',
+          { def: [
+            [
+              'Interrupción',
+              'SYN cookies contra inundaciones de conexiones TCP, y clústeres de alta disponibilidad.'
+            ],
+            [
+              'Intercepción',
+              'SSH y TLS cifran el tráfico (Ubuntu trae bibliotecas como OpenSSL, GnuTLS y NSS).'
+            ],
+            ['Modificación', 'firmas en los repositorios de APT y sumas SHA256 para verificar imágenes.'],
+            ['Fabricación', 'autenticación con llaves SSH o Kerberos.']
+          ] }
+        ],
+        fuentes: ['synCookies', 'ha', 'cryptoLibs', 'aptSecure', 'kerberos']
+      },
+      {
+        titulo: 'Amenazas en redes: ataques pasivos y activos',
+        veredicto: 'igual',
+        af: [
+          { def: [
+            [
+              'Ataques pasivos (confidencialidad)',
+              'observan o espían información sin alterar los datos ni la red; al no dejar huella, son difíciles de detectar y se previenen con cifrado. Un ejemplo es el análisis del tráfico.'
+            ],
+            [
+              'Ataques activos (integridad, disponibilidad y autenticación)',
+              'alteran los datos o crean flujos falsos afectando el funcionamiento de la red; se busca principalmente detectarlos y recuperarse de ellos. Ejemplos: enmascaramiento, reenvío, modificación y denegación de servicio.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          { def: [
+            [
+              'Contra pasivos',
+              'cifrado, como recomienda la AF: la guía de seguridad de Ubuntu pide usar **SSH** para el acceso remoto en lugar de protocolos en texto claro.'
+            ],
+            [
+              'Contra activos',
+              'el firewall `ufw` filtra conexiones, las SYN cookies resisten la denegación de servicio y el sistema de auditoría (`auditd`) registra eventos para detectar lo que pasó.'
+            ]
+          ] }
+        ],
+        fuentes: ['sugerencias', 'openssh', 'firewall', 'synCookies', 'auditd']
+      },
+      {
+        titulo: 'Clasificación del software malicioso',
+        veredicto: 'igual',
+        af: [
+          { def: [
+            [
+              'Requieren anfitrión',
+              'fragmentos de código que necesitan una aplicación para existir (ej. puerta secreta, bomba lógica, troyanos, virus).'
+            ],
+            [
+              'Independientes',
+              'programas autónomos gestionados directamente por el sistema operativo (ej. gusanos, zombies).'
+            ],
+            [
+              'No replicables',
+              'solo se ejecutan tras una acción o disparador (ej. troyanos, puertas secretas).'
+            ],
+            [
+              'Replicables',
+              'generan copias de sí mismos para infectar el mismo u otros sistemas (ej. virus, gusanos).'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu no está libre de malware, pero reduce los caminos de entrada:',
+          { lista: [
+            '**Software firmado:** APT revisa la firma de los repositorios oficiales; la guía de seguridad recomienda evitar repositorios de terceros.',
+            '**Programas confinados:** AppArmor viene instalado y cargado por defecto, y limita lo que puede hacer cada aplicación aunque esté infectada.',
+            '**Menos superficie:** la guía recomienda quitar los paquetes que no se usan.'
+          ] }
+        ],
+        fuentes: ['aptSecure', 'sugerencias', 'apparmor']
+      },
+      {
+        titulo: 'Amenazas de código y tipos de malware',
+        veredicto: 'igual',
+        af: [
+          { def: [
+            [
+              'Puerta secreta (backdoor)',
+              'punto de entrada secreto que omite los controles de autenticación estándar. Origen: usado legítimamente por desarrolladores para depuración o pruebas. Riesgo: usado por programadores maliciosos para accesos no autorizados.'
+            ],
+            [
+              'Bomba lógica',
+              'código oculto en un programa legítimo que se "dispara" ante condiciones específicas, como una fecha clave, el borrado de un usuario o un día de la semana. Al explotar puede borrar o alterar datos o ficheros completos, causar que la máquina se detenga o producir algún otro daño.'
+            ],
+            [
+              'Troyano',
+              'programa útil, o aparentemente útil, que contiene un código oculto que, al invocarse, realiza una función no deseada o dañina.'
+            ],
+            [
+              'Zombie',
+              'programa que toma el control de otro ordenador conectado a Internet y lo utiliza para lanzar ataques difíciles de rastrear hasta el creador del zombie.'
+            ],
+            [
+              'Spyware / adware / ransomware',
+              'herramientas orientadas al espionaje de datos, al despliegue publicitario no deseado o al secuestro de información sensible mediante cifrado.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Defensas oficiales de Ubuntu frente a estos tipos:',
+          { def: [
+            [
+              'Backdoor y troyano',
+              'instalar solo desde repositorios firmados y mantener el principio de **mínimo privilegio**: cuentas sin privilegios y sudo solo para administrar.'
+            ],
+            [
+              'Zombie',
+              'Ubuntu no deja servicios de red escuchando por defecto ("ningún puerto abierto"), y `ufw` controla qué conexiones se aceptan.'
+            ],
+            [
+              'Ransomware',
+              'respaldos; la documentación de Ubuntu Server explica varias formas de hacerlos (rsnapshot, Bacula o scripts de shell).'
+            ]
+          ] }
+        ],
+        fuentes: ['aptSecure', 'sugerencias', 'puertos', 'firewall', 'respaldos']
+      },
+      {
+        titulo: 'Virus: naturaleza y ciclo de vida',
+        veredicto: 'igual',
+        af: [
+          '**Naturaleza del virus:** código que infecta otros programas modificándolos para insertar copias de sí mismo. Se ejecuta con los mismos privilegios del usuario infectado.',
+          { h: 'Fases del ciclo de vida' },
+          { pasos: [
+            '**Fase latente:** el virus permanece inactivo en espera de un evento disparador.',
+            '**Fase de propagación:** se copia e infecta otros programas o sectores del disco.',
+            '**Fase de activación:** se dispara por una condición y se prepara para ejecutar su carga útil.',
+            '**Fase de ejecución:** realiza la acción dañina.'
+          ] }
+        ],
+        ubuntu: [
+          'La frase clave de la AF, "se ejecuta con los privilegios del usuario infectado", explica el diseño de Ubuntu:',
+          { lista: [
+            'Como la cuenta root viene desactivada y se trabaja con un usuario normal, un virus no puede modificar los programas del sistema sin la contraseña de `sudo`.',
+            'Los archivos del sistema pertenecen a root y un usuario normal no puede escribirlos.',
+            'Para frenar la **propagación**, las actualizaciones automáticas corrigen las vulnerabilidades conocidas.'
+          ] }
+        ],
+        fuentes: ['usuarios', 'credentials', 'actualizaciones']
+      },
+      {
+        titulo: 'Clasificación de intrusos',
+        veredicto: 'igual',
+        af: [
+          'Tres perfiles de atacante identificados por Anderson (1980) y retomados por Stallings:',
+          { def: [
+            [
+              'Masquerader (suplantador)',
+              'individuo no autorizado que penetra los controles de acceso del sistema aprovechando la cuenta de un usuario legítimo. Suele ser un atacante externo.'
+            ],
+            [
+              'Misfeasor (usuario legítimo abusivo)',
+              'usuario autorizado que accede a datos, programas o recursos que no le corresponden, o que utiliza sus propios privilegios de forma indebida. Generalmente es interno.'
+            ],
+            [
+              'Clandestine user (usuario clandestino)',
+              'toma el control de supervisión del sistema para evadir la auditoría y el control de acceso, o para suprimir el registro de su propia actividad. Puede ser interno o externo.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          { def: [
+            [
+              'Contra el suplantador',
+              '`faillock` lleva el registro de los intentos fallidos de autenticación, y el doble factor impide entrar solo con una contraseña robada.'
+            ],
+            [
+              'Contra el abusivo',
+              'como la administración se hace con `sudo` y la contraseña propia, **cada acción queda asociada a quien la hizo**.'
+            ],
+            [
+              'Contra el clandestino',
+              '`auditd` escribe en el disco los registros de auditoría, que luego se revisan con `ausearch` o `aureport`.'
+            ]
+          ] }
+        ],
+        fuentes: ['faillock', 'totp', 'usuarios', 'auditd']
+      },
+      {
+        titulo: 'Técnicas de intrusión',
+        veredicto: 'igual',
+        af: [
+          'Los métodos más comunes para obtener acceso no autorizado:',
+          { def: [
+            [
+              'Adivinación y captura de contraseñas',
+              'prueba de contraseñas por defecto, ataques de diccionario, recolección de datos personales del usuario o captura del fichero de contraseñas del sistema.'
+            ],
+            [
+              'Escaneo de puertos',
+              'sondeo sistemático de los puertos de red de un equipo para identificar servicios activos y posibles puntos de entrada.'
+            ],
+            [
+              'Desbordamiento de búfer',
+              'envío de datos que exceden el espacio de memoria reservado por un programa, con el fin de forzar la ejecución de código malicioso.'
+            ],
+            [
+              'Explotación de vulnerabilidades',
+              'aprovechamiento de fallos de software o configuraciones débiles para obtener acceso no autorizado o elevar privilegios.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu tiene una defensa documentada para cada técnica:',
+          { def: [
+            [
+              'Contraseñas',
+              'se guardan en `/etc/shadow`, que no pueden leer los usuarios normales, y como **hash yescrypt** desde Ubuntu 22.04: aunque se robe el archivo, no se obtienen las contraseñas.'
+            ],
+            [
+              'Escaneo de puertos',
+              'política de "ningún puerto abierto": una instalación nueva no tiene servicios escuchando.'
+            ],
+            [
+              'Desbordamiento de búfer',
+              'los paquetes se compilan con **stack protector** (un "canario" aleatorio que detecta desbordamientos de pila) y como PIE, y la **ASLR** coloca la memoria en direcciones aleatorias para que el atacante no sepa dónde está su código.'
+            ],
+            ['Vulnerabilidades', 'actualizaciones automáticas de seguridad y Livepatch para el núcleo.']
+          ] }
+        ],
+        fuentes: ['shadow', 'hashing', 'puertos', 'banderas', 'aslr', 'livepatch']
+      },
+      {
+        titulo: 'Factores de autenticación',
+        veredicto: 'igual',
+        af: [
+          'Cómo verifica el sistema la identidad de quien intenta conectarse:',
+          { def: [
+            [
+              'Algo que se sabe',
+              'contraseñas o PIN. Es el esquema clásico de identificador (ID) y contraseña descrito por Stallings.'
+            ],
+            [
+              'Algo que se tiene',
+              'tokens físicos, tarjetas inteligentes o dispositivos que el usuario porta consigo.'
+            ],
+            [
+              'Algo que se es',
+              'biometría: huella dactilar, rostro o iris, características propias del usuario.'
+            ],
+            [
+              'MFA (autenticación multifactor)',
+              'combinación de dos o más factores anteriores para reforzar el control de acceso.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'La autenticación en Ubuntu pasa por **PAM** (módulos de autenticación intercambiables), y la documentación de Ubuntu Server cubre los factores de la AF:',
+          { def: [
+            ['Algo que se sabe', 'contraseña del usuario.'],
+            ['Algo que se tiene', 'llaves SSH, **tarjetas inteligentes** y llaves físicas **U2F/FIDO**.'],
+            [
+              'MFA',
+              'guía oficial de doble factor con códigos TOTP/HOTP: la llave pública es el primer factor y el código temporal el segundo.'
+            ]
+          ] }
+        ],
+        fuentes: ['pam', 'openssh', 'smartcard', 'fido', 'totp']
+      },
+      {
+        titulo: 'Controles en tres niveles',
+        veredicto: 'igual',
+        af: [
+          'Defensa en profundidad, del usuario individual a la organización:',
+          { def: [
+            [
+              'Nivel empresa',
+              'políticas corporativas de seguridad, gobierno de la información y auditoría que enmarcan las medidas técnicas.'
+            ],
+            [
+              'Nivel red',
+              'control de acceso centralizado o descentralizado y segmentación para limitar el alcance de un atacante.'
+            ],
+            [
+              'Nivel usuario',
+              'políticas de contraseñas robustas, privilegios mínimos necesarios y verificación proactiva de credenciales.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'La guía de seguridad de Ubuntu Server está organizada de forma parecida:',
+          { def: [
+            [
+              'Empresa',
+              'autenticación centralizada con **SSSD** (Active Directory, LDAP, Kerberos), auditoría con `auditd` y Ubuntu Pro para parches de seguridad extendidos.'
+            ],
+            ['Red', 'firewall `ufw` y acceso remoto solo por SSH.'],
+            [
+              'Usuario',
+              'principio de **mínimo privilegio**: cuentas sin privilegios y `sudo` solo para administrar.'
+            ]
+          ] }
+        ],
+        fuentes: ['sssd', 'auditd', 'sugerencias', 'firewall']
+      },
+      {
+        titulo: 'Sistemas confiables',
+        veredicto: 'igual',
+        af: [
+          'Seguridad multinivel y el concepto de monitor de referencia:',
+          { def: [
+            [
+              'Base de computación confiable (TCB)',
+              'conjunto de mecanismos de hardware y software —representado en el libro por el "monitor de referencia" y la base de datos del núcleo de seguridad— que aplica la política de seguridad del sistema.'
+            ],
+            [
+              'Control de acceso multinivel',
+              'reglas de "no leer hacia arriba" y "no escribir hacia abajo" (propiedad-*), que impiden que la información fluya de niveles de clasificación altos a bajos sin autorización.'
+            ],
+            [
+              'Seguridad en sistemas operativos reales',
+              'Windows usa un testigo de acceso (SID) y listas de control de acceso por objeto; UNIX protege las contraseñas mediante cifrado unidireccional (crypt) y control de acceso al fichero de contraseñas.'
+            ]
+          ] },
+          { h: '¿Cuándo podemos confiar en un sistema?' },
+          { def: [
+            ['Monitor de referencia', 'controla los accesos entre los sujetos y los objetos del sistema.'],
+            ['Mediación completa', 'cada acceso debe pasar por el mecanismo de control.'],
+            ['Aislamiento', 'el mecanismo debe estar protegido contra modificaciones externas.'],
+            ['Verificabilidad', 'su funcionamiento puede ser analizado y demostrado formalmente.']
+          ] }
+        ],
+        ubuntu: [
+          { def: [
+            [
+              'Monitor de referencia',
+              'el núcleo Linux tiene los **módulos de seguridad (LSM)**: puntos de control por donde pasan los accesos. Ubuntu usa **AppArmor**, una extensión de control de acceso obligatorio (MAC) basada en perfiles por programa.'
+            ],
+            [
+              'Contraseñas al estilo UNIX',
+              'Ubuntu hace lo que la AF dice de UNIX: guarda las contraseñas con un hash de un solo sentido (yescrypt) en `/etc/shadow`, que no pueden leer los usuarios normales.'
+            ],
+            [
+              'Arranque confiable',
+              '**UEFI Secure Boot** valida cada programa que se carga al arrancar, y Ubuntu soporta el chip **TPM**.'
+            ]
+          ] }
+        ],
+        fuentes: ['kLsm', 'kApparmor', 'shadow', 'hashing', 'secureBoot', 'tpm']
+      },
+      {
+        titulo: 'Access token y descriptores de seguridad',
+        veredicto: 'distinto',
+        af: [
+          { h: '¿Qué contiene un access token?' },
+          'El access token responde a una pregunta clave: ¿quién eres y qué puedes hacer?',
+          { def: [
+            [
+              'SID (identidad del usuario)',
+              'identificador único que permite reconocer al usuario dentro de la red.'
+            ],
+            [
+              'SIDs de grupos (pertenencia)',
+              'indican los grupos a los que pertenece el usuario y permiten asignar permisos de manera colectiva.'
+            ],
+            [
+              'Privilegios (acciones especiales)',
+              'determinan operaciones específicas que puede realizar, como crear copias de seguridad o apagar el sistema.'
+            ],
+            [
+              'Atributos por omisión (seguridad inicial)',
+              'definen el propietario y los permisos que tendrán los nuevos objetos creados por el usuario.'
+            ]
+          ] },
+          { h: 'Descriptores de seguridad' },
+          'Un recurso del sistema necesita saber quién es su propietario, quién puede utilizarlo y qué actividades deben registrarse.',
+          { def: [
+            ['Propietario', 'tiene el control principal sobre el objeto y sus permisos.'],
+            ['DACL', 'define quién puede acceder y qué operaciones puede realizar.'],
+            ['SACL', 'determina qué accesos deben quedar registrados para auditoría.']
+          ] },
+          { h: 'De un usuario a un permiso' },
+          { pasos: [
+            '**Identificación:** el sistema reconoce al usuario mediante su SID.',
+            '**Asignación:** una ACE relaciona ese SID con determinados derechos.',
+            '**Interpretación:** la máscara de acceso representa los permisos mediante bits.',
+            '**Decisión:** el sistema determina si la operación solicitada está permitida.'
+          ] }
+        ],
+        ubuntu: [
+          'Estos conceptos son de **Windows**. Ubuntu tiene un equivalente para cada uno:',
+          { tabla: [
+            ['Windows', 'Ubuntu'],
+            ['SID del usuario', 'UID: el identificador de usuario de cada proceso'],
+            ['SIDs de grupos', 'GID y grupos suplementarios'],
+            ['Privilegios', 'capabilities: los privilegios de root divididos en unidades'],
+            ['Propietario', 'dueño y grupo del archivo'],
+            ['DACL', 'permisos rwx y ACL (`getfacl`)'],
+            ['SACL', 'reglas de auditoría de `auditd`'],
+            ['Máscara de acceso', 'bits de permiso del archivo']
+          ] },
+          'Los SID solo aparecen en Ubuntu cuando se une a un dominio de **Active Directory**: su documentación explica cómo se mapean a usuarios de Linux.'
+        ],
+        fuentes: ['credentials', 'capabilities', 'getfacl', 'auditd', 'sids']
+      },
+      {
+        titulo: 'Cuando el sistema es atacado',
+        veredicto: 'igual',
+        af: [
+          '¿Qué ocurre si un programa intenta acceder a información que no le corresponde?',
+          { def: [
+            [
+              'Aislamiento de memoria',
+              'el sistema operativo separa la memoria de los procesos para impedir accesos indebidos.'
+            ],
+            [
+              'Malware',
+              'programas diseñados para aprovechar vulnerabilidades, provocar daños o interrumpir servicios.'
+            ],
+            [
+              'Virus',
+              'pueden infiltrarse en programas legítimos y modificar su comportamiento sin que el usuario lo detecte.'
+            ]
+          ] },
+          '**Cadena de riesgo:** vulnerabilidad → infección → modificación → daño o acceso no autorizado.'
+        ],
+        ubuntu: [
+          'Ubuntu corta la cadena de riesgo en varios puntos:',
+          { pasos: [
+            '**Vulnerabilidad:** actualizaciones automáticas de seguridad y Livepatch.',
+            '**Infección:** ASLR y stack protector dificultan aprovechar errores de memoria.',
+            '**Modificación:** cada proceso tiene su memoria aislada, y AppArmor limita qué archivos puede tocar cada programa.',
+            '**Daño:** permisos y cuenta root desactivada, para que un programa comprometido no controle todo el sistema.'
+          ] }
+        ],
+        fuentes: ['actualizaciones', 'livepatch', 'aslr', 'banderas', 'apparmor', 'usuarios']
+      },
+      {
+        titulo: 'Cifrado simétrico y asimétrico',
+        veredicto: 'igual',
+        af: [
+          { def: [
+            [
+              'Cifrado simétrico (clave secreta)',
+              'utiliza una clave única compartida tanto para cifrar como para descifrar. Es muy veloz y eficiente para grandes volúmenes de datos. Su desafío principal es la distribución inicial de la clave secreta por un canal seguro.'
+            ],
+            [
+              'Cifrado asimétrico (clave pública)',
+              'utiliza un par de claves vinculadas: una clave pública para cifrar y una clave privada para descifrar. Se usa para intercambio de claves, firmas digitales y autenticación. Soluciona la distribución de claves, con un costo computacional mayor.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu usa los dos tipos:',
+          { def: [
+            [
+              'Simétrico',
+              '**LUKS** cifra discos completos (`cryptsetup`), y la llave se puede proteger con el chip TPM.'
+            ],
+            [
+              'Asimétrico',
+              'las **llaves SSH** (`ssh-keygen` genera el par de llaves) y **GnuPG** (`gpg`), la herramienta OpenPGP para cifrar y firmar.'
+            ],
+            ['Bibliotecas', 'OpenSSL, GnuTLS y NSS dan cifrado a las aplicaciones.']
+          ] }
+        ],
+        fuentes: ['cryptsetup', 'clevis', 'sshKeygen', 'gpg', 'cryptoLibs']
+      },
+      {
+        titulo: 'Firmas digitales e integridad',
+        veredicto: 'igual',
+        af: [
+          { def: [
+            [
+              'Autenticación del emisor',
+              'la firma digital se genera cifrando el resumen del mensaje con la clave privada del remitente.'
+            ],
+            [
+              'Funciones hash criptográficas',
+              'algoritmos unidireccionales que transforman los datos en una cadena de longitud fija.'
+            ],
+            [
+              'Garantía de integridad',
+              'cualquier alteración en el mensaje original invalida el hash verificado por el destinatario.'
+            ],
+            [
+              'No repudio',
+              'el emisor no puede negar la autoría de la transacción, ya que solo él posee la clave privada.'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu aplica las firmas digitales en dos lugares muy visibles:',
+          { def: [
+            [
+              'Paquetes',
+              'APT revisa la firma del archivo *Release* de cada repositorio, así que nadie sin la clave de firma puede modificar los paquetes.'
+            ],
+            [
+              'Imágenes ISO',
+              'el tutorial oficial explica cómo descargar las sumas y la firma, obtener la clave correcta y comprobar la suma **SHA256** de la imagen antes de instalar.'
+            ]
+          ] },
+          { cmd: [['sha256sum -c SHA256SUMS', 'comprueba que la imagen descargada no fue alterada']] }
+        ],
+        fuentes: ['aptSecure', 'verificarIso', 'sha256sum', 'gpg']
+      },
+      {
+        titulo: 'Firewalls y sus arquitecturas',
+        veredicto: 'igual',
+        af: [
+          '**Cortafuegos (firewalls):** mecanismo de control de acceso, filtrado de tráfico y protección perimetral del sistema.',
+          { tabla: [
+            ['Tipo', 'Nivel OSI', 'Mecanismo de control', 'Ventajas'],
+            [
+              'Filtro de paquetes',
+              'Red / Transporte (L3/L4)',
+              'inspección de direcciones IP, puertos y protocolos',
+              'alta velocidad, transparente para el usuario'
+            ],
+            [
+              'Pasarela de nivel circuito',
+              'Sesión (L5)',
+              'verificación de *handshakes* TCP y conexiones autorizadas',
+              'aislamiento eficaz sin procesar capas superiores'
+            ],
+            [
+              'Pasarela de nivel aplicación',
+              'Aplicación (L7)',
+              'inspección profunda de comandos y contenido (proxy)',
+              'máximo nivel de seguridad y registro detallado'
+            ],
+            [
+              'Bastión perimetral',
+              'Multicapa',
+              'host endurecido expuesto directamente a la red externa',
+              'punto focal fortificado para la defensa del sistema'
+            ]
+          ] }
+        ],
+        ubuntu: [
+          'Ubuntu cubre varias filas de la tabla:',
+          { def: [
+            [
+              'Filtro de paquetes',
+              'el núcleo tiene **netfilter**; la herramienta oficial de Ubuntu para configurarlo es **ufw** (*Uncomplicated Firewall*), que crea reglas para IPv4 e IPv6.'
+            ],
+            [
+              'Pasarela de aplicación',
+              '**Squid**, un servidor *proxy* para HTTP, FTP y otros protocolos, con controles de acceso detallados.'
+            ],
+            [
+              'Bastión',
+              'un Ubuntu Server reforzado con las sugerencias oficiales (solo SSH, firewall, actualizaciones) puede cumplir ese papel.'
+            ]
+          ] },
+          { cmd: [['sudo ufw enable', 'activa el firewall de Ubuntu']] }
+        ],
+        fuentes: ['firewall', 'ufw', 'squid', 'sugerencias']
+      },
+      {
+        titulo: 'Conclusión',
+        veredicto: 'igual',
+        af: [
+          'La red y la seguridad son partes fundamentales e inseparables de los sistemas distribuidos: la red permite la comunicación entre clientes, servidores y clústeres, mientras que la seguridad protege esa información en todo momento. Se revisaron los aspectos que integran una red estable, los conceptos básicos de su funcionamiento y las estrategias para resguardar los datos ante posibles amenazas.',
+          'Aunque un sistema distribuido debe ser rápido, transparente y estar siempre disponible, es necesario implementar medidas de seguridad sólidas para evitar problemas como la pérdida de datos, el mal funcionamiento del sistema o ataques de código malicioso.'
+        ],
+        ubuntu: [
+          'Ubuntu reúne las dos partes de la AF: la pila TCP/IP, los sockets y los servicios de red viven en el núcleo y en Ubuntu Server, y la seguridad está activa desde la instalación (AppArmor, ningún puerto abierto, contraseñas con hash, actualizaciones).',
+          'Donde más se separa de la AF es en los algoritmos distribuidos (estados globales, exclusión mutua entre nodos), que no forman parte del sistema operativo, y en los conceptos de Windows (SID, DACL), que Ubuntu resuelve con UID, permisos y ACL.'
+        ],
+        fuentes: ['apparmor', 'puertos', 'hashing', 'actualizaciones']
+      }
+    ]
+  }
 ];
