@@ -41,6 +41,11 @@ class MainActivity : ComponentActivity() {
                 // Los enlaces a PDF empaquetados (AFs) se abren en el visor propio de la app.
                 override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
                     val url = request.url
+                    // Las fuentes de la documentación (sitios externos) se abren en el navegador del teléfono.
+                    if (url.host != WebViewAssetLoader.DEFAULT_DOMAIN && (url.scheme == "https" || url.scheme == "http")) {
+                        startActivity(Intent(Intent.ACTION_VIEW, url))
+                        return true
+                    }
                     val path = url.path ?: return false
                     if (url.host != WebViewAssetLoader.DEFAULT_DOMAIN || !path.startsWith("/assets/") ||
                         !path.endsWith(".pdf", ignoreCase = true)) return false

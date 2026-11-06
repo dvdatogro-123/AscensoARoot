@@ -195,46 +195,69 @@ function afs() {
   </main>${nav('afs')}`;
 }
 
-// Comparación de las AFs con Ubuntu. EDITAR: reemplazar cada texto de ejemplo con la información.
-const comparaciones = [
-  {
-    id: 'AF1',
-    title: 'Arquitectura, desempeño y tipo de un sistema operativo',
-    texto: 'La aplicación Ascenso a Root tiene una relación directa con el tema de arquitectura, desempeño y tipo de un sistema operativo, ya que permite conocer de manera práctica algunos de los elementos que forman parte del funcionamiento de Ubuntu y de otros sistemas basados en Linux. A través de diferentes niveles y actividades, la aplicación presenta comandos que ayudan a comprender cómo se administra una computadora, cómo se ejecutan los procesos y de qué manera se utilizan los recursos del sistema operativo.\n\nUno de los aspectos principales que se relaciona con este tema es la arquitectura del sistema operativo, porque mediante los comandos incluidos en la aplicación es posible identificar información sobre el equipo y conocer algunos de sus componentes. Por ejemplo, con comandos como uname -r se puede consultar la versión del kernel, mientras que cat /etc/os-release permite conocer información de la distribución de Linux que se está utilizando. Esto ayuda a entender que un sistema operativo está formado por diferentes elementos que trabajan en conjunto para permitir que la computadora funcione correctamente. Entre ellos se encuentra el kernel, que tiene una función importante porque administra la comunicación entre el hardware y el software.\n\nOtro punto importante es el desempeño del sistema operativo, ya que la aplicación incluye comandos que permiten observar el uso de los recursos de una computadora. Algunos ejemplos son free -h, que muestra información sobre la memoria; df -h, que permite revisar el espacio disponible en las unidades de almacenamiento; y uptime, que indica cuánto tiempo lleva funcionando el sistema. También se utilizan comandos como top y ps -e, que permiten consultar los procesos que se están ejecutando. Estos conocimientos son importantes porque ayudan a identificar cómo se distribuyen los recursos y cómo puede influir su uso en el rendimiento general del equipo.\n\nLa administración de procesos también forma parte de la relación entre la aplicación y el funcionamiento de un sistema operativo. Mediante comandos como kill y renice se puede comprender que los procesos necesitan ser controlados y organizados para que el sistema trabaje de manera adecuada. Además, se presentan conceptos relacionados con la concurrencia, las condiciones de carrera, las secciones críticas y los semáforos. Estos temas permiten entender que varios procesos pueden ejecutarse al mismo tiempo y que es necesario establecer mecanismos para evitar conflictos cuando comparten recursos.\n\nEn cuanto a los tipos de sistemas operativos, la aplicación se enfoca principalmente en Ubuntu, una distribución de Linux. Al trabajar con sus comandos, se conocen características de los sistemas operativos que utilizan una interfaz de línea de comandos para realizar tareas de administración y configuración. Aunque normalmente los usuarios interactúan con una interfaz gráfica, la terminal permite realizar diferentes operaciones de una manera más directa. Esto demuestra que un sistema operativo puede ofrecer distintas formas de interacción, dependiendo de las necesidades del usuario y de las actividades que se quieran realizar.\n\nLa aplicación también permite relacionar el tema con la administración de archivos, directorios y permisos. Comandos como pwd, ls y cd sirven para ubicarse y desplazarse entre las carpetas, mientras que cat permite consultar el contenido de los archivos. Por otra parte, chmod se utiliza para modificar permisos, lo que demuestra cómo el sistema operativo controla el acceso a la información y establece qué acciones pueden realizar los usuarios sobre determinados archivos.\n\nDe igual manera, se incluyen actividades relacionadas con los servicios, el inicio del sistema y la seguridad. Por ejemplo, se trabaja con systemctl para conocer la administración de servicios, así como con sudo para ejecutar tareas que requieren permisos de administrador. También aparecen herramientas como ufw, relacionada con la configuración del firewall, y comandos como ip a y ping, que permiten conocer aspectos básicos de la conexión de red. Estos elementos muestran que el sistema operativo no solamente se encarga de ejecutar programas, sino que también administra servicios, protege los recursos y permite la comunicación con otros equipos.\n\nEn general, Ascenso a Root facilita la comprensión de cómo funciona un sistema operativo a través de actividades que relacionan los conceptos teóricos con situaciones prácticas. Su dinámica de misiones hace que el aprendizaje de los comandos sea más sencillo y permite reconocer para qué sirve cada uno dentro de Ubuntu. Además, ayuda a comprender que la arquitectura, el desempeño y el tipo de sistema operativo son aspectos que se encuentran relacionados, ya que la estructura interna del sistema influye en la manera en que administra sus recursos y realiza sus tareas.\n\nLa aplicación es una herramienta útil para reforzar los conocimientos sobre los sistemas operativos, especialmente en el entorno Linux. Al practicar con los comandos y conocer sus funciones, es más fácil entender lo que sucede detrás del funcionamiento de una computadora. Esto permite reconocer la importancia del sistema operativo como encargado de coordinar el hardware, administrar los procesos, organizar la información y mantener el funcionamiento del equipo. De esta manera, el aprendizaje no se queda solamente en conocer los nombres de los comandos, sino en comprender cómo se utilizan y qué relación tienen con el funcionamiento general de un sistema operativo.'
-  },
-  {
-    id: 'AF2',
-    title: 'La concurrencia en los sistemas operativos',
-    texto: 'El desarrollo de una aplicación educativa como Ascenso a Root requiere que los conceptos técnicos que se pretenden enseñar estén sustentados por una base teórica sólida. En el caso del Módulo 2, dedicado a la concurrencia, la aplicación no solo se limita a simular comandos de Ubuntu, sino que busca que el usuario comprenda por qué el sistema operativo necesita administrar múltiples tareas de forma segura. Para lograrlo, es necesario comprender los fundamentos que rigen el comportamiento de los procesos dentro de un entorno computacional.\n\nEn primera instancia, resulta indispensable distinguir entre un programa, un proceso y un hilo, ya que la aplicación los utiliza constantemente en sus niveles. Un programa es un conjunto de instrucciones almacenadas en el disco, mientras que un proceso es ese programa en ejecución, el cual adquiere recursos propios como memoria y permisos. La aplicación simula esto cuando el jugador interactúa con la terminal y observa procesos como soporte_vital o navegacion, cada uno con su propio PID (Process ID). Los hilos, por su parte, son unidades de ejecución dentro de un mismo proceso que comparten recursos. Comprender esta jerarquía permite entender por qué, al detener un proceso, no se detiene toda la nave, sino solamente la tarea asignada a ese proceso.\n\nEl ciclo de vida de un proceso es otro de los pilares teóricos que la aplicación representa mediante su lógica de niveles. Un proceso no se ejecuta de principio a fin sin interrupciones; transita por estados como Nuevo, Listo, Ejecución, Bloqueado y Terminado. En la aplicación, esto se refleja cuando el jugador debe usar comandos para detener o reanudar procesos: un proceso en estado «Listo» espera su turno para usar la CPU, mientras que uno «Bloqueado» no puede avanzar aunque el procesador esté libre, ya que depende de un recurso externo. Esta distinción es crucial para entender por qué la nave responde con lentitud en ciertos niveles y cómo el planificador del sistema operativo decide qué proceso debe ejecutarse a continuación.\n\nAl analizar el rendimiento del sistema, la aplicación aborda la diferencia entre concurrencia y paralelismo. La concurrencia es la capacidad de manejar varias tareas que progresan durante el mismo intervalo de tiempo; en un solo núcleo de procesamiento, esto se logra de forma intercalada, otorgando pequeñas porciones de tiempo a cada tarea. El paralelismo, en cambio, requiere hardware con múltiples núcleos que ejecutan instrucciones verdaderamente al mismo tiempo. En el nivel «Trabajo en paralelo», el jugador utiliza el símbolo & para ejecutar una reparación en segundo plano mientras la terminal sigue libre para otros comandos. Esta mecánica no solo enseña un comando de Linux, sino que demuestra que, mientras una tarea espera, el sistema puede avanzar en otra, mejorando así la eficiencia y evitando que la interfaz se congele.\n\nSin embargo, la concurrencia introduce riesgos que el sistema operativo debe gestionar cuando varios procesos acceden a un mismo recurso compartido. En el nivel «Sección crítica», por ejemplo, pueden ocurrir condiciones de carrera si dos procesos leen el mismo valor del tanque de combustible y ambos intentan actualizarlo; la última escritura puede borrar la anterior y provocar una pérdida de datos. Para evitar esto, el sistema operativo emplea mecanismos de exclusión mutua, como los semáforos, los mutex o los monitores. La aplicación utiliza un semáforo para garantizar que solo un motor acceda al tanque a la vez, protegiendo la sección crítica y asegurando que el registro coincida con la medición real. Esta representación permite comprender que la sincronización no es un obstáculo, sino una necesidad para mantener la integridad de los datos.\n\nFinalmente, la aplicación aborda uno de los problemas clásicos de la concurrencia: el Deadlock o abrazo mortal. En el nivel «Abrazo mortal», dos robots retienen una herramienta y esperan la del otro, impidiendo que el motor principal se repare. Este escenario ilustra cómo dos procesos pueden bloquearse mutuamente de forma indefinida. Para prevenirlo, el jugador debe romper el ciclo deteniendo uno de los procesos y aplicando políticas como el orden consistente de recursos o el uso de tiempos de espera. A través de estas dinámicas, Ascenso a Root no solo enseña comandos de Ubuntu, sino que construye una comprensión de cómo el sistema operativo coordina actividades de forma segura y eficiente, equilibrando el rendimiento con la corrección de los datos.'
-  },
-  {
-    id: 'AF3',
-    title: 'Almacenaje, memoria y archivos',
-    texto: 'Ubuntu aparece en el documento solo como Ubuntu Touch, pero, al ser una distribución de Linux, lo que el texto explica sobre Linux, ext4, ZFS, NFS/SMB y paginación se aplica a él. Usa el núcleo Linux, con memoria virtual, paginación y caché de archivos, y crea por defecto un archivo de intercambio (/swap.img). Como indica el documento, la RAM libre no describe por sí sola el estado del equipo: conviene revisar la memoria disponible con free -h o la presión de memoria, y es normal que la caché ocupe una parte considerable de la RAM. Su formato predeterminado es ext4 (con inodos, extensiones y diario); XFS, Btrfs y ZFS también están disponibles. Las instantáneas de Btrfs o ZFS no sustituyen una copia de seguridad. Ubuntu Touch comparte la memoria virtual de Linux, pero, a diferencia de Ubuntu de escritorio, se adapta a dispositivos concretos mediante puertos, utiliza ext4 para los datos de usuario y considera crítico el consumo de energía. En este aspecto, se parece más a Android que a iOS por utilizar el núcleo Linux.\n\nComo servidor, Ubuntu guarda datos en ext4, XFS, Btrfs o ZFS y los publica por NFS o por SMB mediante Samba, de modo que un cliente Windows puede acceder a ellos sin tener que entender ext4. Frente a Windows Server (NTFS o ReFS) y FreeBSD (UFS o ZFS), ofrece más variedad de formatos. Con ZFS, la caché ARC consume RAM y debe considerarse al planear los recursos; además, cgroups y las cuotas de disco permiten limitar la memoria y el espacio por separado. Ante la falta de memoria actúan el OOM killer y systemd-oomd, que eligen procesos por su consumo y no simplemente por estar en segundo plano, como ocurre en Android e iOS. El thrashing también puede presentarse en este entorno, y aumentar el espacio de swap no proporciona la misma velocidad que la RAM.'
-  },
-  {
-    id: 'AF4',
-    title: 'Redes y seguridad en sistemas distribuidos',
-    texto: 'Ubuntu se relaciona directamente con los temas de seguridad informática, ya que cuenta con mecanismos para proteger a los usuarios, archivos, programas y conexiones de red. Al estar basado en Linux, utiliza permisos de acceso, cuentas individuales y privilegios administrativos mediante el comando sudo. También incorpora herramientas como AppArmor, que permite establecer restricciones sobre las acciones y los recursos que pueden utilizar determinadas aplicaciones. Sin embargo, Ubuntu no es completamente inmune a las amenazas informáticas y puede verse afectado por virus, gusanos, troyanos, spyware, adware, ransomware, botnets y cryptojacking. Para reducir estos riesgos es necesario mantener actualizado el sistema, instalar programas de fuentes confiables, controlar los permisos y supervisar los procesos que se ejecutan.\n\nLas amenazas pueden ser internas o externas y afectar la confidencialidad, integridad y disponibilidad de la información mediante interrupciones, intercepciones, modificaciones o fabricación de datos. Ubuntu puede enfrentar intrusos como Black Hat, Grey Hat, Script Kiddies y usuarios internos que hacen un uso indebido de sus permisos. Para prevenir accesos no autorizados, utiliza cuentas individuales, contraseñas y mecanismos de autenticación. También permite implementar llaves criptográficas para conexiones SSH y autenticación multifactor mediante herramientas adicionales. En cuanto al control de acceso, utiliza permisos de lectura, escritura y ejecución, grupos de usuarios y herramientas como AppArmor, que se relaciona con el modelo de control obligatorio (MAC). Asimismo, puede integrarse con Kerberos y SSSD para administrar la autenticación centralizada en redes empresariales.\n\nEn los niveles de seguridad, Ubuntu permite proteger los equipos desde tres perspectivas. A nivel de usuario, utiliza contraseñas seguras, permisos limitados, actualizaciones y cifrado del almacenamiento mediante LUKS. A nivel de red, dispone de UFW como firewall para controlar las conexiones entrantes y salientes, además de permitir conexiones protegidas mediante VPN y SSH. A nivel empresarial, puede funcionar como servidor y utilizar herramientas de administración centralizada, registros de actividad y políticas de control de acceso. Estas medidas permiten aplicar el principio de defensa en profundidad, que consiste en utilizar varias capas de protección en lugar de depender de una sola.\n\nRespecto a la administración de riesgos y prevención de desastres, Ubuntu puede presentar problemas relacionados con infecciones de malware, robo de contraseñas, fallas eléctricas, accesos indebidos y vulnerabilidades de software. Para reducirlos se utilizan actualizaciones de seguridad, controles de acceso, mantenimiento y respaldos periódicos. El documento también presenta la estrategia 3-2-1-1-0, que consiste en conservar tres copias de los datos, utilizar dos medios diferentes, mantener una copia externa, otra fuera de línea o inmutable y verificar que los respaldos puedan restaurarse sin errores. Ubuntu permite administrar estas copias y recuperar información, aunque los planes de continuidad y recuperación deben configurarse de acuerdo con las necesidades de cada organización.\n\nEn cuanto a la seguridad del hardware, software, archivos e información, Ubuntu permite aprovechar tecnologías como Secure Boot y TPM para reforzar la protección del equipo, siempre que sean compatibles. Para el software utiliza actualizaciones automáticas de seguridad y AppArmor; para los archivos cuenta con permisos, listas de control de acceso y herramientas de cifrado; y para la información permite proteger las comunicaciones mediante protocolos como TLS y VPN. Además, como sistema operativo para servidores, Ubuntu puede participar en infraestructuras distribuidas donde se utilizan algoritmos de consenso como Paxos, Raft y PBFT, mediante aplicaciones que los implementan.'
-  }
-];
-// Menú hamburguesa (esquina superior derecha): cada opción lleva a la comparación de esa AF.
+// Apartado Ubuntu: el contenido vive en ubuntu.js. El menú ☰ elige qué AF se muestra.
+const ubuntuList = typeof ubuntuAFs === 'undefined' ? [] : ubuntuAFs;
+const fuentesList = typeof fuentesUbuntu === 'undefined' ? {} : fuentesUbuntu;
+// Etiqueta de cada subtema: qué tanto se parece Ubuntu a lo que dice la AF.
+const veredictos = { igual: 'Igual en Ubuntu', distinto: 'Ubuntu a su manera', na: 'No aplica' };
+function ubuntuCurrent() { return ubuntuList.find(a => a.id === state.ubuntuAF) || ubuntuList[0]; }
+// **negritas**, *cursivas* y `comandos` dentro de los textos (después de escapar el HTML).
+function richText(text) {
+  return safe(text).replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>').replace(/\*([^*]+)\*/g, '<i>$1</i>');
+}
+function ubuntuBlock(b) {
+  if (typeof b === 'string') return `<p>${richText(b)}</p>`;
+  if (b.h) return `<h4 class="u-sub">${richText(b.h)}</h4>`;
+  if (b.lista) return `<ul>${b.lista.map(i => `<li>${richText(i)}</li>`).join('')}</ul>`;
+  if (b.pasos) return `<ol class="u-steps">${b.pasos.map(i => `<li>${richText(i)}</li>`).join('')}</ol>`;
+  if (b.def) return `<dl class="u-defs">${b.def.map(([t, d]) => `<div><dt>${richText(t)}</dt><dd>${richText(d)}</dd></div>`).join('')}</dl>`;
+  if (b.tabla) return `<div class="u-table-wrap"><table class="u-table"><thead><tr>${b.tabla[0].map(c => `<th>${richText(c)}</th>`).join('')}</tr></thead><tbody>${b.tabla.slice(1).map(r => `<tr>${r.map(c => `<td>${richText(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  if (b.cmd) return `<div class="u-term" role="group" aria-label="Comandos de Ubuntu">${b.cmd.map(([c, d]) => `<div class="u-term-line"><code><span class="u-prompt">$</span> ${safe(c)}</code>${d ? `<small># ${safe(d)}</small>` : ''}</div>`).join('')}</div>`;
+  if (b.nota) return `<p class="u-note">${richText(b.nota)}</p>`;
+  return '';
+}
 function ubuntuMenu() {
   const open = !!state.ubuntuMenu;
+  const current = ubuntuCurrent();
   return `<button class="menu-btn ${open ? 'open' : ''}" data-action="toggle-ubuntu-menu" aria-label="${open ? 'Cerrar' : 'Abrir'} menú de AFs" aria-expanded="${open}" aria-controls="ubuntu-menu"><span></span><span></span><span></span></button>
   ${open ? `<button class="menu-scrim" data-action="close-ubuntu-menu" aria-label="Cerrar menú" tabindex="-1"></button>
   <div class="menu-panel" id="ubuntu-menu" role="menu">
     <div class="tech-label menu-title">Actividades fundamentales</div>
-    ${comparaciones.map(c => `<button class="menu-item" role="menuitem" data-action="ubuntu-go" data-id="${c.id}"><b>${c.id}</b><span>${safe(c.title)}</span></button>`).join('')}
+    ${ubuntuList.map(a => `<button class="menu-item af-${a.id.toLowerCase()} ${current && a.id === current.id ? 'current' : ''}" role="menuitem" data-action="ubuntu-go" data-id="${a.id}"><b>${a.id}</b><span>${safe(a.title)}</span></button>`).join('')}
   </div>` : ''}`;
 }
 function texto() {
-  return `<main class="content">
-    ${sectionHeader('Ubuntu','Comparación de las AFs con Ubuntu',`${comparaciones.length} actividades`)}
-    ${comparaciones.map(c => `<div class="hud-card report-card" id="cmp-${c.id}">
-      <div class="bar">${c.id} · ${safe(c.title)}</div>
-      <div class="inner">${c.texto.split(/\n+/).map(p => `<p>${safe(p)}</p>`).join('')}</div>
-    </div>`).join('')}
+  const a = ubuntuCurrent();
+  if (!a) return `<main class="content">${sectionHeader('Ubuntu', 'Las AFs comparadas con Ubuntu', '')}</main>${nav('texto')}`;
+  const num = i => String(i + 1).padStart(2, '0');
+  // Lo que el lector dejó abierto y la pestaña elegida se conservan al volver a dibujar (p. ej. al abrir el menú).
+  const open = new Set(state.ubuntuOpen || []);
+  const tabs = state.ubuntuTabs || {};
+  const count = v => a.temas.filter(t => t.veredicto === v).length;
+  const legend = Object.entries(veredictos).filter(([v]) => count(v)).map(([v, label]) => `<span class="u-badge u-badge-${v}">${label} · ${count(v)}</span>`).join('');
+  const sources = keys => (keys || []).filter(k => fuentesList[k]).map(k => `<li><a href="${safe(fuentesList[k][1])}" rel="noopener">${safe(fuentesList[k][0])}</a></li>`).join('');
+  const body = a.temas.length
+    ? `<div class="u-legend"><span class="tech-label">Comparación</span>${legend}</div>
+      ${a.temas.map((t, i) => {
+        const id = `tema-${i}`;
+        const tab = tabs[id] === 'ub' ? 'ub' : 'af';
+        const verdict = veredictos[t.veredicto] ? t.veredicto : 'na';
+        return `<details class="u-tema" id="${id}" ${open.has(id) ? 'open' : ''}>
+        <summary class="u-tema-head"><span class="u-num">${num(i)}</span><h3>${safe(t.titulo)}</h3><span class="u-badge u-badge-${verdict}">${veredictos[verdict]}</span></summary>
+        <div class="u-tabs" role="tablist">
+          <button class="u-tab u-tab-af ${tab === 'af' ? 'active' : ''}" role="tab" aria-selected="${tab === 'af'}" data-action="ubuntu-tab" data-tab="af">Lo que dice la ${a.id}</button>
+          <button class="u-tab u-tab-ub ${tab === 'ub' ? 'active' : ''}" role="tab" aria-selected="${tab === 'ub'}" data-action="ubuntu-tab" data-tab="ub"><img src="figuras/ojo-ubuntu.png" alt="">En Ubuntu</button>
+        </div>
+        <section class="u-part u-af" data-panel="af" role="tabpanel" ${tab === 'af' ? '' : 'hidden'}>${t.af.map(ubuntuBlock).join('')}</section>
+        <section class="u-part u-ub" data-panel="ub" role="tabpanel" ${tab === 'ub' ? '' : 'hidden'}>${t.ubuntu.map(ubuntuBlock).join('')}
+          ${t.fuentes && t.fuentes.length ? `<div class="u-src"><span class="tech-label">Fuentes oficiales</span><ul>${sources(t.fuentes)}</ul></div>` : ''}</section>
+      </details>`;
+      }).join('')}`
+    : `<div class="u-empty"><span class="tech-label">En preparación</span><p>El contenido de la ${a.id} comparado con Ubuntu se agregará pronto.</p></div>`;
+  return `<main class="content ubuntu-content af-${a.id.toLowerCase()}">
+    ${sectionHeader('Ubuntu', 'Las AFs comparadas con Ubuntu', `${a.temas.length} subtemas`)}
+    <div class="u-hero"><span class="u-hero-id">${a.id}</span><strong>${safe(a.title)}</strong></div>
+    ${body}
   </main>${ubuntuMenu()}${nav('texto')}`;
 }
 
@@ -427,6 +450,8 @@ function render() {
   // Conserva lo que el jugador iba escribiendo cuando la pantalla se vuelve a dibujar.
   const field = renderedScreen === 'mission' ? document.getElementById('command-input') : null;
   if (field && typeof field.value === 'string') state.draft = field.value;
+  // En Ubuntu, recuerda qué subtemas estaban abiertos.
+  if (renderedScreen === 'texto' && app.querySelectorAll) state.ubuntuOpen = [...app.querySelectorAll('details.u-tema[open]')].map(d => d.id);
   const screen = state.screen === 'cover' ? cover() : state.screen === 'team' ? team() : state.screen === 'texto' ? texto() : state.screen === 'afs' ? afs() : state.screen === 'credits' ? credits() : state.screen === 'home' ? home() : state.screen === 'callsign' ? callsign() : state.screen === 'dashboard' ? dashboard() : state.screen === 'map' ? map() : state.screen === 'settings' ? settings() : mission();  app.innerHTML = `<div class="top-rail" aria-hidden="true"></div>${screen}${state.confirmReset ? resetDialog() : ''}`;
   const content = app.querySelector?.('.content');
   if (content) content.scrollTop = previousScroll;
@@ -579,8 +604,17 @@ app.addEventListener('click', event => {
   else if (action === 'toggle-ubuntu-menu') { state.ubuntuMenu = !state.ubuntuMenu; playTone(); render(); }
   else if (action === 'close-ubuntu-menu') { state.ubuntuMenu = false; render(); }
   else if (action === 'ubuntu-go') {
-    state.ubuntuMenu = false; playTone(); render();
-    document.getElementById(`cmp-${button.dataset.id}`)?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+    state.ubuntuMenu = false; state.ubuntuAF = button.dataset.id; state.ubuntuOpen = []; state.ubuntuTabs = {}; playTone(); renderedScreen = null; render();
+    const content = app.querySelector?.('.content');
+    if (content) content.scrollTop = 0;
+  }
+  else if (action === 'ubuntu-tab') {
+    // Cambia de pestaña sin volver a dibujar la pantalla, para no cerrar los demás subtemas.
+    const tema = button.closest('.u-tema');
+    const tab = button.dataset.tab;
+    tema.querySelectorAll('.u-tab').forEach(b => { const on = b.dataset.tab === tab; b.classList.toggle('active', on); b.setAttribute('aria-selected', String(on)); });
+    tema.querySelectorAll('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== tab; });
+    state.ubuntuTabs = { ...(state.ubuntuTabs || {}), [tema.id]: tab };
   }
   else if (action === 'nav') { state.routeJustCompleted = false; state.ubuntuMenu = false; state.screen = button.dataset.screen; playTone(); render(); }
   else if (action === 'open-credits') { playTone(); openCredits(); }

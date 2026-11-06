@@ -25,7 +25,7 @@ function appContext() {
     window: {}
   });
   // Mismo orden que index.html: primero el contenido de los niveles y luego la app.
-  for (const file of ['niveles.js', 'app.js']) vm.runInContext(fs.readFileSync(path.join(assets, file), 'utf8'), context);
+  for (const file of ['niveles.js', 'ubuntu.js', 'app.js']) vm.runInContext(fs.readFileSync(path.join(assets, file), 'utf8'), context);
   return { app, run: expression => vm.runInContext(expression, context) };
 }
 // {dato} en un comando se rellena con state.flags en el momento de escribirlo, como haría el jugador al leer la terminal.
