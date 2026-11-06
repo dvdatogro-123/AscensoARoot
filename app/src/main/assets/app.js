@@ -128,7 +128,8 @@ function sectionHeader(title, sub, aside) {
 }
 
 function cover () {
-  return `<main class="content cover-content">
+  return `<main class="content intro-screen cover-content">
+    <div class="intro-body">
     <div class="cover-logos">
       <div class="logo-plate"><img src="logo-uanl.png" alt="Logo de la Universidad Autónoma de Nuevo León" /></div>
       <div class="logo-plate"><img src="logo-fime.png" alt="Logo de la Facultad de Ingeniería Mecánica y Eléctrica" /></div>
@@ -144,8 +145,9 @@ function cover () {
         <p><span class="tech-label">Semestre</span><strong>5to semestre</strong></p>
       </div>
     </div>
-    <button class="primary-btn full" data-action="cover-continue">Continuar ▶</button>
-  </main>`; 
+    </div>
+    <button class="primary-btn full intro-btn" data-action="cover-continue">Continuar ▶</button>
+  </main>`;
 }
 
 // Orden alfabético por apellido. Cada integrante conserva su propia foto.
@@ -163,14 +165,16 @@ const teamMembers = [
 ];
 
 function team() {
-  return `<main class="content team-content">
+  return `<main class="content intro-screen team-content">
+    <div class="intro-body">
     ${sectionHeader('Integrantes','Equipo de trabajo',`${teamMembers.length} integrantes`)}
     <div class="team-list" role="list">${teamMembers.map(m => `<div class="team-row" role="listitem">
       <div class="team-photo"><img src="${m.photo}" alt="Foto de ${safe(m.name)}" /></div>
       <div class="team-info"><strong>${safe(m.name)}</strong><small>Matrícula ${safe(m.id)}${m.leader ? ' · <b class="team-leader">Líder</b>' : ''}</small></div>
       <span class="team-chip">${safe(m.program)}</span>
     </div>`).join('')}</div>
-    <button class="primary-btn full team-continue" data-action="team-continue">Continuar ▶</button>
+    </div>
+    <button class="primary-btn full intro-btn" data-action="team-continue">Continuar ▶</button>
   </main>`;
 }
 
@@ -262,14 +266,15 @@ function texto() {
 }
 
 function home() {
-  return `<main class="content home-content">
+  return `<main class="content intro-screen home-content">
+    <div class="intro-body">
     <div class="eyebrow">Expedición al sistema operativo</div>
     <h1>ASCENSO<br><em>A ROOT</em></h1>
     <p class="home-copy">Supera misiones, domina los comandos y descubre cómo funciona Ubuntu.</p>
     <div class="home-hero"><img src="astronauta.png" alt="Astronauta naranja despegando" /></div>
-    <div class="home-actions"><button class="primary-btn full" data-action="start">Comenzar expedición ▶</button>
-      <div class="home-points"><span><b>✓</b> Aprende desde cero</span><span><b>✓</b> Desafíos interactivos</span></div>
+    <div class="home-points"><span><b>✓</b> Aprende desde cero</span><span><b>✓</b> Desafíos interactivos</span></div>
     </div>
+    <button class="primary-btn full intro-btn" data-action="start">Comenzar expedición ▶</button>
   </main>`;
 }
 function dashboard() {
@@ -358,7 +363,7 @@ function settings() {
     <button class="setting-row danger" data-action="confirm-reset"><span class="left"><span class="symbol">↶</span>Restablecer progreso</span></button>
     <button class="setting-row" data-action="nav" data-screen="credits"><span class="left"><span class="symbol">★</span>Créditos / Conclusión</span><span class="row-arrow" aria-hidden="true">▶</span></button>
     <div class="setting-row"><span class="left"><span class="symbol">⚒</span>Acerca de Ascenso a Root</span></div>
-    <p class="about">Versión 1.12.0 · Aplicación educativa sobre Ubuntu. Los comandos se simulan dentro de la aplicación y no modifican el teléfono.</p>
+    <p class="about">Versión 1.13.5 · Aplicación educativa sobre Ubuntu. Los comandos se simulan dentro de la aplicación y no modifican el teléfono.</p>
   </main>${nav('settings')}`;
 }
 function credits() {
